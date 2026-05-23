@@ -322,6 +322,12 @@ button,input,textarea,select{font-family:'Inter',sans-serif;-webkit-appearance:n
 .ib-s{font-size:12px;color:var(--mu);line-height:1.5}
 .ib-close{padding:6px 12px;border-radius:8px;background:var(--sf2);border:1px solid var(--bd2);color:var(--mu);font-size:12px;font-weight:500;cursor:pointer;flex-shrink:0;-webkit-tap-highlight-color:transparent}
 .dvdr{height:1px;background:var(--bd);margin:16px 0}
+
+.lang-btn.on{border-color:var(--ac) !important;color:var(--ac) !important;background:var(--ac-bg) !important}
+.lang-opt-btn{width:100%;padding:16px;border-radius:16px;border:1.5px solid var(--bd2);background:var(--sf);cursor:pointer;display:flex;align-items:center;gap:14px;text-align:left;-webkit-tap-highlight-color:transparent;transition:all .15s}
+.lang-opt-btn:active{background:var(--sf2)}
+.lang-opt-btn.active{border-color:var(--ac);background:var(--ac-bg)}
+.lang-opt-btn.active .lang-check{display:block !important}
 </style>
 </head>
 <body>
@@ -329,14 +335,19 @@ button,input,textarea,select{font-family:'Inter',sans-serif;-webkit-appearance:n
 <!-- LOADING -->
 <div class="loading-screen" id="loading">
   <div class="loading-logo"><div class="loading-dot"></div>Cento</div>
-  <div class="loading-txt">Carregando seu app...</div>
+  <div class="loading-txt" data-i18n="loading">Carregando seu app...</div>
 </div>
 
 <!-- AUTH -->
 <div id="auth-screen" style="display:none">
   <div class="auth-box">
     <div class="auth-logo"><div class="auth-dot"></div>Cento</div>
-    <div class="auth-tag">Suas finan&ccedil;as. Em qualquer lugar.</div>
+    <div class="auth-tag" data-i18n="auth_tagline">Suas finan&ccedil;as. Em qualquer lugar.</div>
+    <div class="lang-pick" style="display:flex;gap:6px;margin-bottom:20px">
+      <button class="lang-btn on" data-lang="pt" onclick="setLang('pt')" style="flex:1;padding:8px;border-radius:10px;border:1.5px solid var(--bd2);background:var(--sf);color:var(--mu);font-size:13px;font-weight:500;cursor:pointer;transition:all .15s;-webkit-tap-highlight-color:transparent">&#127463;&#127479; PT</button>
+      <button class="lang-btn" data-lang="en" onclick="setLang('en')" style="flex:1;padding:8px;border-radius:10px;border:1.5px solid var(--bd2);background:var(--sf);color:var(--mu);font-size:13px;font-weight:500;cursor:pointer;transition:all .15s;-webkit-tap-highlight-color:transparent">&#127482;&#127480; EN</button>
+      <button class="lang-btn" data-lang="es" onclick="setLang('es')" style="flex:1;padding:8px;border-radius:10px;border:1.5px solid var(--bd2);background:var(--sf);color:var(--mu);font-size:13px;font-weight:500;cursor:pointer;transition:all .15s;-webkit-tap-highlight-color:transparent">&#127466;&#127480; ES</button>
+    </div>
     <div class="auth-tabs">
       <button class="auth-tab on" id="tab-login" onclick="switchTab('login')">Entrar</button>
       <button class="auth-tab" id="tab-signup" onclick="switchTab('signup')">Criar conta</button>
@@ -476,6 +487,7 @@ button,input,textarea,select{font-family:'Inter',sans-serif;-webkit-appearance:n
     <div class="tb-logo"><div class="tb-dot"></div>Cento</div>
     <div class="tb-name" id="tb-name">Ol&aacute;!</div>
     <button class="tb-mode br" id="tb-mode" onclick="cycleMode()">&#127463;&#127479; BR</button>
+    <button onclick="openLangModal()" style="padding:7px;border-radius:10px;border:1px solid var(--bd2);background:none;cursor:pointer;color:var(--mu);display:flex;align-items:center;-webkit-tap-highlight-color:transparent" aria-label="Language"><i class="ti ti-language" style="font-size:18px"></i></button>
     <button class="tb-logout" onclick="doLogout()" style="padding:7px;border-radius:10px;border:1px solid var(--bd2);background:none;cursor:pointer;color:var(--mu);display:flex;align-items:center;-webkit-tap-highlight-color:transparent" aria-label="Sair"><i class="ti ti-logout" style="font-size:18px"></i></button>
   </div>
   <div class="main" id="main-content">
@@ -484,6 +496,7 @@ button,input,textarea,select{font-family:'Inter',sans-serif;-webkit-appearance:n
     <div class="page" id="page-budget"></div>
     <div class="page" id="page-goals"></div>
     <div class="page" id="page-ai"></div>
+  <div class="page" id="page-support"></div>
   </div>
   <nav class="bot-nav">
     <button class="bn on" id="bn-home" onclick="nav('home',this)">
@@ -504,7 +517,11 @@ button,input,textarea,select{font-family:'Inter',sans-serif;-webkit-appearance:n
     </button>
     <button class="bn" id="bn-goals" onclick="nav('goals',this)">
       <i class="ti ti-target" aria-hidden="true"></i>
-      <span class="bn-label">Metas</span>
+      <span class="bn-label" data-i18n="nav_goals">Metas</span>
+    </button>
+    <button class="bn" id="bn-support" onclick="nav('support',this)">
+      <i class="ti ti-message-circle" aria-hidden="true"></i>
+      <span class="bn-label" data-i18n="nav_support">Suporte</span>
     </button>
   </nav>
 </div>
@@ -570,10 +587,497 @@ button,input,textarea,select{font-family:'Inter',sans-serif;-webkit-appearance:n
 
 <script>
 // \u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550
+//  i18n \u2014 Translations
+// \u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550
+var LANG = 'pt';
+
+var T = {
+  pt: {
+    // Auth
+    auth_login: 'Entrar',
+    auth_signup: 'Criar conta',
+    auth_email: 'E-mail',
+    auth_password: 'Senha',
+    auth_name: 'Seu nome',
+    auth_name_ph: 'Nome completo',
+    auth_email_ph: 'seu@email.com',
+    auth_pass_ph: 'M\u00ednimo 6 caracteres',
+    auth_login_btn: 'Entrar \u2192',
+    auth_signup_btn: 'Criar conta \u2192',
+    auth_forgot: 'Esqueceu a senha? Recuperar',
+    auth_tagline: 'Suas finan\u00e7as. Em qualquer lugar.',
+    auth_err_fill: 'Preencha e-mail e senha.',
+    auth_err_name: 'Digite seu nome.',
+    auth_err_email: 'Digite seu e-mail.',
+    auth_err_pass: 'Senha deve ter pelo menos 6 caracteres.',
+    auth_err_creds: 'E-mail ou senha incorretos.',
+    auth_err_confirm: 'Confirme seu e-mail antes de entrar.',
+    auth_err_conn: 'Erro de conex\u00e3o. Tente novamente.',
+    auth_ok_signup: 'Verifique seu e-mail para confirmar o cadastro.',
+    auth_ok_forgot: 'E-mail de recupera\u00e7\u00e3o enviado!',
+    auth_loading_login: 'Entrando...',
+    auth_loading_signup: 'Criando conta...',
+    // Language picker
+    lang_title: 'Idioma / Language / Idioma',
+    lang_pt: 'Portugu\u00eas',
+    lang_en: 'English',
+    lang_es: 'Espa\u00f1ol',
+    // Onboarding
+    ob_tag: 'Suas finan\u00e7as. Em qualquer lugar.',
+    ob_step: 'Passo',
+    ob_of: 'de',
+    ob_continue: 'Continuar \u2192',
+    ob_back: '\u2190 Voltar',
+    ob_q0: 'Onde voc\u00ea est\u00e1 morando?',
+    ob_s0: 'Define moeda, alertas e dicas.',
+    ob_opt_br: 'No Brasil',
+    ob_opt_br_d: 'Finan\u00e7as em Real brasileiro',
+    ob_opt_us: 'Nos Estados Unidos',
+    ob_opt_us_d: 'Imigrante ou morando nos EUA',
+    ob_opt_both: 'Brasil + EUA',
+    ob_opt_both_d: 'Contas nos dois pa\u00edses',
+    ob_q1: 'Situa\u00e7\u00e3o financeira?',
+    ob_s1: 'Sem julgamento \u2014 calibra seus alertas.',
+    ob_q2: 'Quanto voc\u00ea ganha e gasta?',
+    ob_s2: 'Aproximado est\u00e1 \u00f3timo.',
+    ob_q3: 'Maior desafio financeiro?',
+    ob_s3: 'Vamos atacar isso primeiro.',
+    ob_q4: 'Maior sonho financeiro?',
+    ob_s4: 'Define para onde vai cada real.',
+    ob_q5: 'Frequ\u00eancia de delivery?',
+    ob_s5: 'A IA vai monitorar esse gasto.',
+    ob_q6: 'Gerando seu plano com IA...',
+    ob_finish: 'Come\u00e7ar a usar o Cento \u2192',
+    ob_plan_ready: 'seu plano est\u00e1 pronto!',
+    ob_plan_goal: 'Meta: ',
+    ob_gen0: 'Analisando perfil',
+    ob_gen1: 'Identificando riscos',
+    ob_gen2: 'Calculando or\u00e7amentos',
+    ob_gen3: 'Definindo metas',
+    ob_gen4: 'Escrevendo seu plano',
+    // Nav
+    nav_home: 'In\u00edcio',
+    nav_tx: 'Gastos',
+    nav_new: 'Novo',
+    nav_budget: 'Or\u00e7amento',
+    nav_goals: 'Metas',
+    nav_support: 'Suporte',
+    // Pages
+    page_home: 'In\u00edcio',
+    page_tx: 'Transa\u00e7\u00f5es',
+    page_budget: 'Or\u00e7amentos',
+    page_budget_sub: 'Toque para editar limite',
+    page_goals: 'Metas',
+    page_support: 'Suporte IA',
+    page_support_sub: 'Resposta instant\u00e2nea 24h',
+    // KPI
+    kpi_income: 'Receitas',
+    kpi_expense: 'Despesas',
+    kpi_balance: 'Saldo',
+    // Alerts
+    alert_over_budget: 'Or\u00e7amento de {cat} excedido',
+    alert_over_desc: 'Gastou {spent} de {limit} ({pct}%).',
+    alert_warn_budget: '{cat} em {pct}% do limite',
+    alert_warn_desc: 'Faltam {rem} para o limite.',
+    alert_over_income: 'Despesas superaram receitas',
+    alert_over_income_desc: 'Voc\u00ea gastou {val} a mais do que recebeu.',
+    alert_no_income: 'Nenhuma receita registrada',
+    alert_no_income_desc: 'Adicione suas entradas para ver o saldo real.',
+    alert_goal: '{name} em {pct}%',
+    alert_goal_desc: 'Poupando {monthly}/m\u00eas \u2014 {months} meses para a meta.',
+    alert_none: 'Tudo certo! Nenhum alerta este m\u00eas.',
+    // Recent
+    recent_title: 'Recentes',
+    recent_all: 'Ver tudo',
+    // Tx
+    tx_all: 'Todas',
+    tx_expenses: 'Despesas',
+    tx_income: 'Receitas',
+    tx_empty_t: 'Nenhuma transa\u00e7\u00e3o',
+    tx_empty_s: 'Toque em + para adicionar.',
+    // Budget
+    bg_status_ok: 'OK',
+    bg_status_warn: 'Aten\u00e7\u00e3o',
+    bg_status_over: 'Excedido',
+    bg_spent: 'gasto',
+    bg_limit: 'Limite',
+    // Goals
+    gl_empty_t: 'Nenhuma meta ainda',
+    gl_empty_s: 'Crie sua primeira meta financeira.',
+    gl_saved: 'poupados',
+    gl_missing: 'faltam',
+    gl_monthly: '/m\u00eas',
+    gl_months: 'meses',
+    gl_add: 'Nova Meta',
+    gl_no_monthly: 'Defina um valor mensal',
+    // Modal tx
+    modal_new_tx: 'Nova Transa\u00e7\u00e3o',
+    modal_edit_tx: 'Editar',
+    modal_expense: 'Despesa',
+    modal_income: 'Receita',
+    modal_desc: 'Descri\u00e7\u00e3o',
+    modal_desc_ph: 'Ex: iFood, Sal\u00e1rio...',
+    modal_amount: 'Valor',
+    modal_date: 'Data',
+    modal_category: 'Categoria',
+    modal_save: 'Salvar',
+    modal_delete_tx: 'Excluir transa\u00e7\u00e3o',
+    modal_delete_goal: 'Excluir meta',
+    modal_confirm_del: 'Excluir?',
+    // Modal goal
+    modal_new_goal: 'Nova Meta',
+    modal_edit_goal: 'Editar Meta',
+    modal_goal_name: 'Nome da meta',
+    modal_goal_name_ph: 'Ex: Reserva de emerg\u00eancia',
+    modal_goal_emoji: 'Emoji',
+    modal_goal_target: 'Valor alvo',
+    modal_goal_current: 'Poupado at\u00e9 agora',
+    modal_goal_monthly: 'Poupando/m\u00eas',
+    modal_goal_currency: 'Moeda',
+    // Modal budget
+    modal_edit_limit: 'Editar Limite',
+    modal_monthly_limit: 'Limite mensal',
+    // Support chat
+    support_greeting: 'Ol\u00e1! Sou o assistente do Cento. Como posso ajudar?',
+    support_ph: 'Escreva sua d\u00favida...',
+    support_chip1: 'Como adicionar transa\u00e7\u00f5es?',
+    support_chip2: 'Como funciona o or\u00e7amento?',
+    support_chip3: 'Esqueci minha senha',
+    support_chip4: 'Como criar uma meta?',
+    // Logout
+    logout: 'Sair',
+    // Loading
+    loading: 'Carregando seu app...',
+    // Months
+    months: ['Janeiro','Fevereiro','Mar\u00e7o','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'],
+  },
+  en: {
+    auth_login: 'Sign in',
+    auth_signup: 'Create account',
+    auth_email: 'Email',
+    auth_password: 'Password',
+    auth_name: 'Your name',
+    auth_name_ph: 'Full name',
+    auth_email_ph: 'your@email.com',
+    auth_pass_ph: 'Minimum 6 characters',
+    auth_login_btn: 'Sign in \u2192',
+    auth_signup_btn: 'Create account \u2192',
+    auth_forgot: 'Forgot password? Reset',
+    auth_tagline: 'Your finances. Anywhere.',
+    auth_err_fill: 'Please fill in email and password.',
+    auth_err_name: 'Please enter your name.',
+    auth_err_email: 'Please enter your email.',
+    auth_err_pass: 'Password must be at least 6 characters.',
+    auth_err_creds: 'Incorrect email or password.',
+    auth_err_confirm: 'Please confirm your email before signing in.',
+    auth_err_conn: 'Connection error. Please try again.',
+    auth_ok_signup: 'Check your email to confirm your account.',
+    auth_ok_forgot: 'Recovery email sent!',
+    auth_loading_login: 'Signing in...',
+    auth_loading_signup: 'Creating account...',
+    lang_title: 'Language / Idioma / Idioma',
+    lang_pt: 'Portugu\u00eas',
+    lang_en: 'English',
+    lang_es: 'Espa\u00f1ol',
+    ob_tag: 'Your finances. Anywhere.',
+    ob_step: 'Step',
+    ob_of: 'of',
+    ob_continue: 'Continue \u2192',
+    ob_back: '\u2190 Back',
+    ob_q0: 'Where are you living?',
+    ob_s0: 'Sets your currency, alerts and tips.',
+    ob_opt_br: 'In Brazil',
+    ob_opt_br_d: 'Finances in Brazilian Real',
+    ob_opt_us: 'In the United States',
+    ob_opt_us_d: 'Immigrant or living in the US',
+    ob_opt_both: 'Brazil + USA',
+    ob_opt_both_d: 'Accounts in both countries',
+    ob_q1: 'Financial situation?',
+    ob_s1: 'No judgment \u2014 calibrates your alerts.',
+    ob_q2: 'How much do you earn and spend?',
+    ob_s2: 'Approximate is fine.',
+    ob_q3: 'Biggest financial challenge?',
+    ob_s3: "Let us tackle this first.",
+    ob_q4: 'Biggest financial dream?',
+    ob_s4: 'Defines where every dollar goes.',
+    ob_q5: 'How often do you order delivery?',
+    ob_s5: 'AI will monitor this expense.',
+    ob_q6: 'Generating your plan with AI...',
+    ob_finish: 'Start using Cento \u2192',
+    ob_plan_ready: 'your plan is ready!',
+    ob_plan_goal: 'Goal: ',
+    ob_gen0: 'Analyzing profile',
+    ob_gen1: 'Identifying risks',
+    ob_gen2: 'Calculating budgets',
+    ob_gen3: 'Defining goals',
+    ob_gen4: 'Writing your plan',
+    nav_home: 'Home',
+    nav_tx: 'Expenses',
+    nav_new: 'New',
+    nav_budget: 'Budget',
+    nav_goals: 'Goals',
+    nav_support: 'Support',
+    page_home: 'Home',
+    page_tx: 'Transactions',
+    page_budget: 'Budgets',
+    page_budget_sub: 'Tap to edit limit',
+    page_goals: 'Goals',
+    page_support: 'AI Support',
+    page_support_sub: 'Instant answers 24/7',
+    kpi_income: 'Income',
+    kpi_expense: 'Expenses',
+    kpi_balance: 'Balance',
+    alert_over_budget: '{cat} budget exceeded',
+    alert_over_desc: 'Spent {spent} of {limit} ({pct}%).',
+    alert_warn_budget: '{cat} at {pct}% of limit',
+    alert_warn_desc: '{rem} remaining before limit.',
+    alert_over_income: 'Expenses exceeded income',
+    alert_over_income_desc: 'You spent {val} more than you earned.',
+    alert_no_income: 'No income recorded',
+    alert_no_income_desc: 'Add your earnings to see your real balance.',
+    alert_goal: '{name} at {pct}%',
+    alert_goal_desc: 'Saving {monthly}/month \u2014 {months} months to reach goal.',
+    alert_none: "All good! No alerts this month.",
+    recent_title: 'Recent',
+    recent_all: 'View all',
+    tx_all: 'All',
+    tx_expenses: 'Expenses',
+    tx_income: 'Income',
+    tx_empty_t: 'No transactions',
+    tx_empty_s: 'Tap + to add one.',
+    bg_status_ok: 'OK',
+    bg_status_warn: 'Warning',
+    bg_status_over: 'Over',
+    bg_spent: 'spent',
+    bg_limit: 'Limit',
+    gl_empty_t: 'No goals yet',
+    gl_empty_s: 'Create your first financial goal.',
+    gl_saved: 'saved',
+    gl_missing: 'remaining',
+    gl_monthly: '/month',
+    gl_months: 'months',
+    gl_add: 'New Goal',
+    gl_no_monthly: 'Set a monthly amount',
+    modal_new_tx: 'New Transaction',
+    modal_edit_tx: 'Edit',
+    modal_expense: 'Expense',
+    modal_income: 'Income',
+    modal_desc: 'Description',
+    modal_desc_ph: 'E.g.: Uber Eats, Salary...',
+    modal_amount: 'Amount',
+    modal_date: 'Date',
+    modal_category: 'Category',
+    modal_save: 'Save',
+    modal_delete_tx: 'Delete transaction',
+    modal_delete_goal: 'Delete goal',
+    modal_confirm_del: 'Delete?',
+    modal_new_goal: 'New Goal',
+    modal_edit_goal: 'Edit Goal',
+    modal_goal_name: 'Goal name',
+    modal_goal_name_ph: 'E.g.: Emergency fund',
+    modal_goal_emoji: 'Emoji',
+    modal_goal_target: 'Target amount',
+    modal_goal_current: 'Saved so far',
+    modal_goal_monthly: 'Saving/month',
+    modal_goal_currency: 'Currency',
+    modal_edit_limit: 'Edit Limit',
+    modal_monthly_limit: 'Monthly limit',
+    support_greeting: "Hi! I'm Cento's assistant. How can I help you?",
+    support_ph: 'Write your question...',
+    support_chip1: 'How to add transactions?',
+    support_chip2: 'How does the budget work?',
+    support_chip3: 'I forgot my password',
+    support_chip4: 'How to create a goal?',
+    logout: 'Sign out',
+    loading: 'Loading your app...',
+    months: ['January','February','March','April','May','June','July','August','September','October','November','December'],
+  },
+  es: {
+    auth_login: 'Iniciar sesi\u00f3n',
+    auth_signup: 'Crear cuenta',
+    auth_email: 'Correo electr\u00f3nico',
+    auth_password: 'Contrase\u00f1a',
+    auth_name: 'Tu nombre',
+    auth_name_ph: 'Nombre completo',
+    auth_email_ph: 'tu@correo.com',
+    auth_pass_ph: 'M\u00ednimo 6 caracteres',
+    auth_login_btn: 'Iniciar sesi\u00f3n \u2192',
+    auth_signup_btn: 'Crear cuenta \u2192',
+    auth_forgot: '\u00bfOlvidaste tu contrase\u00f1a? Recuperar',
+    auth_tagline: 'Tus finanzas. En cualquier lugar.',
+    auth_err_fill: 'Completa el correo y la contrase\u00f1a.',
+    auth_err_name: 'Ingresa tu nombre.',
+    auth_err_email: 'Ingresa tu correo electr\u00f3nico.',
+    auth_err_pass: 'La contrase\u00f1a debe tener al menos 6 caracteres.',
+    auth_err_creds: 'Correo o contrase\u00f1a incorrectos.',
+    auth_err_confirm: 'Confirma tu correo antes de iniciar sesi\u00f3n.',
+    auth_err_conn: 'Error de conexi\u00f3n. Int\u00e9ntalo de nuevo.',
+    auth_ok_signup: 'Revisa tu correo para confirmar tu cuenta.',
+    auth_ok_forgot: '\u00a1Correo de recuperaci\u00f3n enviado!',
+    auth_loading_login: 'Iniciando sesi\u00f3n...',
+    auth_loading_signup: 'Creando cuenta...',
+    lang_title: 'Idioma / Language / Idioma',
+    lang_pt: 'Portugu\u00eas',
+    lang_en: 'English',
+    lang_es: 'Espa\u00f1ol',
+    ob_tag: 'Tus finanzas. En cualquier lugar.',
+    ob_step: 'Paso',
+    ob_of: 'de',
+    ob_continue: 'Continuar \u2192',
+    ob_back: '\u2190 Volver',
+    ob_q0: '\u00bfD\u00f3nde vives?',
+    ob_s0: 'Define tu moneda, alertas y consejos.',
+    ob_opt_br: 'En Brasil',
+    ob_opt_br_d: 'Finanzas en Real brasile\u00f1o',
+    ob_opt_us: 'En Estados Unidos',
+    ob_opt_us_d: 'Inmigrante o viviendo en EE.UU.',
+    ob_opt_both: 'Brasil + EE.UU.',
+    ob_opt_both_d: 'Cuentas en ambos pa\u00edses',
+    ob_q1: '\u00bfSituaci\u00f3n financiera?',
+    ob_s1: 'Sin juicios \u2014 calibra tus alertas.',
+    ob_q2: '\u00bfCu\u00e1nto ganas y gastas?',
+    ob_s2: 'Aproximado est\u00e1 bien.',
+    ob_q3: '\u00bfMayor desaf\u00edo financiero?',
+    ob_s3: 'Atacamos esto primero.',
+    ob_q4: '\u00bfMayor sue\u00f1o financiero?',
+    ob_s4: 'Define a d\u00f3nde va cada peso.',
+    ob_q5: '\u00bfCon qu\u00e9 frecuencia pides comida a domicilio?',
+    ob_s5: 'La IA monitorear\u00e1 este gasto.',
+    ob_q6: 'Generando tu plan con IA...',
+    ob_finish: 'Empezar a usar Cento \u2192',
+    ob_plan_ready: '\u00a1tu plan est\u00e1 listo!',
+    ob_plan_goal: 'Meta: ',
+    ob_gen0: 'Analizando perfil',
+    ob_gen1: 'Identificando riesgos',
+    ob_gen2: 'Calculando presupuestos',
+    ob_gen3: 'Definiendo metas',
+    ob_gen4: 'Escribiendo tu plan',
+    nav_home: 'Inicio',
+    nav_tx: 'Gastos',
+    nav_new: 'Nuevo',
+    nav_budget: 'Presupuesto',
+    nav_goals: 'Metas',
+    nav_support: 'Soporte',
+    page_home: 'Inicio',
+    page_tx: 'Transacciones',
+    page_budget: 'Presupuestos',
+    page_budget_sub: 'Toca para editar l\u00edmite',
+    page_goals: 'Metas',
+    page_support: 'Soporte IA',
+    page_support_sub: 'Respuesta instant\u00e1nea 24h',
+    kpi_income: 'Ingresos',
+    kpi_expense: 'Gastos',
+    kpi_balance: 'Saldo',
+    alert_over_budget: 'Presupuesto de {cat} superado',
+    alert_over_desc: 'Gastaste {spent} de {limit} ({pct}%).',
+    alert_warn_budget: '{cat} al {pct}% del l\u00edmite',
+    alert_warn_desc: 'Quedan {rem} para el l\u00edmite.',
+    alert_over_income: 'Los gastos superaron los ingresos',
+    alert_over_income_desc: 'Gastaste {val} m\u00e1s de lo que recibiste.',
+    alert_no_income: 'Ning\u00fan ingreso registrado',
+    alert_no_income_desc: 'Agrega tus entradas para ver el saldo real.',
+    alert_goal: '{name} al {pct}%',
+    alert_goal_desc: 'Ahorrando {monthly}/mes \u2014 {months} meses para la meta.',
+    alert_none: '\u00a1Todo bien! Sin alertas este mes.',
+    recent_title: 'Recientes',
+    recent_all: 'Ver todo',
+    tx_all: 'Todas',
+    tx_expenses: 'Gastos',
+    tx_income: 'Ingresos',
+    tx_empty_t: 'Sin transacciones',
+    tx_empty_s: 'Toca + para agregar.',
+    bg_status_ok: 'OK',
+    bg_status_warn: 'Atenci\u00f3n',
+    bg_status_over: 'Excedido',
+    bg_spent: 'gastado',
+    bg_limit: 'L\u00edmite',
+    gl_empty_t: 'Sin metas a\u00fan',
+    gl_empty_s: 'Crea tu primera meta financiera.',
+    gl_saved: 'ahorrados',
+    gl_missing: 'faltan',
+    gl_monthly: '/mes',
+    gl_months: 'meses',
+    gl_add: 'Nueva Meta',
+    gl_no_monthly: 'Define un monto mensual',
+    modal_new_tx: 'Nueva Transacci\u00f3n',
+    modal_edit_tx: 'Editar',
+    modal_expense: 'Gasto',
+    modal_income: 'Ingreso',
+    modal_desc: 'Descripci\u00f3n',
+    modal_desc_ph: 'Ej: Uber Eats, Salario...',
+    modal_amount: 'Monto',
+    modal_date: 'Fecha',
+    modal_category: 'Categor\u00eda',
+    modal_save: 'Guardar',
+    modal_delete_tx: 'Eliminar transacci\u00f3n',
+    modal_delete_goal: 'Eliminar meta',
+    modal_confirm_del: '\u00bfEliminar?',
+    modal_new_goal: 'Nueva Meta',
+    modal_edit_goal: 'Editar Meta',
+    modal_goal_name: 'Nombre de la meta',
+    modal_goal_name_ph: 'Ej: Fondo de emergencia',
+    modal_goal_emoji: 'Emoji',
+    modal_goal_target: 'Monto objetivo',
+    modal_goal_current: 'Ahorrado hasta ahora',
+    modal_goal_monthly: 'Ahorrando/mes',
+    modal_goal_currency: 'Moneda',
+    modal_edit_limit: 'Editar L\u00edmite',
+    modal_monthly_limit: 'L\u00edmite mensual',
+    support_greeting: '\u00a1Hola! Soy el asistente de Cento. \u00bfC\u00f3mo puedo ayudarte?',
+    support_ph: 'Escribe tu pregunta...',
+    support_chip1: '\u00bfC\u00f3mo agregar transacciones?',
+    support_chip2: '\u00bfC\u00f3mo funciona el presupuesto?',
+    support_chip3: 'Olvid\u00e9 mi contrase\u00f1a',
+    support_chip4: '\u00bfC\u00f3mo crear una meta?',
+    logout: 'Cerrar sesi\u00f3n',
+    loading: 'Cargando tu app...',
+    months: ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'],
+  }
+};
+
+function t(key, vars) {
+  var lang = T[LANG] || T['pt'];
+  var str = lang[key] || T['pt'][key] || key;
+  if (vars) {
+    Object.keys(vars).forEach(function(k) {
+      str = str.replace('{' + k + '}', vars[k]);
+    });
+  }
+  return str;
+}
+
+function setLang(l) {
+  LANG = l;
+  try { localStorage.setItem('cento_lang', l); } catch(e) {}
+  applyLang();
+}
+
+function applyLang() {
+  // Update all data-i18n elements
+  document.querySelectorAll('[data-i18n]').forEach(function(el) {
+    var key = el.getAttribute('data-i18n');
+    var attr = el.getAttribute('data-i18n-attr');
+    if (attr) el.setAttribute(attr, t(key));
+    else el.textContent = t(key);
+  });
+  // Update placeholders
+  document.querySelectorAll('[data-i18n-ph]').forEach(function(el) {
+    el.placeholder = t(el.getAttribute('data-i18n-ph'));
+  });
+  // Mark active lang button
+  document.querySelectorAll('.lang-btn').forEach(function(b) {
+    b.classList.toggle('on', b.dataset.lang === LANG);
+  });
+}
+
+
+// \u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550
 //  SUPABASE
 // \u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550
 var SUPA_URL = 'https://nxtolmtfnyrlvewjtdwy.supabase.co';
 var SUPA_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im54dG9sbXRmbnlybHZld2p0ZHd5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzk0OTkyMDAsImV4cCI6MjA5NTA3NTIwMH0.zMhKvx7_Y5ES7WMFTQJ1mpPlZTENaGDXKULBS08Ig-Q';
+// Load saved language
+try { var _sl = localStorage.getItem('cento_lang'); if(_sl && T[_sl]) LANG = _sl; } catch(e){}
 var sb;
 try {
   sb = window.supabase ? window.supabase.createClient(SUPA_URL, SUPA_KEY) : supabase.createClient(SUPA_URL, SUPA_KEY);
@@ -632,6 +1136,7 @@ var DEF_BUDGETS_US = [
 //  INIT
 // \u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550
 window.addEventListener('DOMContentLoaded', function() {
+  applyLang();
   sb.auth.onAuthStateChange(function(event, session) {
     if (session && session.user) {
       currentUser = session.user;
@@ -901,6 +1406,7 @@ function renderPage(p) {
   else if(p==='budget')renderBudgetPage();
   else if(p==='goals')renderGoalsPage();
   else if(p==='ai')renderAIPage();
+  else if(p==='support')renderSupportPage();
 }
 
 // \u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550
@@ -962,17 +1468,17 @@ function renderHome(){
   var modeBar='';
   if(USER.mode!=='br'){modeBar='<div class="currency-bar"><div class="cbar-info">1 USD = <strong>R$\u00a0'+USD_RATE+'</strong></div><div class="ctog"><button class="cb brl'+(viewCurr==='brl'?' on':'')+'" onclick="setView(\'brl\')">R$</button><button class="cb usd'+(viewCurr==='usd'?' on':'')+'" onclick="setView(\'usd\')">$</button></div></div>';}
     var ALERT_ICONS={danger:'<i class="ti ti-alert-triangle" style="color:var(--rd)"></i>',warning:'<i class="ti ti-alert-circle" style="color:var(--or)"></i>',tip:'<i class="ti ti-target" style="color:var(--ac)"></i>',info:'<i class="ti ti-info-circle" style="color:var(--bl)"></i>'};
-  var alertsHTML=alerts.length?alerts.map(function(a){return'<div class="al '+a.type+'"><div class="al-ico">'+(ALERT_ICONS[a.type]||'')+'</div><div class="al-body"><div class="al-hl '+a.type+'">'+(a.hl||'')+'</div><div class="al-desc">'+(a.desc||'')+'</div></div></div>';}).join(''):'<div style="font-size:13px;color:var(--mu);padding:10px 0">Tudo certo! Nenhum alerta este mes.</div>'
+  var alertsHTML=alerts.length?alerts.map(function(a){return'<div class="al '+a.type+'"><div class="al-ico">'+(ALERT_ICONS[a.type]||'')+'</div><div class="al-body"><div class="al-hl '+a.type+'">'+(a.hl||'')+'</div><div class="al-desc">'+(a.desc||'')+'</div></div></div>';}).join(''):"<div style='font-size:13px;color:var(--mu);padding:10px 0'>"+t('alert_none')+"</div>"
   var recent=getModeTx().slice(0,5);
-  var recentHTML=recent.length?recent.map(txItem).join(''):'<div class="empty-state"><div class="ei"><i class="ti ti-arrows-sort"></i></div><div class="et">Nenhuma transa\u00e7\u00e3o</div><div class="es">Toque em <strong>+</strong> para adicionar.</div></div>';
-  var now=new Date();var months=['\u200bJaneiro','Fevereiro','Mar\u00e7o','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
+  var recentHTML=recent.length?recent.map(txItem).join(''):'<div class="empty-state"><div class="ei"><i class="ti ti-arrows-sort"></i></div><div class="et">'+t('tx_empty_t')+'</div><div class="es">'+t('tx_empty_s')+'</div></div>';
+  var now=new Date();var months=t('months');
   document.getElementById('page-home').innerHTML=
     '<div class="phdr"><div class="ptitle">In\u00edcio</div><div class="psub">'+months[now.getMonth()]+' '+now.getFullYear()+'</div></div>'
     +modeBar
     +'<div class="kpi-row"><div class="card"><div class="clbl">Receitas</div><div class="cval g">'+fmtV(inc)+'</div></div><div class="card"><div class="clbl">Despesas</div><div class="cval r">'+fmtV(exp)+'</div></div><div class="card"><div class="clbl">Saldo</div><div class="cval '+(bal>=0?'g':'r')+'">'+(bal<0?'-':'')+fmtV(Math.abs(bal))+'</div></div></div>'
     +'<div class="al-w">'+alertsHTML+'</div>'
     +'<div class="cc"><div class="cch"><div class="cct">Fluxo mensal</div></div><div style="height:150px"><canvas id="flowChart"></canvas></div></div>'
-    +'<div class="sec-hdr"><div class="sec-t">Recentes</div><button class="btn-sm" onclick="nav(\'tx\',document.getElementById(\'bn-tx\'))">Ver tudo</button></div>'
+    +'<div class="sec-hdr"><div class="sec-t">Recentes</div><button class="btn-sm" onclick="nav(\'tx\',document.getElementById(\'bn-tx\'))">'+t('recent_all')+'</button></div>'
     +'<div class="txl">'+recentHTML+'</div>';
   setTimeout(renderFlowChart,80);
 }
@@ -1003,18 +1509,18 @@ function buildAlerts(){
     BUDGETS.forEach(function(b){
       var s=catSpent(b.cat);
       var p=b.limit_val>0?(s/b.limit_val)*100:0;
-      if(p>100) alerts.push({type:'danger',hl:'Or\u00e7amento de '+b.label+' excedido',desc:'Gastou '+fmtV(s)+' de '+fmtV(b.limit_val)+' ('+p.toFixed(0)+'%).'});
-      else if(p>80) alerts.push({type:'warning',hl:b.label+' em '+p.toFixed(0)+'% do limite',desc:'Faltam '+fmtV(b.limit_val-s)+' para o limite.'});
+      if(p>100) alerts.push({type:'danger',hl:t('alert_over_budget',{cat:b.label}),desc:t('alert_over_desc',{spent:fmtV(s),limit:fmtV(b.limit_val),pct:p.toFixed(0)})});
+      else if(p>80) alerts.push({type:'warning',hl:t('alert_warn_budget',{cat:b.label,pct:p.toFixed(0)}),desc:t('alert_warn_desc',{rem:fmtV(b.limit_val-s)})});
     });
   }
-  if(inc>0&&exp>inc) alerts.push({type:'danger',hl:'Despesas superaram receitas',desc:'Voc\u00ea gastou '+fmtV(exp-inc)+' a mais do que recebeu.'});
-  else if(inc===0&&exp>0) alerts.push({type:'info',hl:'Nenhuma receita registrada',desc:'Adicione suas entradas para ver o saldo real.'});
+  if(inc>0&&exp>inc) alerts.push({type:'danger',hl:t('alert_over_income'),desc:t('alert_over_income_desc',{val:fmtV(exp-inc)})});
+  else if(inc===0&&exp>0) alerts.push({type:'info',hl:t('alert_no_income'),desc:t('alert_no_income_desc')});
   if(GOALS.length){
     var best=GOALS.slice().sort(function(a,b){return(b.current_val/b.target)-(a.current_val/a.target);})[0];
     if(best&&best.monthly>0){
       var m2=Math.ceil((best.target-best.current_val)/best.monthly);
       var pct2=((best.current_val/best.target)*100).toFixed(0);
-      alerts.push({type:'tip',hl:best.name+' em '+pct2+'%',desc:'Poupando '+fmt(best.monthly,best.curr)+'/mes - '+m2+' meses para a meta.'});
+      alerts.push({type:'tip',hl:t('alert_goal',{name:best.name,pct:pct2}),desc:t('alert_goal_desc',{monthly:fmt(best.monthly,best.curr),months:m2})});
     }
   }
   return alerts;
@@ -1023,7 +1529,7 @@ function buildAlerts(){
 function renderTxPage(){
   var all=getModeTx();
   var filtered=txFilter==='all'?all:all.filter(function(t){return t.type===txFilter;});
-  var listHTML=filtered.length?filtered.map(txItem).join(''):'<div class="empty-state"><div class="ei"><i class="ti ti-arrows-sort"></i></div><div class="et">Nenhuma transa\u00e7\u00e3o</div><div class="es">Toque em <strong>+</strong> para adicionar.</div></div>';
+  var listHTML=filtered.length?filtered.map(txItem).join(''):'<div class="empty-state"><div class="ei"><i class="ti ti-arrows-sort"></i></div><div class="et">'+t('tx_empty_t')+'</div><div class="es">'+t('tx_empty_s')+'</div></div>';
   document.getElementById('page-tx').innerHTML='<div class="phdr"><div class="ptitle">Transa\u00e7\u00f5es</div></div><div class="filter-row"><button class="fpill'+(txFilter==='all'?' on':'')+'" onclick="setTxFilter(\'all\')">Todas</button><button class="fpill'+(txFilter==='expense'?' on':'')+'" onclick="setTxFilter(\'expense\')">\u2193 Despesas</button><button class="fpill'+(txFilter==='income'?' on':'')+'" onclick="setTxFilter(\'income\')">\u2191 Receitas</button></div><div class="txl">'+listHTML+'</div>';
 }
 function setTxFilter(f){txFilter=f;renderTxPage();}
@@ -1084,7 +1590,7 @@ function renderGoalsPage(){
       +'<div class="glb"><div class="glf" style="width:'+p+'%"></div></div>'
       +(m?'<div class="gl-mo">'+fmt(g.monthly,g.curr)+'/m\u00eas \u00b7 <span>\u2248 '+m+' meses</span></div>':'<div class="gl-mo" style="color:var(--mu2)">Defina um valor mensal</div>')
       +'</div>';
-  }).join(''):'<div class="empty-state"><div class="ei"><i class="ti ti-target"></i></div><div class="et">Nenhuma meta ainda</div><div class="es">Crie sua primeira meta financeira.</div></div>';
+  }).join(''):'<div class="empty-state"><div class="ei"><i class="ti ti-target"></i></div><div class="et">'+t('gl_empty_t')+'</div><div class="es">'+t('gl_empty_s')+'</div></div>';
   document.getElementById('page-goals').innerHTML='<div class="phdr"><div class="ptitle">Metas</div></div><div class="glg">'+items+'</div><div style="margin-top:14px"><button onclick="openModal(\'goal\')" style="width:100%;padding:14px;border-radius:11px;background:var(--sf);border:1.5px dashed var(--bd2);color:var(--mu);font-size:14px;cursor:pointer;-webkit-tap-highlight-color:transparent">+ Nova Meta</button></div>';
 }
 
@@ -1101,6 +1607,74 @@ function renderAIPage(){
     +'<div class="chat-ir"><textarea class="chat-ta" id="chat-ta" placeholder="Pergunte sobre suas finan\u00e7as..." rows="1" onkeydown="hkey(event)" oninput="aresize(this)"></textarea><button class="sbtn" id="sbtn" onclick="sendMsg()">\u2191</button></div>'
     +'</div>';
 }
+function renderSupportPage(){
+  var pg=document.getElementById('page-support');
+  if(pg.querySelector('.chat-ms'))return;
+  var name=(USER&&USER.name?USER.name:'').split(' ')[0];
+  pg.innerHTML='<div class="phdr"><div><div class="ptitle" data-i18n="page_support">'+t('page_support')+'</div><div class="psub" data-i18n="page_support_sub">'+t('page_support_sub')+'</div></div></div>'
+    +'<div class="ai-lay">'
+    +'<div class="chips">'
+    +'<div class="chip" onclick="suChip(this)">'+t('support_chip1')+'</div>'
+    +'<div class="chip" onclick="suChip(this)">'+t('support_chip2')+'</div>'
+    +'<div class="chip" onclick="suChip(this)">'+t('support_chip3')+'</div>'
+    +'<div class="chip" onclick="suChip(this)">'+t('support_chip4')+'</div>'
+    +'</div>'
+    +'<div class="chat-ms" id="support-ms">'
+    +'<div class="cmsg"><div class="mav ai"><i class="ti ti-headset"></i></div>'
+    +'<div class="mb ai"><p>'+t('support_greeting')+'</p></div></div>'
+    +'</div>'
+    +'<div class="chat-ir"><textarea class="chat-ta" id="support-ta" placeholder="'+t('support_ph')+'" rows="1" onkeydown="suKey(event)" oninput="aresize(this)"></textarea>'
+    +'<button class="sbtn" id="support-sbtn" onclick="sendSupport()"><i class="ti ti-arrow-up"></i></button></div>'
+    +'</div>';
+}
+
+function sendSupport(){
+  var inp=document.getElementById('support-ta');
+  if(!inp)return;
+  var msg=inp.value.trim();
+  if(!msg)return;
+  inp.value='';inp.style.height='';
+  var ms=document.getElementById('support-ms');
+  var initials=USER&&USER.name?USER.name[0].toUpperCase():'?';
+  ms.innerHTML+='<div class="cmsg usr"><div class="mav usr">'+initials+'</div><div class="mb usr">'+escH(msg)+'</div></div>';
+  ms.innerHTML+='<div class="cmsg" id="su-typ"><div class="mav ai"><i class="ti ti-headset"></i></div><div class="mb ai"><div class="typing"><div class="td"></div><div class="td"></div><div class="td"></div></div></div></div>';
+  ms.scrollTop=99999;
+  var sbtn=document.getElementById('support-sbtn');
+  if(sbtn)sbtn.disabled=true;
+  var langNames={pt:'Brazilian Portuguese',en:'English',es:'Spanish'};
+  var langName=langNames[LANG]||'Brazilian Portuguese';
+  var userName=(USER&&USER.name)||'unknown';
+  var sysLines=[
+    'You are a friendly customer support assistant for Cento, a personal finance app.',
+    'The app helps Brazilians manage finances in Brazil and/or the USA.',
+    'Always respond in '+langName+'.',
+    'Be warm, helpful, and concise.',
+    'App features: transactions, budgets by category, savings goals, AI financial advisor.',
+    'For password reset: go to login, tap forgot password.',
+    'For account issues: contact support@cento.app.',
+    'User: '+userName+' | Language: '+LANG
+  ];
+  var sysStr=sysLines.join(' ');
+  fetch('https://api.anthropic.com/v1/messages',{
+    method:'POST',
+    headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:500,system:sysStr,messages:[{role:'user',content:msg}]})
+  }).then(function(r){return r.json();})
+  .then(function(d){
+    var reply=d.content&&d.content[0]&&d.content[0].text||'Sorry, try again.';
+    var typ=document.getElementById('su-typ');if(typ)typ.remove();
+    var ms2=document.getElementById('support-ms');
+    if(ms2){ms2.innerHTML+='<div class="cmsg"><div class="mav ai"><i class="ti ti-headset"></i></div><div class="mb ai">'+md2html(reply)+'</div></div>';ms2.scrollTop=99999;}
+  }).catch(function(){
+    var typ=document.getElementById('su-typ');if(typ)typ.remove();
+  }).finally(function(){
+    var sb2=document.getElementById('support-sbtn');if(sb2)sb2.disabled=false;
+  });
+}
+
+function suChip(el){var ta=document.getElementById('support-ta');if(ta){ta.value=el.textContent.trim();sendSupport();}}
+function suKey(e){if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();sendSupport();}}
+
 function getCtx(){
   var txs=getModeTx();
   var inc=txs.filter(function(t){return t.type==='income';}).reduce(function(s,t){return s+Math.abs(t.amount);},0);
@@ -1186,6 +1760,19 @@ function openEditBudget(cat){
   document.getElementById('modal-budget').classList.add('open');
 }
 function closeModal(w){document.getElementById('modal-'+w).classList.remove('open');}
+function openLangModal(){
+  document.querySelectorAll('.lang-opt-btn').forEach(function(b){b.classList.toggle('active',b.dataset.lang===LANG);});
+  document.getElementById('modal-lang').classList.add('open');
+}
+function selectLang(l){
+  setLang(l);
+  if(USER&&currentUser){
+    var prof=USER.profile||{};prof.lang=l;USER.profile=prof;
+    sb.from('profiles').update({profile:prof}).eq('id',currentUser.id);
+  }
+  document.querySelectorAll('.lang-opt-btn').forEach(function(b){b.classList.toggle('active',b.dataset.lang===l);});
+  setTimeout(function(){closeModal('lang');renderPage(activePage);},300);
+}
 document.querySelectorAll('.modal-ov').forEach(function(ov){ov.addEventListener('click',function(e){if(e.target===ov)ov.classList.remove('open');});});
 
 function setType(t){txType=t;syncTypeUI();buildCatGrid();}
@@ -1268,5 +1855,33 @@ function saveBudget(){
   });
 }
 </script>
+
+<!-- MODAL LANG -->
+<div class="modal-ov" id="modal-lang">
+<div class="modal" style="padding-bottom:max(calc(var(--sab) + 24px), 24px)">
+  <div class="modal-pill"></div>
+  <div class="modal-hdr">
+    <div class="modal-t" data-i18n="lang_title">Idioma</div>
+    <button class="modal-close" onclick="closeModal('lang')" aria-label="Fechar"><i class="ti ti-x"></i></button>
+  </div>
+  <div style="display:flex;flex-direction:column;gap:10px">
+    <button class="lang-opt-btn" data-lang="pt" onclick="selectLang('pt')">
+      <div style="font-size:28px">&#127463;&#127479;</div>
+      <div><div style="font-size:15px;font-weight:600;margin-bottom:2px">Portugu&#234;s</div><div style="font-size:12px;color:var(--mu)">Brasil</div></div>
+      <i class="ti ti-check lang-check" style="margin-left:auto;font-size:20px;color:var(--ac);display:none"></i>
+    </button>
+    <button class="lang-opt-btn" data-lang="en" onclick="selectLang('en')">
+      <div style="font-size:28px">&#127482;&#127480;</div>
+      <div><div style="font-size:15px;font-weight:600;margin-bottom:2px">English</div><div style="font-size:12px;color:var(--mu)">United States</div></div>
+      <i class="ti ti-check lang-check" style="margin-left:auto;font-size:20px;color:var(--ac);display:none"></i>
+    </button>
+    <button class="lang-opt-btn" data-lang="es" onclick="selectLang('es')">
+      <div style="font-size:28px">&#127466;&#127480;</div>
+      <div><div style="font-size:15px;font-weight:600;margin-bottom:2px">Espa&#241;ol</div><div style="font-size:12px;color:var(--mu)">Latinoam&#233;rica</div></div>
+      <i class="ti ti-check lang-check" style="margin-left:auto;font-size:20px;color:var(--ac);display:none"></i>
+    </button>
+  </div>
+</div>
+</div>
 </body>
 </html>
