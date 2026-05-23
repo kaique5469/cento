@@ -953,7 +953,8 @@ function renderHome(){
   dot.style.display=alerts.filter(function(a){return a.type==='danger';}).length?'block':'none';
   var modeBar='';
   if(USER.mode!=='br'){modeBar='<div class="currency-bar"><div class="cbar-info">1 USD = <strong>R$\u00a0'+USD_RATE+'</strong></div><div class="ctog"><button class="cb brl'+(viewCurr==='brl'?' on':'')+'" onclick="setView(\'brl\')">R$</button><button class="cb usd'+(viewCurr==='usd'?' on':'')+'" onclick="setView(\'usd\')">$</button></div></div>';}
-  var alertsHTML=alerts.length?alerts.map(function(a){return'<div class="al '+a.type+'"><div class="al-ico">'+a.icon+'</div><div class="al-body"><div class="al-hl '+a.type+'">'+a.hl+'</div><div class="al-desc">'+a.desc+'</div></div></div>';}).join(''):'<div style="font-size:12px;color:var(--mu);padding:10px 0">\ud83d\udfe2 Tudo certo! Nenhum alerta este m\u00eas.</div>';
+    var ALERT_ICONS={danger:'<i class="ti ti-alert-triangle" style="color:var(--rd)"></i>',warning:'<i class="ti ti-alert-circle" style="color:var(--or)"></i>',tip:'<i class="ti ti-target" style="color:var(--ac)"></i>',info:'<i class="ti ti-info-circle" style="color:var(--bl)"></i>'};
+  var alertsHTML=alerts.length?alerts.map(function(a){return'<div class="al '+a.type+'"><div class="al-ico">'+(ALERT_ICONS[a.type]||'')+'</div><div class="al-body"><div class="al-hl '+a.type+'">'+(a.hl||'')+'</div><div class="al-desc">'+(a.desc||'')+'</div></div></div>';}).join(''):'<div style="font-size:13px;color:var(--mu);padding:10px 0">Tudo certo! Nenhum alerta este mes.</div>'
   var recent=getModeTx().slice(0,5);
   var recentHTML=recent.length?recent.map(txItem).join(''):'<div class="empty-state"><div class="ei"><i class="ti ti-arrows-sort"></i></div><div class="et">Nenhuma transa\u00e7\u00e3o</div><div class="es">Toque em <strong>+</strong> para adicionar.</div></div>';
   var now=new Date();var months=['\u200bJaneiro','Fevereiro','Mar\u00e7o','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
@@ -986,19 +987,31 @@ function renderFlowChart(){
 }
 
 function buildAlerts(){
-  var txs=getMonthTx(),alerts=[];
+  var txs=getMonthTx();
+  var alerts=[];
   var inc=txs.filter(function(t){return t.type==='income';}).reduce(function(s,t){return s+Math.abs(cvtAmt(t.amount,t.curr));},0);
   var exp=txs.filter(function(t){return t.type==='expense';}).reduce(function(s,t){return s+Math.abs(cvtAmt(t.amount,t.curr));},0);
-  if(BUDGETS)BUDGETS.forEach(function(b){var s=catSpent(b.cat);var p=b.limit_val>0?(s/b.limit_val)*100:0;if(p>100)alerts.push({type:'danger',icon:'\ud83d\udea8',hl:'Or\u00e7amento de '+b.label+' excedido',desc:'Gastou '+fmtV(s)+' de '+fmtV(b.limit_val)+' ('+p.toFixed(0)+'%).'});else if(p>80)alerts.push({type:'warning',icon:'\u26a0\ufe0f',hl:b.label+' em '+p.toFixed(0)+'% do limite',desc:'Faltam '+fmtV(b.limit_val-s)+' para o limite.'});});
-  if(inc>0&&exp>inc)alerts.push({type:'danger',icon:'\ud83d\udcc9',hl:'Despesas superaram receitas',desc:'Voc\u00ea gastou '+fmtV(exp-inc)+' a mais do que recebeu.'});
-  else if(inc===0&&exp>0)alerts.push({type:'info',icon:'\ud83d\udcca',hl:'Nenhuma receita registrada',desc:'Adicione suas entradas para ver o saldo real.'});
-  if(GOALS.length){var best=GOALS.slice().sort(function(a,b){return(b.current_val/b.target)-(a.current_val/a.target);})[0];if(best&&best.monthly>0){var m2=Math.ceil((best.target-best.current_val)/best.monthly);alerts.push({type:'tip',icon:'\ud83c\udfaf',hl:'"'+best.name+'" em '+((best.current_val/best.target)*100).toFixed(0)+'%',desc:'Continue poupando '+fmt(best.monthly,best.curr)+'/m\u00eas \u2014 '+m2+' meses para a meta.});}}
+  if(BUDGETS) {
+    BUDGETS.forEach(function(b){
+      var s=catSpent(b.cat);
+      var p=b.limit_val>0?(s/b.limit_val)*100:0;
+      if(p>100) alerts.push({type:'danger',hl:'Or\u00e7amento de '+b.label+' excedido',desc:'Gastou '+fmtV(s)+' de '+fmtV(b.limit_val)+' ('+p.toFixed(0)+'%).'});
+      else if(p>80) alerts.push({type:'warning',hl:b.label+' em '+p.toFixed(0)+'% do limite',desc:'Faltam '+fmtV(b.limit_val-s)+' para o limite.'});
+    });
+  }
+  if(inc>0&&exp>inc) alerts.push({type:'danger',hl:'Despesas superaram receitas',desc:'Voc\u00ea gastou '+fmtV(exp-inc)+' a mais do que recebeu.'});
+  else if(inc===0&&exp>0) alerts.push({type:'info',hl:'Nenhuma receita registrada',desc:'Adicione suas entradas para ver o saldo real.'});
+  if(GOALS.length){
+    var best=GOALS.slice().sort(function(a,b){return(b.current_val/b.target)-(a.current_val/a.target);})[0];
+    if(best&&best.monthly>0){
+      var m2=Math.ceil((best.target-best.current_val)/best.monthly);
+      var pct2=((best.current_val/best.target)*100).toFixed(0);
+      alerts.push({type:'tip',hl:best.name+' em '+pct2+'%',desc:'Poupando '+fmt(best.monthly,best.curr)+'/mes - '+m2+' meses para a meta.'});
+    }
+  }
   return alerts;
 }
 
-// \u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550
-//  TRANSACTIONS
-// \u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550
 function renderTxPage(){
   var all=getModeTx();
   var filtered=txFilter==='all'?all:all.filter(function(t){return t.type===txFilter;});
@@ -1036,7 +1049,7 @@ function renderBudgetPage(){
     var ico=BUDGET_ICONS[b.cat]||'wallet';
     return'<div class="bgi'+(ov?' ov':'')+'" onclick="openEditBudget(\''+b.cat+'\')">'
       +'<div class="bg-top"><div class="bg-ico" style="background:'+(b.color||'#C9F15B')+'22"><i class="ti ti-'+ico+'" style="color:'+(b.color||'#C9F15B')+'"></i></div>'
-      +'<div class="bg-info"><div class="bg-nm">'+b.label+'</div><div class="bg-vs">'+fmtV(s)+' de '+fmtV(b.limit_val)+'+'</div></div><span class="bg-sts '+sts+'">'+stsL+'</span></div>'
+      +'<div class="bg-info"><div class="bg-nm">'+b.label+'</div><div class="bg-vs">'+fmtV(s)+' de '+fmtV(b.limit_val)+'</div></div><span class="bg-sts '+sts+'">'+stsL+'</span></div>'
       +'<div class="bgb"><div class="bgf" style="width:'+p+'%;background:'+bc+'"></div></div>'
       +'</div>';
   }).join('');
