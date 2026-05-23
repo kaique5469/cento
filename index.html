@@ -11,7 +11,7 @@
 <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 180 180'><rect width='180' height='180' rx='40' fill='%230a0a08'/><circle cx='65' cy='90' r='9' fill='%23c8f05a'/><text x='80' y='115' font-family='Georgia,serif' font-size='68' fill='%23f0efe8'>C</text></svg>">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.31.0/dist/tabler-icons.min.css">
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
@@ -574,7 +574,12 @@ button,input,textarea,select{font-family:'Inter',sans-serif;-webkit-appearance:n
 // \u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550
 var SUPA_URL = 'https://nxtolmtfnyrlvewjtdwy.supabase.co';
 var SUPA_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im54dG9sbXRmbnlybHZld2p0ZHd5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzk0OTkyMDAsImV4cCI6MjA5NTA3NTIwMH0.zMhKvx7_Y5ES7WMFTQJ1mpPlZTENaGDXKULBS08Ig-Q';
-var sb = supabase.createClient(SUPA_URL, SUPA_KEY);
+var sb;
+try {
+  sb = window.supabase ? window.supabase.createClient(SUPA_URL, SUPA_KEY) : supabase.createClient(SUPA_URL, SUPA_KEY);
+} catch(e) {
+  console.error('Supabase init error:', e);
+}
 
 // \u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550
 //  STATE
@@ -700,8 +705,11 @@ function doSignup() {
   sb.auth.signUp({email:email, password:pass, options:{data:{name:name}}}).then(function(res) {
     btn.classList.remove('loading'); btn.textContent = 'Criar conta';
     if (res.error) { showErr(res.error.message); return; }
-    if (res.data && res.data.user && !res.data.session) {
-      showOk('Confirme seu e-mail para continuar!');
+    if (res.data && res.data.user) {
+      if (!res.data.session) {
+        showOk('Verifique seu e-mail para confirmar o cadastro. Depois fa\u00E7a login.');
+      }
+      // if session exists, onAuthStateChange will handle redirect
     }
   });
 }
