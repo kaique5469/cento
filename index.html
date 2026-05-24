@@ -1151,8 +1151,8 @@ function callPlanAI(cb){
     +' | D\u00edvidas: '+(p.debt||0)+' | Desafio: '+(p.challenge||'?')+' | Meta: '+(p.goal||'?')
     +'\nUse **negrito** para valores chave. Sections: ### Diagn\u00f3stico, ### Plano 30 dias, ### Meta Principal.'
     +'\nM\u00e1x 250 palavras. Direto e acion\u00e1vel.';
-  fetch('https://api.anthropic.com/v1/messages',{
-    method:'POST',headers:{'Content-Type':'application/json'},
+  fetch('https://nxtolmtfnyrlvewjtdwy.supabase.co/functions/v1/ai-proxy',{
+    method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+SUPA_KEY},
     body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:600,messages:[{role:'user',content:prompt}]})
   }).then(function(r){return r.json();})
     .then(function(d){cb(d.content&&d.content[0]&&d.content[0].text||null);})
@@ -1643,7 +1643,7 @@ function sendAI(){
   CHAT.push({role:'user',content:msg});
   var sb2=document.getElementById('ai-send'); if(sb2)sb2.disabled=true;
   var sys='Voce e o Cento, assistente financeiro para brasileiros. Responda em portugues brasileiro. Use **negrito** para valores. Seja direto e acionavel.\n'+aiCtx();
-  fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:800,system:sys,messages:CHAT})})
+  fetch('https://nxtolmtfnyrlvewjtdwy.supabase.co/functions/v1/ai-proxy',{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+SUPA_KEY},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:800,system:sys,messages:CHAT})})
   .then(function(r){return r.json();})
   .then(function(d){
     var reply=d.content&&d.content[0]&&d.content[0].text||'Erro. Tente novamente.';
@@ -1690,7 +1690,7 @@ function sendSupport(){
   var sbtn=document.getElementById('sup-send'); if(sbtn)sbtn.disabled=true;
   var langMap={pt:'Brazilian Portuguese',en:'English',es:'Spanish'};
   var sys='You are a helpful support assistant for Cento, a personal finance app for Brazilians. Respond in '+( langMap[LANG]||'Brazilian Portuguese')+'. Be warm, concise, helpful. Features: transactions, budgets, goals, risk analysis, 12-month plan, investments, AI chat. For password: forgot password on login screen. Contact: support@cento.app';
-  fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:400,system:sys,messages:[{role:'user',content:msg}]})})
+  fetch('https://nxtolmtfnyrlvewjtdwy.supabase.co/functions/v1/ai-proxy',{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+SUPA_KEY},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:400,system:sys,messages:[{role:'user',content:msg}]})})
   .then(function(r){return r.json();})
   .then(function(d){
     var reply=d.content&&d.content[0]&&d.content[0].text||'Desculpe, tente novamente.';
