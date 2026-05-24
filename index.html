@@ -7,9 +7,9 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Cento">
 <meta name="theme-color" content="#0a0a0a">
-<title>Cento</title>
+<title>Cento &mdash; Finan&ccedil;as Inteligentes</title>
 <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 180 180'><rect width='180' height='180' rx='40' fill='%230a0a0a'/><circle cx='62' cy='90' r='10' fill='%23c8f05a'/><text x='78' y='118' font-family='Georgia,serif' font-size='72' fill='%23f0efe8'>C</text></svg>">
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.31.0/dist/tabler-icons.min.css">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
@@ -32,33 +32,42 @@
 html{height:100%;background:var(--bg);-webkit-text-size-adjust:100%}
 body{font-family:'Inter',system-ui,sans-serif;background:var(--bg);color:var(--tx);min-height:100%;min-height:-webkit-fill-available;overflow-x:hidden}
 button,input,textarea,select{font-family:inherit;-webkit-appearance:none;appearance:none;border-radius:0;outline:none}
-img{display:block}
-
-/* ── LOADING ── */
-#loading{position:fixed;inset:0;background:var(--bg);z-index:9999;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px}
+/* CANVAS */
+#bg-canvas{position:fixed;top:0;left:0;width:100%;height:100%;z-index:0;pointer-events:none;background:#0a0a0a}
+/* STACKING */
+#loading,#auth,#ob,#landing{position:fixed;inset:0;z-index:8000}
+#app{position:relative;z-index:1;background:transparent}
+#loading{background:transparent;z-index:9999}
+#auth{background:transparent;z-index:8200}
+#ob{background:transparent;z-index:8100}
+#landing{background:transparent;z-index:8300;display:none;overflow-y:auto;-webkit-overflow-scrolling:touch;flex-direction:column}
+.modal-overlay{z-index:800}
+#drawer-overlay{z-index:700}
+#drawer{z-index:701}
+#sup-fab{z-index:300}
+#sup-panel{z-index:299}
+/* LOADING */
+#loading{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px}
 .ld-logo{font-size:26px;font-weight:700;letter-spacing:-1px;display:flex;align-items:center;gap:8px}
 .ld-dot{width:8px;height:8px;background:var(--ac);border-radius:50%;animation:ldp 1.4s ease-in-out infinite}
 .ld-txt{font-size:13px;color:var(--mu)}
 @keyframes ldp{0%,100%{transform:scale(.6);opacity:.4}50%{transform:scale(1);opacity:1}}
-
-/* ── AUTH ── */
-#auth{position:fixed;inset:0;background:var(--bg);z-index:9000;display:none;flex-direction:column;justify-content:center;padding:24px;overflow-y:auto;-webkit-overflow-scrolling:touch}
+/* AUTH */
+#auth{display:none;flex-direction:column;justify-content:center;padding:24px;overflow-y:auto;-webkit-overflow-scrolling:touch}
 .auth-inner{width:100%;max-width:400px;margin:0 auto}
 .auth-logo{font-size:28px;font-weight:700;letter-spacing:-1.2px;display:flex;align-items:center;gap:9px;margin-bottom:5px}
 .auth-logo-dot{width:9px;height:9px;background:var(--ac);border-radius:50%}
 .auth-sub{font-size:14px;color:var(--mu);margin-bottom:20px}
-/* lang picker */
 .lang-row{display:flex;gap:8px;margin-bottom:24px}
 .lang-btn{flex:1;padding:10px 6px;border-radius:12px;border:1.5px solid var(--bd2);background:var(--sf);color:var(--mu);font-size:13px;font-weight:500;cursor:pointer;transition:all .15s;text-align:center}
 .lang-btn.on{border-color:var(--ac);color:var(--ac);background:var(--ac2)}
-/* tabs */
 .auth-tabs{display:flex;background:var(--sf2);border-radius:14px;padding:4px;margin-bottom:20px;gap:4px}
 .auth-tab{flex:1;padding:11px;border-radius:11px;border:none;background:none;color:var(--mu);font-size:14px;font-weight:500;cursor:pointer;transition:all .2s}
 .auth-tab.on{background:var(--sf);color:var(--tx);box-shadow:0 2px 8px rgba(0,0,0,.4)}
 .auth-form{display:flex;flex-direction:column;gap:14px}
 .af-field{display:flex;flex-direction:column;gap:6px}
 .af-lbl{font-size:12px;font-weight:600;color:var(--mu);text-transform:uppercase;letter-spacing:.4px}
-.af-inp{width:100%;padding:15px 16px;background:var(--sf);border:1.5px solid var(--bd2);border-radius:14px;color:var(--tx);font-size:16px}
+.af-inp{width:100%;padding:15px 16px;background:rgba(22,22,21,.8);border:1.5px solid var(--bd2);border-radius:14px;color:var(--tx);font-size:16px;-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px)}
 .af-inp:focus{border-color:var(--ac)}
 .af-inp::placeholder{color:var(--mu2)}
 .af-btn{width:100%;padding:16px;border-radius:14px;background:var(--ac);color:#0a0a0a;font-size:16px;font-weight:700;border:none;cursor:pointer;margin-top:4px;letter-spacing:-.3px}
@@ -70,9 +79,8 @@ img{display:block}
 .af-msg.show{display:block}
 .af-link{font-size:13px;color:var(--mu);text-align:center;cursor:pointer;margin-top:6px}
 .af-link b{color:var(--ac);font-weight:500}
-
-/* ── ONBOARDING ── */
-#ob{position:fixed;inset:0;background:var(--bg);z-index:8000;display:none;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:max(var(--sat),28px) 20px calc(var(--sab)+28px)}
+/* ONBOARDING */
+#ob{display:none;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:max(var(--sat),28px) 20px calc(var(--sab)+28px)}
 .ob-wrap{max-width:480px;margin:0 auto}
 .ob-logo{font-size:20px;font-weight:700;letter-spacing:-1px;display:flex;align-items:center;gap:7px;margin-bottom:4px}
 .ob-logo-dot{width:7px;height:7px;background:var(--ac);border-radius:50%}
@@ -86,7 +94,7 @@ img{display:block}
 .ob-hint{font-size:14px;color:var(--mu);margin-bottom:18px;line-height:1.6}
 .ob-options{display:flex;flex-direction:column;gap:10px;margin-bottom:18px}
 .ob-options.grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.ob-opt{padding:14px 16px;border-radius:16px;border:1.5px solid var(--bd2);background:var(--sf);cursor:pointer;display:flex;align-items:center;gap:12px;text-align:left;transition:all .15s;position:relative}
+.ob-opt{padding:14px 16px;border-radius:16px;border:1.5px solid var(--bd2);background:rgba(22,22,21,.7);cursor:pointer;display:flex;align-items:center;gap:12px;text-align:left;transition:all .15s;position:relative;-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px)}
 .ob-opt:active,.ob-opt.sel{border-color:var(--ac);background:var(--ac2)}
 .ob-opt.sel::after{content:'\ea5e';font-family:'tabler-icons';position:absolute;right:14px;top:50%;transform:translateY(-50%);color:var(--ac);font-size:18px}
 .ob-options.grid2 .ob-opt{flex-direction:column;align-items:flex-start;gap:6px;padding:14px 12px}
@@ -102,18 +110,18 @@ img{display:block}
 .ob-numgrid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:18px}
 .ob-numfield{display:flex;flex-direction:column;gap:6px}
 .ob-numlbl{font-size:11px;font-weight:600;color:var(--mu);text-transform:uppercase;letter-spacing:.4px}
-.ob-numinp{width:100%;padding:13px 14px;background:var(--sf);border:1.5px solid var(--bd2);border-radius:12px;color:var(--tx);font-size:16px;-webkit-appearance:none}
+.ob-numinp{width:100%;padding:13px 14px;background:rgba(22,22,21,.8);border:1.5px solid var(--bd2);border-radius:12px;color:var(--tx);font-size:16px;-webkit-appearance:none}
 .ob-numinp:focus{border-color:var(--ac)}
 .ob-numinp::placeholder{color:var(--mu2)}
 .ob-generating{text-align:center;padding:20px 0}
 .ob-spin{font-size:36px;display:inline-block;animation:spin 3s linear infinite;margin-bottom:14px}
 @keyframes spin{to{transform:rotate(360deg)}}
 .ob-gen-steps{display:flex;flex-direction:column;gap:8px;margin:18px 0;text-align:left}
-.ob-gen-step{display:flex;align-items:center;gap:10px;padding:12px 14px;border-radius:13px;background:var(--sf);border:1px solid var(--bd);font-size:13px;color:var(--mu);transition:all .3s}
+.ob-gen-step{display:flex;align-items:center;gap:10px;padding:12px 14px;border-radius:13px;background:rgba(22,22,21,.7);border:1px solid var(--bd);font-size:13px;color:var(--mu);transition:all .3s;-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px)}
 .ob-gen-step i{font-size:16px}
 .ob-gen-step.act{color:var(--tx);border-color:var(--bd2)}
 .ob-gen-step.done{color:var(--ac);border-color:var(--ac3);background:var(--ac2)}
-.ob-plan-card{background:var(--sf);border:1px solid var(--bd2);border-radius:20px;padding:20px;margin-bottom:18px}
+.ob-plan-card{background:rgba(22,22,21,.8);border:1px solid var(--bd2);border-radius:20px;padding:20px;margin-bottom:18px;-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px)}
 .ob-plan-head{font-size:11px;color:var(--mu);margin-bottom:7px;font-weight:500}
 .ob-plan-title{font-size:17px;font-weight:700;color:var(--ac);margin-bottom:12px;letter-spacing:-.3px}
 .ob-plan-body{font-size:14px;line-height:1.8;color:var(--tx)}
@@ -123,57 +131,43 @@ img{display:block}
 .ob-plan-body li{margin-bottom:4px}
 .ob-plan-body p{margin-bottom:8px}
 .ob-plan-body p:last-child{margin-bottom:0}
-
-/* ── APP SHELL ── */
+/* APP SHELL */
 #app{display:none;flex-direction:column;min-height:100vh;min-height:-webkit-fill-available}
-
-/* TOP BAR */
-.top-bar{position:sticky;top:0;z-index:200;background:var(--sf);border-bottom:1px solid var(--bd);display:flex;align-items:center;padding:calc(var(--sat) + 12px) 16px 12px}
-.tb-menu{width:42px;height:42px;border-radius:12px;border:none;background:var(--sf2);color:var(--tx);cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.top-bar{position:sticky;top:0;z-index:200;background:rgba(12,12,11,.88);border-bottom:1px solid rgba(200,240,90,.07);display:flex;align-items:center;padding:calc(var(--sat) + 12px) 16px 12px;-webkit-backdrop-filter:blur(24px);backdrop-filter:blur(24px)}
+.tb-menu{width:42px;height:42px;border-radius:12px;border:none;background:rgba(30,30,28,.7);color:var(--tx);cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0}
 .tb-menu i{font-size:20px}
 .tb-title{flex:1;text-align:center;font-size:18px;font-weight:700;letter-spacing:-1px;display:flex;align-items:center;justify-content:center;gap:7px}
 .tb-title-dot{width:6px;height:6px;background:var(--ac);border-radius:50%}
-.tb-lang{width:42px;height:42px;border-radius:12px;border:none;background:var(--sf2);color:var(--mu);cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.tb-lang{width:42px;height:42px;border-radius:12px;border:none;background:rgba(30,30,28,.7);color:var(--mu);cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0}
 .tb-lang i{font-size:20px}
-
-/* CONTENT */
 .content{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:18px 16px calc(var(--nav-h) + var(--sab) + 80px)}
-
-/* PAGES */
 .page{display:none}.page.on{display:block;animation:fadeUp .18s ease}
 .page-hdr{margin-bottom:18px}
 .page-title{font-size:24px;font-weight:700;letter-spacing:-.8px;margin-bottom:3px}
 .page-sub{font-size:13px;color:var(--mu)}
-
 /* BOTTOM NAV */
-.bot-nav{position:fixed;bottom:0;left:0;right:0;z-index:200;background:rgba(14,14,13,.95);border-top:1px solid var(--bd);-webkit-backdrop-filter:blur(20px);backdrop-filter:blur(20px);height:calc(var(--nav-h) + var(--sab));display:flex;align-items:flex-start;padding-top:8px}
+.bot-nav{position:fixed;bottom:0;left:0;right:0;z-index:200;background:rgba(8,8,8,.93);border-top:1px solid rgba(200,240,90,.06);height:calc(var(--nav-h) + var(--sab));display:flex;align-items:flex-start;padding-top:8px;-webkit-backdrop-filter:blur(20px);backdrop-filter:blur(20px)}
 .nav-btn{flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;border:none;background:none;color:var(--mu);font-size:10px;font-weight:600;cursor:pointer;padding:6px 2px;transition:color .15s;letter-spacing:.2px;min-width:0;position:relative}
 .nav-btn i{font-size:24px;line-height:1;transition:transform .15s}
 .nav-btn.on{color:var(--ac)}
 .nav-btn.on i{transform:scale(1.1)}
 .nav-alert{position:absolute;top:5px;right:calc(50% - 15px);width:6px;height:6px;background:var(--rd);border-radius:50%;border:1.5px solid var(--bg);display:none}
-/* FAB add button */
 .nav-fab-wrap{flex-shrink:0;display:flex;flex-direction:column;align-items:center;gap:4px;padding:0 4px;margin-top:-14px}
 .nav-fab{width:56px;height:56px;border-radius:18px;background:var(--ac);color:#0a0a0a;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 20px rgba(200,240,90,.5);transition:transform .15s,box-shadow .15s;flex-shrink:0}
 .nav-fab:active{transform:scale(.92);box-shadow:0 2px 10px rgba(200,240,90,.3)}
 .nav-fab i{font-size:26px}
 .nav-fab-lbl{font-size:10px;font-weight:600;color:var(--ac);letter-spacing:.2px}
-
 /* CARDS */
 .kpi-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:16px}
-.kpi-card{background:var(--sf);border:1px solid var(--bd);border-radius:16px;padding:14px 12px}
+.kpi-card{background:rgba(22,22,21,.75);border:1px solid rgba(255,255,255,.09);border-radius:16px;padding:14px 12px;-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px)}
 .kpi-label{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.6px;color:var(--mu);margin-bottom:8px}
 .kpi-val{font-size:18px;font-weight:700;letter-spacing:-.6px;line-height:1;margin-bottom:2px}
 .kpi-val.green{color:var(--ac)}.kpi-val.red{color:var(--rd)}.kpi-val.blue{color:var(--bl)}
-
-/* SECTION HEADER */
 .sec-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
 .sec-title{font-size:15px;font-weight:700;letter-spacing:-.3px}
 .sec-link{font-size:13px;color:var(--ac);font-weight:500;border:none;background:none;cursor:pointer;padding:4px 0}
-
-/* ALERT CARDS */
 .alert-list{display:flex;flex-direction:column;gap:8px;margin-bottom:16px}
-.alert-card{display:flex;align-items:flex-start;gap:12px;padding:14px;border-radius:14px;border:1px solid}
+.alert-card{display:flex;align-items:flex-start;gap:12px;padding:14px;border-radius:14px;border:1px solid;-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px)}
 .alert-card.red{background:var(--rd2);border-color:var(--rd3)}
 .alert-card.orange{background:var(--or2);border-color:var(--or3)}
 .alert-card.green{background:var(--ac2);border-color:var(--ac3)}
@@ -184,11 +178,9 @@ img{display:block}
 .alert-title{font-size:13px;font-weight:700;margin-bottom:3px}
 .alert-title.red{color:var(--rd)}.alert-title.orange{color:var(--or)}.alert-title.green{color:var(--ac)}.alert-title.blue{color:var(--bl)}.alert-title.purple{color:var(--pu)}
 .alert-desc{font-size:12px;color:var(--mu);line-height:1.6}
-
-/* TX LIST */
 .tx-list{display:flex;flex-direction:column;gap:3px}
-.tx-item{display:flex;align-items:center;gap:13px;padding:13px 14px;border-radius:14px;background:var(--sf);border:1px solid var(--bd);cursor:pointer;transition:background .12s}
-.tx-item:active{background:var(--sf2)}
+.tx-item{display:flex;align-items:center;gap:13px;padding:13px 14px;border-radius:14px;background:rgba(22,22,21,.75);border:1px solid rgba(255,255,255,.08);cursor:pointer;transition:background .12s;-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px)}
+.tx-item:active{background:rgba(30,30,28,.9)}
 .tx-icon{width:40px;height:40px;border-radius:12px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
 .tx-icon i{font-size:20px}
 .tx-body{flex:1;min-width:0}
@@ -201,17 +193,13 @@ img{display:block}
 .tx-amount{font-size:14px;font-weight:700;letter-spacing:-.3px}
 .tx-amount.exp{color:var(--rd)}.tx-amount.inc{color:var(--ac)}
 .tx-conv{font-size:11px;color:var(--mu2);margin-top:2px}
-
-/* EMPTY STATE */
 .empty{text-align:center;padding:48px 20px}
 .empty i{font-size:44px;color:var(--mu2)}
 .empty-title{font-size:16px;font-weight:700;color:var(--tx);margin:14px 0 6px;letter-spacing:-.3px}
 .empty-sub{font-size:14px;color:var(--mu);line-height:1.6}
-
-/* BUDGET */
 .budget-list{display:flex;flex-direction:column;gap:10px;margin-bottom:16px}
-.budget-item{background:var(--sf);border:1px solid var(--bd);border-radius:16px;padding:16px;cursor:pointer;transition:background .12s}
-.budget-item:active{background:var(--sf2)}
+.budget-item{background:rgba(22,22,21,.75);border:1px solid rgba(255,255,255,.08);border-radius:16px;padding:16px;cursor:pointer;transition:background .12s;-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px)}
+.budget-item:active{background:rgba(30,30,28,.9)}
 .budget-item.over{border-color:var(--rd3)}
 .budget-top{display:flex;align-items:center;gap:12px;margin-bottom:12px}
 .budget-ico{width:38px;height:38px;border-radius:11px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
@@ -225,11 +213,9 @@ img{display:block}
 .bb-over{background:var(--rd2);color:var(--rd)}
 .budget-bar{height:6px;background:var(--sf2);border-radius:3px;overflow:hidden}
 .budget-fill{height:100%;border-radius:3px;transition:width .5s ease}
-
-/* GOALS */
 .goals-list{display:flex;flex-direction:column;gap:10px}
-.goal-item{background:var(--sf);border:1px solid var(--bd);border-radius:18px;padding:18px;cursor:pointer;transition:background .12s}
-.goal-item:active{background:var(--sf2)}
+.goal-item{background:rgba(22,22,21,.75);border:1px solid rgba(255,255,255,.08);border-radius:18px;padding:18px;cursor:pointer;transition:background .12s;-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px)}
+.goal-item:active{background:rgba(30,30,28,.9)}
 .goal-top{display:flex;align-items:center;gap:13px;margin-bottom:14px}
 .goal-emoji{width:46px;height:46px;border-radius:14px;background:var(--ac2);border:1px solid var(--ac3);display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0}
 .goal-info{flex:1}
@@ -241,26 +227,22 @@ img{display:block}
 .goal-fill{height:100%;border-radius:4px;background:var(--ac);transition:width .7s ease}
 .goal-footer{font-size:12px;color:var(--mu)}
 .goal-footer span{color:var(--tx);font-weight:600}
-.ghost-btn{width:100%;padding:16px;border-radius:14px;background:var(--sf);border:2px dashed var(--bd2);color:var(--mu);font-size:14px;font-weight:500;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:9px;margin-top:10px}
+.ghost-btn{width:100%;padding:16px;border-radius:14px;background:rgba(22,22,21,.6);border:2px dashed var(--bd2);color:var(--mu);font-size:14px;font-weight:500;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:9px;margin-top:10px;-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px)}
 .ghost-btn i{font-size:19px}
-.ghost-btn:active{background:var(--sf2)}
-
-/* RISK */
-.risk-score-card{background:var(--sf);border:1px solid var(--bd);border-radius:20px;padding:22px;text-align:center;margin-bottom:16px}
+.ghost-btn:active{background:rgba(30,30,28,.9)}
+.risk-score-card{background:rgba(22,22,21,.75);border:1px solid rgba(255,255,255,.08);border-radius:20px;padding:22px;text-align:center;margin-bottom:16px;-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px)}
 .risk-num{font-size:64px;font-weight:800;letter-spacing:-3px;line-height:1;margin-bottom:6px}
 .risk-lbl{font-size:14px;font-weight:600;margin-bottom:4px}
 .risk-hint{font-size:12px;color:var(--mu)}
 .risk-factors{display:flex;flex-direction:column;gap:9px;margin-bottom:16px}
-.risk-factor{background:var(--sf);border:1px solid var(--bd);border-radius:14px;padding:15px;display:flex;align-items:center;gap:13px}
+.risk-factor{background:rgba(22,22,21,.75);border:1px solid rgba(255,255,255,.08);border-radius:14px;padding:15px;display:flex;align-items:center;gap:13px;-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px)}
 .rf-icon{width:40px;height:40px;border-radius:12px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
 .rf-icon i{font-size:20px}
 .rf-body{flex:1}
 .rf-name{font-size:13px;font-weight:600;margin-bottom:3px}
 .rf-desc{font-size:12px;color:var(--mu);line-height:1.5}
 .rf-value{font-size:14px;font-weight:700;text-align:right;flex-shrink:0}
-
-/* PLAN */
-.plan-hero{background:linear-gradient(135deg,var(--ac2),var(--bl2));border:1px solid var(--ac3);border-radius:20px;padding:22px;margin-bottom:18px}
+.plan-hero{background:linear-gradient(135deg,rgba(200,240,90,.1),rgba(77,166,255,.08));border:1px solid rgba(200,240,90,.2);border-radius:20px;padding:22px;margin-bottom:18px;-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px)}
 .plan-hero-lbl{font-size:12px;color:var(--mu);margin-bottom:6px;font-weight:500}
 .plan-hero-val{font-size:38px;font-weight:800;letter-spacing:-2px;color:var(--ac);margin-bottom:4px}
 .plan-hero-sub{font-size:13px;color:var(--mu)}
@@ -268,9 +250,9 @@ img{display:block}
 .plan-month{display:flex;gap:14px;padding-bottom:20px;position:relative}
 .plan-month::before{content:'';position:absolute;left:13px;top:28px;bottom:0;width:2px;background:var(--bd)}
 .plan-month:last-child::before{display:none}
-.pm-dot{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;flex-shrink:0;z-index:1;border:2px solid var(--bd);background:var(--sf);color:var(--mu)}
+.pm-dot{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;flex-shrink:0;z-index:1;border:2px solid var(--bd);background:rgba(14,14,12,.9);color:var(--mu)}
 .pm-dot.now{border-color:var(--ac);background:var(--ac);color:#0a0a0a}
-.pm-card{flex:1;background:var(--sf);border:1px solid var(--bd);border-radius:14px;padding:14px}
+.pm-card{flex:1;background:rgba(22,22,21,.75);border:1px solid rgba(255,255,255,.08);border-radius:14px;padding:14px;-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px)}
 .pm-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
 .pm-name{font-size:13px;font-weight:700}
 .pm-bal{font-size:16px;font-weight:800;letter-spacing:-.5px}
@@ -280,15 +262,13 @@ img{display:block}
 .pm-bar-track{flex:1;height:4px;background:var(--sf2);border-radius:2px;overflow:hidden}
 .pm-bar-fill{height:100%;border-radius:2px}
 .pm-bar-val{font-size:11px;font-weight:600;width:58px;text-align:right;flex-shrink:0}
-
-/* INVEST */
-.invest-hero{background:var(--sf);border:1px solid var(--bd2);border-radius:20px;padding:20px;margin-bottom:16px}
+.invest-hero{background:rgba(22,22,21,.8);border:1px solid rgba(255,255,255,.1);border-radius:20px;padding:20px;margin-bottom:16px;-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px)}
 .invest-hero-lbl{font-size:12px;color:var(--mu);margin-bottom:6px;font-weight:500}
 .invest-hero-val{font-size:34px;font-weight:800;letter-spacing:-1.5px;margin-bottom:6px}
 .invest-change-row{display:flex;align-items:center;gap:6px;font-size:13px;font-weight:600}
 .invest-cards{display:flex;flex-direction:column;gap:8px}
-.invest-card{background:var(--sf);border:1px solid var(--bd);border-radius:14px;padding:15px;display:flex;align-items:center;gap:13px;cursor:pointer;transition:background .12s}
-.invest-card:active{background:var(--sf2)}
+.invest-card{background:rgba(22,22,21,.75);border:1px solid rgba(255,255,255,.08);border-radius:14px;padding:15px;display:flex;align-items:center;gap:13px;cursor:pointer;transition:background .12s;-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px)}
+.invest-card:active{background:rgba(30,30,28,.9)}
 .invest-ico{width:42px;height:42px;border-radius:13px;display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:700;flex-shrink:0}
 .invest-ico i{font-size:20px}
 .invest-body{flex:1}
@@ -299,16 +279,14 @@ img{display:block}
 .invest-chg{font-size:12px;font-weight:700;padding:2px 8px;border-radius:100px;display:inline-block}
 .chg-up{background:var(--ac2);color:var(--ac)}
 .chg-dn{background:var(--rd2);color:var(--rd)}
-.invest-add-btn{width:100%;padding:16px;border-radius:14px;background:var(--sf);border:2px dashed var(--bd2);color:var(--mu);font-size:14px;font-weight:500;cursor:pointer;display:flex;align-items:center;gap:10px;margin-top:10px}
+.invest-add-btn{width:100%;padding:16px;border-radius:14px;background:rgba(22,22,21,.65);border:2px dashed var(--bd2);color:var(--mu);font-size:14px;font-weight:500;cursor:pointer;display:flex;align-items:center;gap:10px;margin-top:10px;-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px)}
 .invest-add-btn i{font-size:20px}
-.invest-add-btn:active{background:var(--sf2)}
-.invest-tip{background:var(--sf);border:1px solid var(--bd);border-radius:16px;padding:16px;margin-top:14px}
+.invest-add-btn:active{background:rgba(30,30,28,.9)}
+.invest-tip{background:rgba(22,22,21,.75);border:1px solid rgba(255,255,255,.08);border-radius:16px;padding:16px;margin-top:14px;-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px)}
 .invest-tip-title{font-size:14px;font-weight:700;margin-bottom:12px;letter-spacing:-.3px}
-
-/* AI CHAT */
 .ai-wrap{display:flex;flex-direction:column;height:calc(100vh - 180px)}
 .ai-chips{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:14px;flex-shrink:0}
-.ai-chip{padding:8px 14px;border-radius:100px;background:var(--sf);border:1.5px solid var(--bd2);font-size:12px;font-weight:500;color:var(--mu);cursor:pointer}
+.ai-chip{padding:8px 14px;border-radius:100px;background:rgba(22,22,21,.8);border:1.5px solid var(--bd2);font-size:12px;font-weight:500;color:var(--mu);cursor:pointer;-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px)}
 .ai-chip:active{border-color:var(--ac);color:var(--ac);background:var(--ac2)}
 .ai-msgs{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;display:flex;flex-direction:column;gap:12px;padding-bottom:12px}
 .ai-msg{display:flex;gap:9px}
@@ -318,7 +296,7 @@ img{display:block}
 .ai-av.bot i{font-size:16px}
 .ai-av.usr{background:var(--sf2);border:1.5px solid var(--bd2);color:var(--mu)}
 .ai-bubble{padding:12px 16px;border-radius:16px;font-size:14px;line-height:1.7;max-width:86%}
-.ai-bubble.bot{background:var(--sf);border:1px solid var(--bd)}
+.ai-bubble.bot{background:rgba(22,22,21,.8);border:1px solid var(--bd);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px)}
 .ai-bubble.usr{background:var(--ac2);border:1px solid var(--ac3)}
 .ai-bubble p{margin-bottom:7px}.ai-bubble p:last-child{margin-bottom:0}
 .ai-bubble strong{color:var(--ac);font-weight:600}
@@ -330,15 +308,13 @@ img{display:block}
 .typing-dot:nth-child(3){animation-delay:.4s}
 @keyframes tdot{0%,80%,100%{transform:scale(.6);opacity:.4}40%{transform:scale(1);opacity:1}}
 .ai-input-row{border-top:1px solid var(--bd);padding-top:12px;display:flex;gap:9px;align-items:flex-end;flex-shrink:0}
-.ai-textarea{flex:1;background:var(--sf);border:1.5px solid var(--bd2);border-radius:14px;padding:12px 14px;color:var(--tx);font-size:15px;resize:none;line-height:1.5;min-height:46px;max-height:110px;-webkit-overflow-scrolling:touch}
+.ai-textarea{flex:1;background:rgba(22,22,21,.8);border:1.5px solid var(--bd2);border-radius:14px;padding:12px 14px;color:var(--tx);font-size:15px;resize:none;line-height:1.5;min-height:46px;max-height:110px;-webkit-overflow-scrolling:touch;-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px)}
 .ai-textarea:focus{border-color:var(--ac)}
 .ai-textarea::placeholder{color:var(--mu2)}
 .ai-send{width:46px;height:46px;border-radius:14px;background:var(--ac);color:#0a0a0a;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0}
 .ai-send i{font-size:20px}
 .ai-send:active{opacity:.85}
-
-/* CURRENCY BAR */
-.curr-bar{display:flex;align-items:center;gap:10px;padding:11px 14px;background:var(--sf);border:1px solid var(--bd);border-radius:14px;margin-bottom:16px}
+.curr-bar{display:flex;align-items:center;gap:10px;padding:11px 14px;background:rgba(22,22,21,.7);border:1px solid rgba(255,255,255,.08);border-radius:14px;margin-bottom:16px;-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px)}
 .curr-info{flex:1;font-size:12px;color:var(--mu)}
 .curr-info strong{color:var(--tx);font-weight:600}
 .curr-toggle{display:flex;gap:3px;background:var(--sf2);border:1px solid var(--bd);border-radius:9px;padding:3px}
@@ -346,25 +322,19 @@ img{display:block}
 .curr-btn.on{background:var(--sf);color:var(--tx)}
 .curr-btn.brl.on{color:var(--ac)}
 .curr-btn.usd.on{color:var(--bl)}
-
-/* FILTERS */
 .filter-row{display:flex;gap:8px;margin-bottom:16px;overflow-x:auto;padding-bottom:2px}
 .filter-row::-webkit-scrollbar{display:none}
-.filter-pill{padding:8px 16px;border-radius:100px;border:1.5px solid var(--bd2);background:var(--sf);color:var(--mu);font-size:13px;font-weight:500;cursor:pointer;white-space:nowrap;flex-shrink:0}
+.filter-pill{padding:8px 16px;border-radius:100px;border:1.5px solid var(--bd2);background:rgba(22,22,21,.7);color:var(--mu);font-size:13px;font-weight:500;cursor:pointer;white-space:nowrap;flex-shrink:0;-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px)}
 .filter-pill.on{border-color:var(--ac);color:var(--ac);background:var(--ac2)}
-
-/* CHART CARD */
-.chart-card{background:var(--sf);border:1px solid var(--bd);border-radius:18px;padding:16px;margin-bottom:14px}
+.chart-card{background:rgba(22,22,21,.75);border:1px solid rgba(255,255,255,.08);border-radius:18px;padding:16px;margin-bottom:14px;-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px)}
 .chart-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px}
 .chart-title{font-size:14px;font-weight:700;letter-spacing:-.3px}
 .chart-sub{font-size:12px;color:var(--mu)}
-
-/* DRAWER */
 #drawer-overlay{position:fixed;inset:0;background:rgba(0,0,0,.65);z-index:700;display:none;-webkit-backdrop-filter:blur(4px);backdrop-filter:blur(4px)}
-#drawer{position:fixed;top:0;right:0;bottom:0;width:290px;background:var(--sf);border-left:1px solid var(--bd2);z-index:701;display:flex;flex-direction:column;transform:translateX(100%);transition:transform .28s cubic-bezier(.4,0,.2,1);overflow-y:auto;-webkit-overflow-scrolling:touch;padding:max(var(--sat),16px) 0 calc(var(--sab)+16px)}
+#drawer{position:fixed;top:0;right:0;bottom:0;width:290px;background:rgba(18,18,17,.95);border-left:1px solid rgba(255,255,255,.1);z-index:701;display:flex;flex-direction:column;transform:translateX(100%);transition:transform .28s cubic-bezier(.4,0,.2,1);overflow-y:auto;-webkit-overflow-scrolling:touch;padding:max(var(--sat),16px) 0 calc(var(--sab)+16px);-webkit-backdrop-filter:blur(24px);backdrop-filter:blur(24px)}
 #drawer.open{transform:translateX(0)}
 .dr-head{padding:18px 18px 16px;border-bottom:1px solid var(--bd)}
-.dr-user-row{display:flex;align-items:center;gap:13px;margin-bottom:14px}
+.dr-user-row{display:flex;align-items:center;gap:13px;margin-bottom:12px}
 .dr-avatar{width:48px;height:48px;border-radius:15px;background:var(--ac);color:#0a0a0a;display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:800;flex-shrink:0}
 .dr-info{flex:1;min-width:0}
 .dr-name{font-size:16px;font-weight:700;letter-spacing:-.3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-bottom:2px}
@@ -375,7 +345,7 @@ img{display:block}
 .dr-sec-lbl{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.9px;color:var(--mu2);padding:0 6px;margin-bottom:6px}
 .dr-item{width:100%;padding:12px 10px;border-radius:12px;border:none;background:none;color:var(--mu);font-size:14px;font-weight:500;cursor:pointer;display:flex;align-items:center;gap:13px;text-align:left;transition:all .12s;margin-bottom:2px}
 .dr-item i{font-size:20px;flex-shrink:0;width:22px}
-.dr-item:active{background:var(--sf2)}
+.dr-item:active{background:rgba(255,255,255,.05)}
 .dr-item.on{background:var(--ac2);color:var(--ac);font-weight:600}
 .dr-item.on i{color:var(--ac)}
 .dr-item.danger{color:var(--rd)}
@@ -384,38 +354,34 @@ img{display:block}
 .dr-add{width:100%;padding:15px;border-radius:14px;background:var(--ac);color:#0a0a0a;font-size:15px;font-weight:700;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:9px}
 .dr-add i{font-size:19px}
 .dr-add:active{opacity:.85}
-
-/* MODALS */
 .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:800;display:none;align-items:flex-end;-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px)}
 .modal-overlay.open{display:flex}
-.modal-sheet{background:var(--sf);border-radius:22px 22px 0 0;padding:20px 20px calc(var(--sab)+22px);width:100%;max-height:90vh;overflow-y:auto;-webkit-overflow-scrolling:touch;animation:sheetUp .26s cubic-bezier(.4,0,.2,1)}
+.modal-sheet{background:rgba(18,18,17,.96);border-radius:22px 22px 0 0;padding:20px 20px calc(var(--sab)+22px);width:100%;max-height:90vh;overflow-y:auto;-webkit-overflow-scrolling:touch;animation:sheetUp .26s cubic-bezier(.4,0,.2,1);-webkit-backdrop-filter:blur(20px);backdrop-filter:blur(20px);border-top:1px solid rgba(255,255,255,.08)}
 @keyframes sheetUp{from{transform:translateY(100%)}to{transform:translateY(0)}}
 .sheet-pill{width:36px;height:4px;background:var(--mu2);border-radius:2px;margin:0 auto 18px}
 .sheet-hdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px}
 .sheet-title{font-size:19px;font-weight:700;letter-spacing:-.4px}
-.sheet-close{width:32px;height:32px;border-radius:50%;background:var(--sf2);border:1px solid var(--bd2);color:var(--mu);cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.sheet-close{width:32px;height:32px;border-radius:50%;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);color:var(--mu);cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0}
 .sheet-close i{font-size:18px}
-/* form */
 .form-field{display:flex;flex-direction:column;gap:6px;margin-bottom:14px}
 .form-label{font-size:12px;font-weight:700;color:var(--mu);text-transform:uppercase;letter-spacing:.4px}
-.form-input{width:100%;padding:14px 15px;background:var(--sf2);border:1.5px solid var(--bd2);border-radius:12px;color:var(--tx);font-size:16px;transition:border-color .15s}
+.form-input{width:100%;padding:14px 15px;background:rgba(22,22,21,.9);border:1.5px solid var(--bd2);border-radius:12px;color:var(--tx);font-size:16px;transition:border-color .15s}
 .form-input:focus{border-color:var(--ac)}
 .form-input::placeholder{color:var(--mu2)}
 .form-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px}
 .form-row .form-field{margin-bottom:0}
-/* toggle buttons */
 .tog-row{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px}
-.tog-btn{padding:13px 10px;border-radius:12px;border:1.5px solid var(--bd2);background:var(--sf2);color:var(--mu);font-size:14px;font-weight:500;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;transition:all .15s}
+.tog-btn{padding:13px 10px;border-radius:12px;border:1.5px solid var(--bd2);background:rgba(22,22,21,.8);color:var(--mu);font-size:14px;font-weight:500;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;transition:all .15s}
 .tog-btn i{font-size:18px}
 .tog-btn.exp{background:var(--rd2);border-color:var(--rd3);color:var(--rd)}
 .tog-btn.inc{background:var(--ac2);border-color:var(--ac3);color:var(--ac)}
 .curr-sel{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px}
-.curr-opt{padding:12px;border-radius:12px;border:1.5px solid var(--bd2);background:var(--sf2);color:var(--mu);font-size:13px;font-weight:500;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:7px}
+.curr-opt{padding:12px;border-radius:12px;border:1.5px solid var(--bd2);background:rgba(22,22,21,.8);color:var(--mu);font-size:13px;font-weight:500;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:7px}
 .curr-opt i{font-size:17px}
 .curr-opt.brl{background:var(--ac2);border-color:var(--ac3);color:var(--ac)}
 .curr-opt.usd{background:var(--bl2);border-color:var(--bl3);color:var(--bl)}
 .cat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:14px}
-.cat-opt{padding:12px 6px;border-radius:12px;border:1.5px solid var(--bd2);background:var(--sf2);color:var(--mu);font-size:11px;font-weight:500;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:6px;transition:all .15s}
+.cat-opt{padding:12px 6px;border-radius:12px;border:1.5px solid var(--bd2);background:rgba(22,22,21,.8);color:var(--mu);font-size:11px;font-weight:500;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:6px;transition:all .15s}
 .cat-opt i{font-size:20px}
 .cat-opt.on{border-color:var(--ac);background:var(--ac2);color:var(--ac)}
 .save-btn{width:100%;padding:16px;border-radius:14px;background:var(--ac);color:#0a0a0a;font-size:15px;font-weight:700;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;margin-top:8px;letter-spacing:-.2px}
@@ -424,22 +390,18 @@ img{display:block}
 .save-btn.busy{opacity:.5;pointer-events:none}
 .del-btn{width:100%;padding:15px;border-radius:14px;background:var(--rd2);color:var(--rd);border:1.5px solid var(--rd3);font-size:15px;font-weight:600;cursor:pointer;margin-top:10px}
 .del-btn:active{opacity:.85}
-
-/* LANG MODAL */
-.lang-option{width:100%;padding:16px;border-radius:15px;border:1.5px solid var(--bd2);background:var(--sf);cursor:pointer;display:flex;align-items:center;gap:14px;text-align:left;transition:all .15s;margin-bottom:10px}
+.lang-option{width:100%;padding:16px;border-radius:15px;border:1.5px solid var(--bd2);background:rgba(22,22,21,.8);cursor:pointer;display:flex;align-items:center;gap:14px;text-align:left;transition:all .15s;margin-bottom:10px;-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px)}
 .lang-option:active,.lang-option.sel{border-color:var(--ac);background:var(--ac2)}
 .lang-flag{font-size:28px}
 .lang-text-name{font-size:16px;font-weight:700;margin-bottom:2px;letter-spacing:-.3px}
 .lang-text-sub{font-size:12px;color:var(--mu)}
 .lang-check{margin-left:auto;font-size:22px;color:var(--ac);display:none}
 .lang-option.sel .lang-check{display:block}
-
-/* SUPPORT FAB */
-#sup-fab{position:fixed;bottom:calc(var(--nav-h) + var(--sab) + 16px);right:18px;z-index:300;width:50px;height:50px;border-radius:16px;background:var(--sf);border:1.5px solid var(--bd2);color:var(--mu);cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 16px rgba(0,0,0,.4);transition:all .2s}
+#sup-fab{position:fixed;bottom:calc(var(--nav-h) + var(--sab) + 16px);right:18px;z-index:300;width:50px;height:50px;border-radius:16px;background:rgba(22,22,21,.9);border:1.5px solid rgba(255,255,255,.12);color:var(--mu);cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 16px rgba(0,0,0,.4);transition:all .2s;-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px)}
 #sup-fab i{font-size:22px;transition:transform .2s}
 #sup-fab:active{transform:scale(.93)}
 #sup-fab.open{background:var(--ac);color:#0a0a0a;border-color:var(--ac);box-shadow:0 4px 20px rgba(200,240,90,.4)}
-#sup-panel{position:fixed;bottom:calc(var(--nav-h) + var(--sab) + 74px);right:14px;z-index:299;width:min(360px, calc(100vw - 28px));height:min(460px, calc(100vh - 200px));background:var(--sf);border:1px solid var(--bd2);border-radius:22px;box-shadow:0 8px 40px rgba(0,0,0,.55);display:none;flex-direction:column;overflow:hidden;animation:chatPop .22s cubic-bezier(.4,0,.2,1)}
+#sup-panel{position:fixed;bottom:calc(var(--nav-h) + var(--sab) + 74px);right:14px;z-index:299;width:min(360px, calc(100vw - 28px));height:min(460px, calc(100vh - 200px));background:rgba(18,18,17,.96);border:1px solid rgba(255,255,255,.1);border-radius:22px;box-shadow:0 8px 40px rgba(0,0,0,.55);display:none;flex-direction:column;overflow:hidden;animation:chatPop .22s cubic-bezier(.4,0,.2,1);-webkit-backdrop-filter:blur(24px);backdrop-filter:blur(24px)}
 @keyframes chatPop{from{opacity:0;transform:scale(.92) translateY(12px)}to{opacity:1;transform:scale(1) translateY(0)}}
 .sup-head{padding:14px 16px;border-bottom:1px solid var(--bd);display:flex;align-items:center;gap:11px;flex-shrink:0}
 .sup-head-ico{width:36px;height:36px;border-radius:11px;background:var(--ac2);border:1px solid var(--ac3);display:flex;align-items:center;justify-content:center;flex-shrink:0}
@@ -448,71 +410,70 @@ img{display:block}
 .sup-head-title{font-size:14px;font-weight:700}
 .sup-head-status{font-size:11px;color:var(--ac);display:flex;align-items:center;gap:4px}
 .sup-head-dot{width:6px;height:6px;background:var(--ac);border-radius:50%}
-.sup-close{width:28px;height:28px;border-radius:50%;background:var(--sf2);border:1px solid var(--bd2);color:var(--mu);cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.sup-close{width:28px;height:28px;border-radius:50%;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);color:var(--mu);cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0}
 .sup-close i{font-size:15px}
 .sup-chips{padding:10px 12px 0;display:flex;flex-wrap:wrap;gap:5px;flex-shrink:0}
-.sup-chip{padding:5px 11px;border-radius:100px;background:var(--sf2);border:1px solid var(--bd2);font-size:11px;font-weight:500;color:var(--mu);cursor:pointer;white-space:nowrap}
+.sup-chip{padding:5px 11px;border-radius:100px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);font-size:11px;font-weight:500;color:var(--mu);cursor:pointer;white-space:nowrap}
 .sup-chip:active{border-color:var(--ac);color:var(--ac)}
 .sup-msgs{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:12px;display:flex;flex-direction:column;gap:9px}
 .sup-inp-row{padding:10px 12px;border-top:1px solid var(--bd);display:flex;gap:7px;align-items:flex-end;flex-shrink:0}
-.sup-textarea{flex:1;background:var(--sf2);border:1.5px solid var(--bd2);border-radius:12px;padding:10px 12px;color:var(--tx);font-size:14px;resize:none;line-height:1.5;min-height:40px;max-height:90px;-webkit-overflow-scrolling:touch}
+.sup-textarea{flex:1;background:rgba(22,22,21,.9);border:1.5px solid var(--bd2);border-radius:12px;padding:10px 12px;color:var(--tx);font-size:14px;resize:none;line-height:1.5;min-height:40px;max-height:90px;-webkit-overflow-scrolling:touch}
 .sup-textarea:focus{border-color:var(--ac)}
 .sup-textarea::placeholder{color:var(--mu2)}
 .sup-send{width:40px;height:40px;border-radius:12px;background:var(--ac);color:#0a0a0a;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0}
 .sup-send i{font-size:18px}
+/* PRO BANNER */
+#pro-banner{background:linear-gradient(135deg,rgba(245,200,66,.12),rgba(255,154,60,.08));border:1.5px solid rgba(245,200,66,.3);border-radius:14px;margin:8px 12px;padding:14px;-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px)}
 
-/* INSTALL BANNER */
-#install-banner{position:fixed;bottom:calc(var(--nav-h) + var(--sab) + 10px);left:12px;right:12px;z-index:250;background:var(--sf);border:1.5px solid var(--ac3);border-radius:18px;padding:14px 16px;box-shadow:0 8px 24px rgba(0,0,0,.5);display:none}
-.ib-row{display:flex;align-items:center;gap:12px}
-.ib-ico{width:38px;height:38px;background:var(--ac2);border-radius:11px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
-.ib-ico i{font-size:20px;color:var(--ac)}
-.ib-body{flex:1}
-.ib-title{font-size:13px;font-weight:700;margin-bottom:2px}
-.ib-sub{font-size:11px;color:var(--mu);line-height:1.5}
-.ib-close{padding:6px 12px;border-radius:9px;background:var(--sf2);border:1px solid var(--bd2);color:var(--mu);font-size:12px;font-weight:500;cursor:pointer;flex-shrink:0}
-
-/* ── ANIMATED BACKGROUND ── */
-#bg-canvas{
-  position:fixed;top:0;left:0;width:100%;height:100%;
-  z-index:0;pointer-events:none;
-  background:#0a0a0a;
-}
-/* Make sure everything sits above canvas */
-#loading,#auth,#ob,#app,
-.modal-overlay,#drawer-overlay,#drawer,
-#sup-fab,#sup-panel,#install-banner{
-  position:relative;z-index:1;
-}
-#loading,#auth,#ob{
-  background:transparent;
-}
-#app{
-  background:transparent;
-}
-.top-bar{
-  background:rgba(14,14,12,.85) !important;
-  -webkit-backdrop-filter:blur(20px);
-  backdrop-filter:blur(20px);
-}
-.bot-nav{
-  background:rgba(10,10,10,.88) !important;
-}
-/* Glassmorphism on cards */
-.kpi-card,.tx-item,.budget-item,.goal-item,.risk-factor,
-.plan-hero,.pm-card,.invest-hero,.invest-card,.chart-card,
-.invest-tip,.risk-score-card{
-  background:rgba(22,22,21,.75) !important;
-  -webkit-backdrop-filter:blur(12px);
-  backdrop-filter:blur(12px);
-  border:1px solid rgba(255,255,255,.09) !important;
-}
-/* Loading screen transparent bg */
-.loading-screen{background:transparent !important;}
+/* ── LANDING PAGE ── */
+.lp-hero{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:max(var(--sat),60px) 24px 48px;text-align:center}
+.lp-badge{display:inline-flex;align-items:center;gap:7px;padding:6px 14px;border-radius:100px;background:rgba(200,240,90,.1);border:1px solid rgba(200,240,90,.25);font-size:12px;font-weight:600;color:var(--ac);margin-bottom:24px;letter-spacing:.3px}
+.lp-badge-dot{width:6px;height:6px;background:var(--ac);border-radius:50%;animation:ldp 1.4s infinite}
+.lp-logo2{font-size:22px;font-weight:700;letter-spacing:-1px;display:flex;align-items:center;gap:8px;margin-bottom:32px;justify-content:center}
+.lp-logo2-dot{width:8px;height:8px;background:var(--ac);border-radius:50%}
+.lp-h1{font-size:clamp(38px,10vw,62px);font-weight:800;letter-spacing:-2.5px;line-height:1.05;margin-bottom:20px;background:linear-gradient(135deg,#f0efe8 30%,rgba(200,240,90,.95) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.lp-sub{font-size:clamp(15px,4vw,18px);color:rgba(240,239,232,.6);line-height:1.7;margin-bottom:36px;max-width:440px;font-weight:400}
+.lp-cta-row{display:flex;flex-direction:column;gap:12px;width:100%;max-width:340px}
+.lp-btn-main{width:100%;padding:18px;border-radius:16px;background:var(--ac);color:#0a0a0a;font-size:16px;font-weight:800;border:none;cursor:pointer;letter-spacing:-.4px;box-shadow:0 8px 32px rgba(200,240,90,.45);transition:transform .15s,box-shadow .15s}
+.lp-btn-main:active{transform:scale(.97);box-shadow:0 4px 16px rgba(200,240,90,.3)}
+.lp-btn-sec{font-size:14px;color:rgba(240,239,232,.5);cursor:pointer;background:none;border:none}
+.lp-btn-sec b{color:rgba(240,239,232,.85);font-weight:600}
+.lp-scroll{margin-top:32px;display:flex;flex-direction:column;align-items:center;gap:6px;font-size:10px;color:rgba(240,239,232,.3);letter-spacing:.6px;text-transform:uppercase}
+.lp-scroll-ico{animation:bounceDown 2s ease-in-out infinite;font-size:17px;color:rgba(200,240,90,.4)}
+@keyframes bounceDown{0%,100%{transform:translateY(0)}60%{transform:translateY(7px)}}
+.lp-stats{display:flex;border-top:1px solid rgba(255,255,255,.06);border-bottom:1px solid rgba(255,255,255,.06);background:rgba(255,255,255,.02);padding:20px 0}
+.lp-stat{flex:1;min-width:80px;text-align:center;padding:0 10px;border-right:1px solid rgba(255,255,255,.06)}
+.lp-stat:last-child{border-right:none}
+.lp-stat-num{font-size:22px;font-weight:800;letter-spacing:-1px;color:var(--ac);margin-bottom:4px}
+.lp-stat-lbl{font-size:10px;color:rgba(240,239,232,.4);font-weight:500;line-height:1.4}
+.lp-sec{padding:52px 24px;max-width:540px;margin:0 auto;width:100%}
+.lp-sec-lbl{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--ac);margin-bottom:10px}
+.lp-sec-title{font-size:clamp(24px,6vw,32px);font-weight:800;letter-spacing:-1px;line-height:1.15;margin-bottom:12px}
+.lp-sec-sub{font-size:14px;color:rgba(240,239,232,.5);line-height:1.7;margin-bottom:28px}
+.lp-feats{display:flex;flex-direction:column;gap:12px}
+.lp-feat{display:flex;align-items:flex-start;gap:15px;padding:17px;border-radius:16px;background:rgba(22,22,21,.65);border:1px solid rgba(255,255,255,.08);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px)}
+.lp-feat-ico{width:42px;height:42px;border-radius:12px;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:19px}
+.lp-feat-title{font-size:14px;font-weight:700;margin-bottom:4px;letter-spacing:-.2px}
+.lp-feat-desc{font-size:12px;color:rgba(240,239,232,.5);line-height:1.6}
+.lp-testis{display:flex;flex-direction:column;gap:12px}
+.lp-testi{padding:17px;border-radius:16px;background:rgba(22,22,21,.65);border:1px solid rgba(255,255,255,.08);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px)}
+.lp-stars{color:var(--ac);font-size:12px;margin-bottom:8px;letter-spacing:2px}
+.lp-testi-text{font-size:13px;color:rgba(240,239,232,.8);line-height:1.7;margin-bottom:12px;font-style:italic}
+.lp-testi-row{display:flex;align-items:center;gap:10px}
+.lp-testi-av{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;flex-shrink:0}
+.lp-testi-name{font-size:12px;font-weight:600;margin-bottom:1px}
+.lp-testi-role{font-size:11px;color:rgba(240,239,232,.4)}
+.lp-compare{background:rgba(22,22,21,.65);border:1px solid rgba(255,255,255,.08);border-radius:18px;overflow:hidden;-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px)}
+.lp-compare-hdr{display:grid;grid-template-columns:1fr 1fr 1fr;border-bottom:1px solid rgba(255,255,255,.08)}
+.lp-compare-row{display:grid;grid-template-columns:1fr 1fr 1fr;border-bottom:1px solid rgba(255,255,255,.05)}
+.lp-compare-row:last-child{border-bottom:none}
+.lp-final{padding:52px 24px calc(var(--sab)+60px);text-align:center;background:linear-gradient(180deg,transparent,rgba(200,240,90,.04))}
+.lp-final-title{font-size:clamp(26px,7vw,38px);font-weight:800;letter-spacing:-1.2px;line-height:1.1;margin-bottom:14px}
+.lp-final-sub{font-size:14px;color:rgba(240,239,232,.5);margin-bottom:32px;line-height:1.7}
+.lp-final-note{font-size:11px;color:rgba(240,239,232,.3);margin-top:14px;line-height:1.6}
 </style>
 </head>
 <body>
-
-<!-- ANIMATED BACKGROUND -->
 <canvas id="bg-canvas"></canvas>
 
 <!-- LOADING -->
@@ -521,11 +482,114 @@ img{display:block}
   <div class="ld-txt">Carregando...</div>
 </div>
 
+<!-- LANDING PAGE -->
+<div id="landing">
+  <div class="lp-hero">
+    <div class="lp-logo2"><div class="lp-logo2-dot"></div>Cento</div>
+    <div class="lp-badge"><span class="lp-badge-dot"></span>App financeiro para brasileiros</div>
+    <h1 class="lp-h1">Seu dinheiro,<br>finalmente<br>sob controle</h1>
+    <p class="lp-sub">O app que entende a vida do brasileiro &mdash; no Brasil, nos EUA ou nos dois ao mesmo tempo. Com IA que realmente conhece suas finan&ccedil;as.</p>
+    <div class="lp-cta-row">
+      <button class="lp-btn-main" onclick="showAuth('up')">Criar conta gr&aacute;tis &rarr;</button>
+      <button class="lp-btn-sec" onclick="showAuth('in')">J&aacute; tenho conta &mdash; <b>Entrar</b></button>
+    </div>
+    <div class="lp-scroll">
+      <span>Saiba mais</span>
+      <div class="lp-scroll-ico"><i class="ti ti-chevron-down"></i></div>
+    </div>
+  </div>
+
+  <div class="lp-stats">
+    <div class="lp-stat"><div class="lp-stat-num">100%</div><div class="lp-stat-lbl">Gr&aacute;tis<br>para come&ccedil;ar</div></div>
+    <div class="lp-stat"><div class="lp-stat-num">3</div><div class="lp-stat-lbl">Idiomas<br>PT EN ES</div></div>
+    <div class="lp-stat"><div class="lp-stat-num">IA</div><div class="lp-stat-lbl">Assistente<br>24 horas</div></div>
+    <div class="lp-stat"><div class="lp-stat-num">2</div><div class="lp-stat-lbl">Pa&iacute;ses<br>BR + EUA</div></div>
+  </div>
+
+  <div class="lp-sec">
+    <div class="lp-sec-lbl">Por que o Cento?</div>
+    <h2 class="lp-sec-title">Feito para quem leva a vida a s&eacute;rio</h2>
+    <p class="lp-sec-sub">N&atilde;o &eacute; mais um app de planilha. &Eacute; um assistente que entende sua realidade.</p>
+    <div class="lp-feats">
+      <div class="lp-feat">
+        <div class="lp-feat-ico" style="background:rgba(200,240,90,.12)"><i class="ti ti-sparkles" style="color:#c8f05a"></i></div>
+        <div><div class="lp-feat-title">IA que conhece suas finan&ccedil;as</div><div class="lp-feat-desc">Pergunte: &ldquo;Quanto gastei em delivery?&rdquo; ou &ldquo;Consigo comprar um carro em 2 anos?&rdquo; A IA responde com seus dados reais, n&atilde;o gen&eacute;rico.</div></div>
+      </div>
+      <div class="lp-feat">
+        <div class="lp-feat-ico" style="background:rgba(77,166,255,.12)"><i class="ti ti-shield-exclamation" style="color:#4da6ff"></i></div>
+        <div><div class="lp-feat-title">Score de risco financeiro</div><div class="lp-feat-desc">Descubra o qu&atilde;o vulner&aacute;vel est&aacute; sua sa&uacute;de financeira. Reserva, d&iacute;vidas, comprometimento &mdash; tudo em um n&uacute;mero claro com dicas de melhoria.</div></div>
+      </div>
+      <div class="lp-feat">
+        <div class="lp-feat-ico" style="background:rgba(175,135,255,.12)"><i class="ti ti-chart-line" style="color:#af87ff"></i></div>
+        <div><div class="lp-feat-title">Plano real de 12 meses</div><div class="lp-feat-desc">Veja exatamente quanto voc&ecirc; ter&aacute; daqui a 1 ano se continuar no ritmo atual. M&ecirc;s a m&ecirc;s, com proje&ccedil;&atilde;o personalizada para sua renda.</div></div>
+      </div>
+      <div class="lp-feat">
+        <div class="lp-feat-ico" style="background:rgba(255,149,0,.12)"><i class="ti ti-world" style="color:#ff9500"></i></div>
+        <div><div class="lp-feat-title">Brasil e EUA no mesmo lugar</div><div class="lp-feat-desc">Contas em Real e D&oacute;lar ao mesmo tempo. Perfeito para imigrantes, n&ocirc;mades e quem manda remessa para o Brasil.</div></div>
+      </div>
+      <div class="lp-feat">
+        <div class="lp-feat-ico" style="background:rgba(200,240,90,.12)"><i class="ti ti-activity" style="color:#c8f05a"></i></div>
+        <div><div class="lp-feat-title">Mercado ao vivo com dicas</div><div class="lp-feat-desc">Bitcoin, Ethereum, d&oacute;lar e mais em tempo real. Alertas quando algo importante acontece e dicas contextuais de quando &eacute; boa hora de investir.</div></div>
+      </div>
+      <div class="lp-feat">
+        <div class="lp-feat-ico" style="background:rgba(255,95,95,.12)"><i class="ti ti-target" style="color:#ff5f5f"></i></div>
+        <div><div class="lp-feat-title">Metas que voc&ecirc; realmente atinge</div><div class="lp-feat-desc">Configure sua meta, defina quanto poupar por m&ecirc;s e o Cento mostra exatamente quando voc&ecirc; vai chegar l&aacute;. Casa, viagem, reserva &mdash; qualquer sonho.</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="lp-sec" style="padding-top:0">
+    <div class="lp-sec-lbl">Depoimentos</div>
+    <h2 class="lp-sec-title">Quem usa n&atilde;o larga</h2>
+    <div class="lp-testis">
+      <div class="lp-testi">
+        <div class="lp-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+        <div class="lp-testi-text">&ldquo;Finalmente um app pra quem mora nos EUA e ainda manda dinheiro pro Brasil. Antes tinha 3 planilhas, agora tudo em um lugar.&rdquo;</div>
+        <div class="lp-testi-row"><div class="lp-testi-av" style="background:#c8f05a;color:#0a0a0a">M</div><div><div class="lp-testi-name">Marcos A.</div><div class="lp-testi-role">Brasileiro em Miami, FL</div></div></div>
+      </div>
+      <div class="lp-testi">
+        <div class="lp-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+        <div class="lp-testi-text">&ldquo;A IA me fez perceber que eu gastava R$800/m&ecirc;s em delivery sem notar. Em 3 meses economizei o suficiente para uma viagem.&rdquo;</div>
+        <div class="lp-testi-row"><div class="lp-testi-av" style="background:#4da6ff;color:#0a0a0a">A</div><div><div class="lp-testi-name">Ana C.</div><div class="lp-testi-role">Freelancer, S&atilde;o Paulo</div></div></div>
+      </div>
+      <div class="lp-testi">
+        <div class="lp-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+        <div class="lp-testi-text">&ldquo;O score de risco foi um choque de realidade. Minha reserva cobria menos de 1 m&ecirc;s. Hoje tenho 4 meses guardados.&rdquo;</div>
+        <div class="lp-testi-row"><div class="lp-testi-av" style="background:#af87ff;color:#0a0a0a">R</div><div><div class="lp-testi-name">Rafael S.</div><div class="lp-testi-role">Engenheiro, Belo Horizonte</div></div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="lp-sec" style="padding-top:0">
+    <div class="lp-sec-lbl">Compara&ccedil;&atilde;o</div>
+    <h2 class="lp-sec-title">Cento vs outros apps</h2>
+    <div class="lp-compare">
+      <div class="lp-compare-hdr">
+        <div style="padding:12px;font-size:11px;font-weight:700;color:rgba(240,239,232,.4);text-transform:uppercase;letter-spacing:.4px">Recurso</div>
+        <div style="padding:12px;font-size:13px;font-weight:800;color:var(--ac);text-align:center;border-left:1px solid rgba(255,255,255,.07)">Cento</div>
+        <div style="padding:12px;font-size:11px;font-weight:600;color:rgba(240,239,232,.4);text-align:center;border-left:1px solid rgba(255,255,255,.07)">Outros</div>
+      </div>
+      <div id="lp-compare-rows"></div>
+    </div>
+  </div>
+
+  <div class="lp-final">
+    <h2 class="lp-final-title">Pronto para assumir<br>o controle?</h2>
+    <p class="lp-final-sub">Gratuito para sempre no plano b&aacute;sico.<br>Sem cart&atilde;o de cr&eacute;dito. Sem surpresas.</p>
+    <div class="lp-cta-row" style="max-width:340px;margin:0 auto">
+      <button class="lp-btn-main" onclick="showAuth('up')">Come&ccedil;ar agora &mdash; &eacute; gr&aacute;tis &rarr;</button>
+      <button class="lp-btn-sec" onclick="showAuth('in')">J&aacute; tenho conta &mdash; <b>Entrar</b></button>
+    </div>
+    <div class="lp-final-note">&#128274; Seus dados s&atilde;o privados e criptografados.<br>Nunca compartilhamos com terceiros.</div>
+  </div>
+</div>
+
 <!-- AUTH -->
 <div id="auth">
 <div class="auth-inner">
+  <button onclick="goToLanding()" style="background:none;border:none;color:var(--mu);font-size:13px;cursor:pointer;margin-bottom:16px;display:flex;align-items:center;gap:5px;padding:0"><i class="ti ti-arrow-left" style="font-size:16px"></i>Voltar</button>
   <div class="auth-logo"><div class="auth-logo-dot"></div>Cento</div>
-  <div class="auth-sub">Suas finan&#231;as. Em qualquer lugar.</div>
+  <div class="auth-sub">Suas finan&ccedil;as. Em qualquer lugar.</div>
   <div class="lang-row">
     <button class="lang-btn on" data-lang="pt" onclick="setLang('pt')">&#127463;&#127479; PT</button>
     <button class="lang-btn" data-lang="en" onclick="setLang('en')">&#127482;&#127480; EN</button>
@@ -558,7 +622,6 @@ img{display:block}
   <div class="ob-tagline">Configurando seu perfil</div>
   <div class="ob-bar"><div class="ob-fill" id="ob-fill"></div></div>
   <div class="ob-step-num" id="ob-step-num">Passo 1 de 7</div>
-
   <div class="ob-step on" id="obs-0">
     <div class="ob-q">Onde voc&#234; mora?</div>
     <div class="ob-hint">Define moeda, alertas e dicas.</div>
@@ -567,43 +630,29 @@ img{display:block}
       <div class="ob-opt" onclick="obSel(0,'mode','us',this)"><span class="ob-opt-icon">&#127482;&#127480;</span><div><div class="ob-opt-title">Nos Estados Unidos</div><div class="ob-opt-desc">Imigrante ou morando nos EUA</div></div></div>
       <div class="ob-opt" onclick="obSel(0,'mode','both',this)"><span class="ob-opt-icon">&#127758;</span><div><div class="ob-opt-title">Brasil + EUA</div><div class="ob-opt-desc">Contas nos dois pa&#237;ses</div></div></div>
     </div>
-    <div class="ob-btn-row">
-      <button class="ob-btn dim" id="ob-btn-0" onclick="obNext(0,1)">Continuar &#8594;</button>
-    </div>
+    <div class="ob-btn-row"><button class="ob-btn dim" id="ob-btn-0" onclick="obNext(0,1)">Continuar &#8594;</button></div>
   </div>
-
   <div class="ob-step" id="obs-1">
-    <div class="ob-q">Sua renda &#233;</div>
-    <div class="ob-hint">Muda como calculamos seu plano.</div>
+    <div class="ob-q">Sua renda &#233;</div><div class="ob-hint">Muda como calculamos seu plano.</div>
     <div class="ob-options">
-      <div class="ob-opt" onclick="obSel(1,'incomeType','fixed',this)"><span class="ob-opt-icon">&#128188;</span><div><div class="ob-opt-title">Fixa (CLT, sal&#225;rio fixo)</div><div class="ob-opt-desc">Valor previs&#237;vel todo m&#234;s</div></div></div>
-      <div class="ob-opt" onclick="obSel(1,'incomeType','variable',this)"><span class="ob-opt-icon">&#128200;</span><div><div class="ob-opt-title">Vari&#225;vel (freelance, vendas)</div><div class="ob-opt-desc">Renda muda de m&#234;s em m&#234;s</div></div></div>
-      <div class="ob-opt" onclick="obSel(1,'incomeType','mixed',this)"><span class="ob-opt-icon">&#9889;</span><div><div class="ob-opt-title">Mista (fixo + extra)</div><div class="ob-opt-desc">Tenho renda fixa e fontes extras</div></div></div>
+      <div class="ob-opt" onclick="obSel(1,'incomeType','fixed',this)"><span class="ob-opt-icon">&#128188;</span><div><div class="ob-opt-title">Fixa (CLT, sal&#225;rio)</div><div class="ob-opt-desc">Valor previs&#237;vel todo m&#234;s</div></div></div>
+      <div class="ob-opt" onclick="obSel(1,'incomeType','variable',this)"><span class="ob-opt-icon">&#128200;</span><div><div class="ob-opt-title">Vari&#225;vel (freelance)</div><div class="ob-opt-desc">Renda muda de m&#234;s em m&#234;s</div></div></div>
+      <div class="ob-opt" onclick="obSel(1,'incomeType','mixed',this)"><span class="ob-opt-icon">&#9889;</span><div><div class="ob-opt-title">Mista (fixo + extra)</div><div class="ob-opt-desc">Tenho renda fixa e extras</div></div></div>
     </div>
-    <div class="ob-btn-row">
-      <button class="ob-btn dim" id="ob-btn-1" onclick="obNext(1,2)">Continuar &#8594;</button>
-      <button class="ob-btn ob-btn-ghost" onclick="obGo(0)">&#8592; Voltar</button>
-    </div>
+    <div class="ob-btn-row"><button class="ob-btn dim" id="ob-btn-1" onclick="obNext(1,2)">Continuar &#8594;</button><button class="ob-btn ob-btn-ghost" onclick="obGo(0)">&#8592; Voltar</button></div>
   </div>
-
   <div class="ob-step" id="obs-2">
-    <div class="ob-q">Quanto ganha e gasta?</div>
-    <div class="ob-hint">Aproximado est&#225; &#243;timo!</div>
+    <div class="ob-q">Quanto ganha e gasta?</div><div class="ob-hint">Aproximado est&#225; &#243;timo!</div>
     <div class="ob-numgrid">
-      <div class="ob-numfield"><div class="ob-numlbl" id="ob-inc-lbl">Renda/m&#234;s (R$)</div><input class="ob-numinp" id="ob-inc" type="number" inputmode="numeric" placeholder="5000" oninput="obCheckNums()"></div>
-      <div class="ob-numfield"><div class="ob-numlbl" id="ob-exp-lbl">Gastos/m&#234;s (R$)</div><input class="ob-numinp" id="ob-exp" type="number" inputmode="numeric" placeholder="3500" oninput="obCheckNums()"></div>
+      <div class="ob-numfield"><div class="ob-numlbl" id="ob-inc-lbl">Renda/m&#234;s</div><input class="ob-numinp" id="ob-inc" type="number" inputmode="numeric" placeholder="5000" oninput="obCheckNums()"></div>
+      <div class="ob-numfield"><div class="ob-numlbl" id="ob-exp-lbl">Gastos/m&#234;s</div><input class="ob-numinp" id="ob-exp" type="number" inputmode="numeric" placeholder="3500" oninput="obCheckNums()"></div>
       <div class="ob-numfield"><div class="ob-numlbl">Horas/m&#234;s</div><input class="ob-numinp" id="ob-hrs" type="number" inputmode="numeric" placeholder="160"></div>
-      <div class="ob-numfield"><div class="ob-numlbl">D&#237;vidas (R$)</div><input class="ob-numinp" id="ob-dbt" type="number" inputmode="numeric" placeholder="0"></div>
+      <div class="ob-numfield"><div class="ob-numlbl">D&#237;vidas</div><input class="ob-numinp" id="ob-dbt" type="number" inputmode="numeric" placeholder="0"></div>
     </div>
-    <div class="ob-btn-row">
-      <button class="ob-btn dim" id="ob-btn-2" onclick="obNext(2,3)">Continuar &#8594;</button>
-      <button class="ob-btn ob-btn-ghost" onclick="obGo(1)">&#8592; Voltar</button>
-    </div>
+    <div class="ob-btn-row"><button class="ob-btn dim" id="ob-btn-2" onclick="obNext(2,3)">Continuar &#8594;</button><button class="ob-btn ob-btn-ghost" onclick="obGo(1)">&#8592; Voltar</button></div>
   </div>
-
   <div class="ob-step" id="obs-3">
-    <div class="ob-q">Maior desafio?</div>
-    <div class="ob-hint">Atacamos isso primeiro.</div>
+    <div class="ob-q">Maior desafio?</div><div class="ob-hint">Atacamos isso primeiro.</div>
     <div class="ob-options grid2">
       <div class="ob-opt" onclick="obSel(3,'challenge','debt',this)"><span class="ob-opt-icon">&#128179;</span><div><div class="ob-opt-title">D&#237;vidas</div></div></div>
       <div class="ob-opt" onclick="obSel(3,'challenge','delivery',this)"><span class="ob-opt-icon">&#127828;</span><div><div class="ob-opt-title">Gastos altos</div></div></div>
@@ -612,15 +661,10 @@ img{display:block}
       <div class="ob-opt" onclick="obSel(3,'challenge','usa',this)"><span class="ob-opt-icon">&#127482;&#127480;</span><div><div class="ob-opt-title">Come&#231;ar EUA</div></div></div>
       <div class="ob-opt" onclick="obSel(3,'challenge','invest',this)"><span class="ob-opt-icon">&#128200;</span><div><div class="ob-opt-title">Investir</div></div></div>
     </div>
-    <div class="ob-btn-row">
-      <button class="ob-btn dim" id="ob-btn-3" onclick="obNext(3,4)">Continuar &#8594;</button>
-      <button class="ob-btn ob-btn-ghost" onclick="obGo(2)">&#8592; Voltar</button>
-    </div>
+    <div class="ob-btn-row"><button class="ob-btn dim" id="ob-btn-3" onclick="obNext(3,4)">Continuar &#8594;</button><button class="ob-btn ob-btn-ghost" onclick="obGo(2)">&#8592; Voltar</button></div>
   </div>
-
   <div class="ob-step" id="obs-4">
-    <div class="ob-q">Maior sonho?</div>
-    <div class="ob-hint">Define para onde vai cada real.</div>
+    <div class="ob-q">Maior sonho?</div><div class="ob-hint">Define para onde vai cada real.</div>
     <div class="ob-options grid2">
       <div class="ob-opt" onclick="obSel(4,'goal','emergency',this)"><span class="ob-opt-icon">&#128737;</span><div><div class="ob-opt-title">Reserva</div></div></div>
       <div class="ob-opt" onclick="obSel(4,'goal','travel',this)"><span class="ob-opt-icon">&#9992;</span><div><div class="ob-opt-title">Viagem</div></div></div>
@@ -629,27 +673,18 @@ img{display:block}
       <div class="ob-opt" onclick="obSel(4,'goal','credit_us',this)"><span class="ob-opt-icon">&#128179;</span><div><div class="ob-opt-title">Cr&#233;dito EUA</div></div></div>
       <div class="ob-opt" onclick="obSel(4,'goal','family',this)"><span class="ob-opt-icon">&#128106;</span><div><div class="ob-opt-title">Fam&#237;lia</div></div></div>
     </div>
-    <div class="ob-btn-row">
-      <button class="ob-btn dim" id="ob-btn-4" onclick="obNext(4,5)">Continuar &#8594;</button>
-      <button class="ob-btn ob-btn-ghost" onclick="obGo(3)">&#8592; Voltar</button>
-    </div>
+    <div class="ob-btn-row"><button class="ob-btn dim" id="ob-btn-4" onclick="obNext(4,5)">Continuar &#8594;</button><button class="ob-btn ob-btn-ghost" onclick="obGo(3)">&#8592; Voltar</button></div>
   </div>
-
   <div class="ob-step" id="obs-5">
-    <div class="ob-q">Frequ&#234;ncia de delivery?</div>
-    <div class="ob-hint">A IA monitora esse gasto.</div>
+    <div class="ob-q">Frequ&#234;ncia de delivery?</div><div class="ob-hint">A IA monitora esse gasto.</div>
     <div class="ob-options">
       <div class="ob-opt" onclick="obSel(5,'delivery','never',this)"><span class="ob-opt-icon">&#129367;</span><div><div class="ob-opt-title">Raramente</div></div></div>
       <div class="ob-opt" onclick="obSel(5,'delivery','sometimes',this)"><span class="ob-opt-icon">&#127829;</span><div><div class="ob-opt-title">1x por semana</div></div></div>
       <div class="ob-opt" onclick="obSel(5,'delivery','often',this)"><span class="ob-opt-icon">&#127828;</span><div><div class="ob-opt-title">V&#225;rias vezes</div></div></div>
       <div class="ob-opt" onclick="obSel(5,'delivery','always',this)"><span class="ob-opt-icon">&#128556;</span><div><div class="ob-opt-title">Quase todo dia</div></div></div>
     </div>
-    <div class="ob-btn-row">
-      <button class="ob-btn dim" id="ob-btn-5" onclick="startGen()">Gerar meu plano com IA &#10024;</button>
-      <button class="ob-btn ob-btn-ghost" onclick="obGo(4)">&#8592; Voltar</button>
-    </div>
+    <div class="ob-btn-row"><button class="ob-btn dim" id="ob-btn-5" onclick="startGen()">Gerar meu plano com IA &#10024;</button><button class="ob-btn ob-btn-ghost" onclick="obGo(4)">&#8592; Voltar</button></div>
   </div>
-
   <div class="ob-step" id="obs-6">
     <div class="ob-generating">
       <div class="ob-spin">&#10024;</div>
@@ -664,7 +699,6 @@ img{display:block}
       </div>
     </div>
   </div>
-
   <div class="ob-step" id="obs-7">
     <div style="font-size:12px;color:var(--mu);margin-bottom:7px;font-weight:500" id="ob-plan-who"></div>
     <div class="ob-plan-card"><div class="ob-plan-title" id="ob-plan-title"></div><div class="ob-plan-body" id="ob-plan-body"></div></div>
@@ -678,9 +712,8 @@ img{display:block}
   <div class="top-bar">
     <button class="tb-menu" onclick="toggleDrawer()"><i class="ti ti-menu-2"></i></button>
     <div class="tb-title"><div class="tb-title-dot"></div>Cento</div>
-    <div style="width:42px"></div>
+    <button class="tb-lang" onclick="openLangModal()"><i class="ti ti-language"></i></button>
   </div>
-
   <div class="content" id="content">
     <div class="page on" id="page-home"></div>
     <div class="page" id="page-tx"></div>
@@ -692,44 +725,30 @@ img{display:block}
     <div class="page" id="page-ai"></div>
     <div class="page" id="page-market"></div>
   </div>
-
   <nav class="bot-nav">
     <button class="nav-btn on" id="nav-home" onclick="nav('home')">
       <div style="position:relative;display:inline-block"><i class="ti ti-home"></i><span class="nav-alert" id="nav-alert"></span></div>
       <span>In&#237;cio</span>
     </button>
-    <button class="nav-btn" id="nav-tx" onclick="nav('tx')">
-      <i class="ti ti-arrows-sort"></i><span>Gastos</span>
-    </button>
+    <button class="nav-btn" id="nav-tx" onclick="nav('tx')"><i class="ti ti-arrows-sort"></i><span>Gastos</span></button>
     <div class="nav-fab-wrap">
-      <button class="nav-fab" onclick="openModal('tx')" aria-label="Nova transa&#231;&#227;o"><i class="ti ti-plus"></i></button>
+      <button class="nav-fab" onclick="openModal('tx')"><i class="ti ti-plus"></i></button>
       <span class="nav-fab-lbl">Novo</span>
     </div>
-    <button class="nav-btn" id="nav-budget" onclick="nav('budget')">
-      <i class="ti ti-chart-pie"></i><span>Or&#231;amento</span>
-    </button>
-    <button class="nav-btn" id="nav-market" onclick="nav('market')">
-      <i class="ti ti-activity"></i><span>Mercado</span>
-    </button>
+    <button class="nav-btn" id="nav-budget" onclick="nav('budget')"><i class="ti ti-chart-pie"></i><span>Or&#231;amento</span></button>
+    <button class="nav-btn" id="nav-market" onclick="nav('market')"><i class="ti ti-activity"></i><span>Mercado</span></button>
   </nav>
 </div>
 
-<!-- DRAWER OVERLAY -->
+<!-- DRAWER -->
 <div id="drawer-overlay" onclick="toggleDrawer()"></div>
-
-<!-- SIDE DRAWER -->
 <div id="drawer">
   <div class="dr-head">
     <div class="dr-user-row">
       <div class="dr-avatar" id="dr-av">C</div>
-      <div class="dr-info">
-        <div class="dr-name" id="dr-name">Cento</div>
-        <div class="dr-email" id="dr-email"></div>
-      </div>
+      <div class="dr-info"><div class="dr-name" id="dr-name">Cento</div><div class="dr-email" id="dr-email"></div></div>
     </div>
-    <button class="dr-mode-btn" onclick="cycleMode();updateDrawer()">
-      <i class="ti ti-map-pin"></i><span id="dr-mode-lbl">Brasil</span>
-    </button>
+    <button class="dr-mode-btn" onclick="cycleMode();updateDrawer()"><i class="ti ti-map-pin"></i><span id="dr-mode-lbl">Brasil</span></button>
   </div>
   <div class="dr-section">
     <div class="dr-sec-lbl">Principal</div>
@@ -743,84 +762,50 @@ img{display:block}
     <button class="dr-item" id="dr-risk" onclick="drNav('risk')"><i class="ti ti-shield-exclamation"></i>Risco Financeiro</button>
     <button class="dr-item" id="dr-plan" onclick="drNav('plan')"><i class="ti ti-chart-line"></i>Plano 12 Meses</button>
     <button class="dr-item" id="dr-invest" onclick="drNav('invest')"><i class="ti ti-trending-up"></i>Investimentos</button>
-    <button class="dr-item" id="dr-market" onclick="drNav('market')"><i class="ti ti-activity"></i>Mercado ao Vivo</button>
     <button class="dr-item" id="dr-ai" onclick="drNav('ai')"><i class="ti ti-sparkles"></i>Assistente IA</button>
+    <button class="dr-item" id="dr-market" onclick="drNav('market')"><i class="ti ti-activity"></i>Mercado ao Vivo</button>
   </div>
-  <!-- PRO BANNER -->
+  <div class="dr-section" style="margin-top:4px">
+    <div class="dr-sec-lbl">Conta</div>
+    <button class="dr-item" onclick="openLangModal()"><i class="ti ti-language"></i>Idioma</button>
+    <button class="dr-item danger" onclick="doLogout()"><i class="ti ti-logout"></i>Sair</button>
+  </div>
   <div id="pro-banner" style="margin:8px 12px;padding:14px;border-radius:14px;background:linear-gradient(135deg,rgba(245,200,66,.15),rgba(255,154,60,.1));border:1.5px solid rgba(245,200,66,.35)">
     <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">
       <span style="font-size:16px">&#10024;</span>
       <span style="font-size:13px;font-weight:700;color:#f5c842">Cento Pro</span>
       <span style="font-size:10px;font-weight:700;padding:2px 7px;border-radius:100px;background:rgba(245,200,66,.2);color:#f5c842;border:1px solid rgba(245,200,66,.4)">EM BREVE</span>
     </div>
-    <div style="font-size:12px;color:var(--mu);line-height:1.6;margin-bottom:10px">Alertas avan&#231;ados, IA financeira completa, relat&#243;rios detalhados e muito mais.</div>
-    <button onclick="openProModal()" style="width:100%;padding:10px;border-radius:10px;background:#f5c842;color:#1a1200;font-size:13px;font-weight:700;border:none;cursor:pointer;-webkit-tap-highlight-color:transparent">Ver planos Pro</button>
-  </div>
-
-  <div class="dr-section" style="margin-top:4px">
-    <div class="dr-sec-lbl">Conta</div>
-    <button class="dr-item" onclick="openLangModal()"><i class="ti ti-language"></i>Idioma</button>
-    <button class="dr-item danger" onclick="doLogout()"><i class="ti ti-logout"></i>Sair</button>
+    <div style="font-size:12px;color:var(--mu);line-height:1.6;margin-bottom:10px">Alertas avan&#231;ados, IA completa, relat&#243;rios e muito mais.</div>
+    <button onclick="openProModal()" style="width:100%;padding:10px;border-radius:10px;background:#f5c842;color:#1a1200;font-size:13px;font-weight:700;border:none;cursor:pointer">Ver planos Pro</button>
   </div>
   <div class="dr-footer">
     <button class="dr-add" onclick="openModal('tx');toggleDrawer()"><i class="ti ti-plus"></i>Nova Transa&#231;&#227;o</button>
   </div>
 </div>
 
-<!-- MODAL: TRANSACTION -->
+<!-- MODALS (TX, GOAL, BUDGET, INVEST, LANG, PRO) -->
 <div class="modal-overlay" id="modal-tx">
 <div class="modal-sheet">
   <div class="sheet-pill"></div>
-  <div class="sheet-hdr">
-    <div class="sheet-title" id="mtx-title">Nova Transa&#231;&#227;o</div>
-    <button class="sheet-close" onclick="closeModal('tx')"><i class="ti ti-x"></i></button>
-  </div>
-  <!-- TYPE -->
-  <div class="form-field">
-    <div class="form-label">Tipo</div>
-    <div class="tog-row">
-      <button class="tog-btn exp" id="tog-exp" onclick="setTxType('expense')"><i class="ti ti-arrow-down"></i>Despesa</button>
-      <button class="tog-btn" id="tog-inc" onclick="setTxType('income')"><i class="ti ti-arrow-up"></i>Receita</button>
-    </div>
-  </div>
-  <!-- CURRENCY -->
-  <div class="form-field">
-    <div class="form-label">Moeda</div>
-    <div class="curr-sel">
-      <button class="curr-opt brl" id="curr-brl" onclick="setTxCurr('BRL')"><i class="ti ti-currency-real"></i>Real (BRL)</button>
-      <button class="curr-opt" id="curr-usd" onclick="setTxCurr('USD')"><i class="ti ti-currency-dollar"></i>D&#243;lar (USD)</button>
-    </div>
-  </div>
-  <!-- DESC -->
-  <div class="form-field"><div class="form-label">Descri&#231;&#227;o</div><input class="form-input" id="tx-desc" placeholder="Ex: iFood, Sal&#225;rio, Aluguel..." autocorrect="off"></div>
-  <!-- AMOUNT + DATE -->
+  <div class="sheet-hdr"><div class="sheet-title" id="mtx-title">Nova Transa&#231;&#227;o</div><button class="sheet-close" onclick="closeModal('tx')"><i class="ti ti-x"></i></button></div>
+  <div class="form-field"><div class="form-label">Tipo</div><div class="tog-row"><button class="tog-btn exp" id="tog-exp" onclick="setTxType('expense')"><i class="ti ti-arrow-down"></i>Despesa</button><button class="tog-btn" id="tog-inc" onclick="setTxType('income')"><i class="ti ti-arrow-up"></i>Receita</button></div></div>
+  <div class="form-field"><div class="form-label">Moeda</div><div class="curr-sel"><button class="curr-opt brl" id="curr-brl" onclick="setTxCurr('BRL')"><i class="ti ti-currency-real"></i>Real (BRL)</button><button class="curr-opt" id="curr-usd" onclick="setTxCurr('USD')"><i class="ti ti-currency-dollar"></i>D&#243;lar (USD)</button></div></div>
+  <div class="form-field"><div class="form-label">Descri&#231;&#227;o</div><input class="form-input" id="tx-desc" placeholder="Ex: iFood, Sal&#225;rio..." autocorrect="off"></div>
   <div class="form-row">
     <div class="form-field"><div class="form-label">Valor</div><input class="form-input" id="tx-amount" type="number" inputmode="decimal" placeholder="0,00"></div>
     <div class="form-field"><div class="form-label">Data</div><input class="form-input" id="tx-date" type="date"></div>
   </div>
-  <!-- CATEGORY -->
   <div class="form-field"><div class="form-label">Categoria</div><div class="cat-grid" id="cat-grid"></div></div>
-  <!-- EXTRA INCOME -->
-  <div class="form-field" id="extra-field" style="display:none">
-    <div class="form-label">Renda Extra?</div>
-    <div class="tog-row">
-      <button class="tog-btn inc" id="tog-extra-no" onclick="setExtra(false)">N&#227;o</button>
-      <button class="tog-btn" id="tog-extra-yes" onclick="setExtra(true)">&#9889; Sim, renda extra</button>
-    </div>
-  </div>
+  <div class="form-field" id="extra-field" style="display:none"><div class="form-label">Renda Extra?</div><div class="tog-row"><button class="tog-btn inc" id="tog-extra-no" onclick="setExtra(false)">N&#227;o</button><button class="tog-btn" id="tog-extra-yes" onclick="setExtra(true)">&#9889; Sim</button></div></div>
   <button class="save-btn" id="tx-save-btn" onclick="saveTx()"><i class="ti ti-check"></i>Salvar Transa&#231;&#227;o</button>
-  <button class="del-btn" id="tx-del-btn" style="display:none" onclick="deleteTx()">Excluir transa&#231;&#227;o</button>
+  <button class="del-btn" id="tx-del-btn" style="display:none" onclick="deleteTx()">Excluir</button>
 </div>
 </div>
-
-<!-- MODAL: GOAL -->
 <div class="modal-overlay" id="modal-goal">
 <div class="modal-sheet">
   <div class="sheet-pill"></div>
-  <div class="sheet-hdr">
-    <div class="sheet-title" id="mgoal-title">Nova Meta</div>
-    <button class="sheet-close" onclick="closeModal('goal')"><i class="ti ti-x"></i></button>
-  </div>
+  <div class="sheet-hdr"><div class="sheet-title" id="mgoal-title">Nova Meta</div><button class="sheet-close" onclick="closeModal('goal')"><i class="ti ti-x"></i></button></div>
   <div class="form-field"><div class="form-label">Nome da meta</div><input class="form-input" id="g-name" placeholder="Ex: Reserva de emerg&#234;ncia"></div>
   <div class="form-field"><div class="form-label">Emoji</div><input class="form-input" id="g-emoji" placeholder="&#127919;" maxlength="4" style="font-size:24px;text-align:center"></div>
   <div class="form-row">
@@ -829,42 +814,27 @@ img{display:block}
   </div>
   <div class="form-row">
     <div class="form-field"><div class="form-label">Poupar/m&#234;s</div><input class="form-input" id="g-monthly" type="number" inputmode="numeric" placeholder="500"></div>
-    <div class="form-field"><div class="form-label">Moeda</div>
-      <div class="curr-sel" style="margin-bottom:0">
-        <button class="curr-opt brl" id="g-brl" onclick="setGoalCurr('BRL')">BRL</button>
-        <button class="curr-opt" id="g-usd" onclick="setGoalCurr('USD')">USD</button>
-      </div>
-    </div>
+    <div class="form-field"><div class="form-label">Moeda</div><div class="curr-sel" style="margin-bottom:0"><button class="curr-opt brl" id="g-brl" onclick="setGoalCurr('BRL')">BRL</button><button class="curr-opt" id="g-usd" onclick="setGoalCurr('USD')">USD</button></div></div>
   </div>
   <button class="save-btn" id="goal-save-btn" onclick="saveGoal()"><i class="ti ti-check"></i>Salvar Meta</button>
   <button class="del-btn" id="goal-del-btn" style="display:none" onclick="deleteGoal()">Excluir meta</button>
 </div>
 </div>
-
-<!-- MODAL: BUDGET EDIT -->
 <div class="modal-overlay" id="modal-budget">
 <div class="modal-sheet">
   <div class="sheet-pill"></div>
-  <div class="sheet-hdr">
-    <div class="sheet-title">Editar Limite</div>
-    <button class="sheet-close" onclick="closeModal('budget')"><i class="ti ti-x"></i></button>
-  </div>
+  <div class="sheet-hdr"><div class="sheet-title">Editar Limite</div><button class="sheet-close" onclick="closeModal('budget')"><i class="ti ti-x"></i></button></div>
   <div style="font-size:28px;text-align:center;margin-bottom:12px" id="bg-ico"></div>
   <div class="form-field"><div class="form-label">Categoria</div><input class="form-input" id="bg-cat" readonly></div>
   <div class="form-field"><div class="form-label">Limite mensal</div><input class="form-input" id="bg-limit" type="number" inputmode="numeric" placeholder="0"></div>
   <button class="save-btn" id="bg-save-btn" onclick="saveBudget()"><i class="ti ti-check"></i>Salvar</button>
 </div>
 </div>
-
-<!-- MODAL: INVESTMENT -->
 <div class="modal-overlay" id="modal-invest">
 <div class="modal-sheet">
   <div class="sheet-pill"></div>
-  <div class="sheet-hdr">
-    <div class="sheet-title" id="minv-title">Adicionar Investimento</div>
-    <button class="sheet-close" onclick="closeModal('invest')"><i class="ti ti-x"></i></button>
-  </div>
-  <div class="form-field"><div class="form-label">Nome / Ticker</div><input class="form-input" id="inv-name" placeholder="Ex: PETR4, Bitcoin, Tesouro SELIC..."></div>
+  <div class="sheet-hdr"><div class="sheet-title" id="minv-title">Adicionar Investimento</div><button class="sheet-close" onclick="closeModal('invest')"><i class="ti ti-x"></i></button></div>
+  <div class="form-field"><div class="form-label">Nome / Ticker</div><input class="form-input" id="inv-name" placeholder="Ex: PETR4, Bitcoin..."></div>
   <div class="form-row">
     <div class="form-field"><div class="form-label">Valor investido</div><input class="form-input" id="inv-invested" type="number" inputmode="decimal" placeholder="1000"></div>
     <div class="form-field"><div class="form-label">Valor atual</div><input class="form-input" id="inv-current" type="number" inputmode="decimal" placeholder="1200"></div>
@@ -883,30 +853,55 @@ img{display:block}
   <button class="del-btn" id="inv-del-btn" style="display:none" onclick="deleteInvestment()">Excluir</button>
 </div>
 </div>
-
-<!-- MODAL: LANGUAGE -->
 <div class="modal-overlay" id="modal-lang">
 <div class="modal-sheet">
   <div class="sheet-pill"></div>
-  <div class="sheet-hdr">
-    <div class="sheet-title">Idioma / Language</div>
-    <button class="sheet-close" onclick="closeModal('lang')"><i class="ti ti-x"></i></button>
+  <div class="sheet-hdr"><div class="sheet-title">Idioma / Language</div><button class="sheet-close" onclick="closeModal('lang')"><i class="ti ti-x"></i></button></div>
+  <button class="lang-option sel" data-lang="pt" onclick="selectLang('pt')"><span class="lang-flag">&#127463;&#127479;</span><div><div class="lang-text-name">Portugu&#234;s</div><div class="lang-text-sub">Brasil</div></div><i class="ti ti-check lang-check"></i></button>
+  <button class="lang-option" data-lang="en" onclick="selectLang('en')"><span class="lang-flag">&#127482;&#127480;</span><div><div class="lang-text-name">English</div><div class="lang-text-sub">United States</div></div><i class="ti ti-check lang-check"></i></button>
+  <button class="lang-option" data-lang="es" onclick="selectLang('es')"><span class="lang-flag">&#127466;&#127480;</span><div><div class="lang-text-name">Espa&#241;ol</div><div class="lang-text-sub">Latinoam&#233;rica</div></div><i class="ti ti-check lang-check"></i></button>
+</div>
+</div>
+<div class="modal-overlay" id="modal-pro">
+<div class="modal-sheet">
+  <div class="sheet-pill"></div>
+  <div class="sheet-hdr"><div class="sheet-title">&#10024; Cento Pro</div><button class="sheet-close" onclick="closeModal('pro')"><i class="ti ti-x"></i></button></div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px">
+    <div style="background:rgba(255,255,255,.04);border:1.5px solid var(--bd2);border-radius:16px;padding:16px;text-align:center">
+      <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:var(--mu);margin-bottom:10px">Gratuito</div>
+      <div style="font-size:28px;font-weight:800;color:var(--tx);margin-bottom:4px">R$0</div>
+      <div style="font-size:11px;color:var(--mu);margin-bottom:14px">Para sempre</div>
+      <div style="display:flex;flex-direction:column;gap:6px;text-align:left">
+        <div style="font-size:12px;color:var(--mu);display:flex;align-items:center;gap:6px"><i class="ti ti-check" style="color:var(--ac);font-size:14px"></i>Transa&#231;&#245;es</div>
+        <div style="font-size:12px;color:var(--mu);display:flex;align-items:center;gap:6px"><i class="ti ti-check" style="color:var(--ac);font-size:14px"></i>Or&#231;amentos</div>
+        <div style="font-size:12px;color:var(--mu);display:flex;align-items:center;gap:6px"><i class="ti ti-check" style="color:var(--ac);font-size:14px"></i>Metas</div>
+        <div style="font-size:12px;color:var(--mu);display:flex;align-items:center;gap:6px"><i class="ti ti-check" style="color:var(--ac);font-size:14px"></i>3 idiomas</div>
+        <div style="font-size:12px;color:var(--mu2);display:flex;align-items:center;gap:6px"><i class="ti ti-x" style="font-size:14px"></i>Risco &#38; Plano</div>
+        <div style="font-size:12px;color:var(--mu2);display:flex;align-items:center;gap:6px"><i class="ti ti-x" style="font-size:14px"></i>IA avan&#231;ada</div>
+      </div>
+    </div>
+    <div style="background:linear-gradient(135deg,rgba(245,200,66,.12),rgba(255,154,60,.08));border:1.5px solid rgba(245,200,66,.4);border-radius:16px;padding:16px;text-align:center;position:relative">
+      <div style="position:absolute;top:-10px;left:50%;transform:translateX(-50%);background:#f5c842;color:#1a1200;font-size:10px;font-weight:800;padding:3px 10px;border-radius:100px;white-space:nowrap">EM BREVE</div>
+      <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:#f5c842;margin-bottom:10px">Pro</div>
+      <div style="font-size:28px;font-weight:800;color:#f5c842;margin-bottom:4px">R$19</div>
+      <div style="font-size:11px;color:var(--mu);margin-bottom:14px">por m&#234;s</div>
+      <div style="display:flex;flex-direction:column;gap:6px;text-align:left">
+        <div style="font-size:12px;color:var(--tx);display:flex;align-items:center;gap:6px"><i class="ti ti-check" style="color:#f5c842;font-size:14px"></i>Tudo do gratuito</div>
+        <div style="font-size:12px;color:var(--tx);display:flex;align-items:center;gap:6px"><i class="ti ti-check" style="color:#f5c842;font-size:14px"></i>Risco financeiro</div>
+        <div style="font-size:12px;color:var(--tx);display:flex;align-items:center;gap:6px"><i class="ti ti-check" style="color:#f5c842;font-size:14px"></i>Plano 12 meses</div>
+        <div style="font-size:12px;color:var(--tx);display:flex;align-items:center;gap:6px"><i class="ti ti-check" style="color:#f5c842;font-size:14px"></i>Investimentos</div>
+        <div style="font-size:12px;color:var(--tx);display:flex;align-items:center;gap:6px"><i class="ti ti-check" style="color:#f5c842;font-size:14px"></i>IA ilimitada</div>
+        <div style="font-size:12px;color:var(--tx);display:flex;align-items:center;gap:6px"><i class="ti ti-check" style="color:#f5c842;font-size:14px"></i>Alertas avan&#231;ados</div>
+      </div>
+    </div>
   </div>
-  <button class="lang-option sel" data-lang="pt" onclick="selectLang('pt')">
-    <span class="lang-flag">&#127463;&#127479;</span>
-    <div><div class="lang-text-name">Portugu&#234;s</div><div class="lang-text-sub">Brasil</div></div>
-    <i class="ti ti-check lang-check"></i>
-  </button>
-  <button class="lang-option" data-lang="en" onclick="selectLang('en')">
-    <span class="lang-flag">&#127482;&#127480;</span>
-    <div><div class="lang-text-name">English</div><div class="lang-text-sub">United States</div></div>
-    <i class="ti ti-check lang-check"></i>
-  </button>
-  <button class="lang-option" data-lang="es" onclick="selectLang('es')">
-    <span class="lang-flag">&#127466;&#127480;</span>
-    <div><div class="lang-text-name">Espa&#241;ol</div><div class="lang-text-sub">Latinoam&#233;rica</div></div>
-    <i class="ti ti-check lang-check"></i>
-  </button>
+  <div style="background:rgba(245,200,66,.08);border:1.5px solid rgba(245,200,66,.25);border-radius:14px;padding:16px;margin-bottom:6px">
+    <div style="font-size:14px;font-weight:700;margin-bottom:4px">&#128276; Lista de espera</div>
+    <div style="font-size:12px;color:var(--mu);margin-bottom:12px;line-height:1.6">Seja o primeiro. Quem entrar na lista tem 30 dias gr&#225;tis!</div>
+    <input class="form-input" id="pro-email" type="email" placeholder="seu@email.com" style="margin-bottom:10px">
+    <button onclick="joinWaitlist()" style="width:100%;padding:14px;border-radius:12px;background:#f5c842;color:#1a1200;font-size:14px;font-weight:700;border:none;cursor:pointer" id="pro-join-btn">Quero ser avisado!</button>
+    <div id="pro-join-msg" style="display:none;text-align:center;font-size:13px;color:var(--ac);margin-top:10px;font-weight:500">&#10003; Voc&#234; est&#225; na lista! Obrigado.</div>
+  </div>
 </div>
 </div>
 
@@ -915,10 +910,7 @@ img{display:block}
 <div id="sup-panel">
   <div class="sup-head">
     <div class="sup-head-ico"><i class="ti ti-sparkles"></i></div>
-    <div class="sup-head-info">
-      <div class="sup-head-title">Suporte IA</div>
-      <div class="sup-head-status"><span class="sup-head-dot"></span>Online 24h</div>
-    </div>
+    <div class="sup-head-info"><div class="sup-head-title">Suporte IA</div><div class="sup-head-status"><span class="sup-head-dot"></span>Online 24h</div></div>
     <button class="sup-close" onclick="toggleSupport()"><i class="ti ti-x"></i></button>
   </div>
   <div class="sup-chips" id="sup-chips">
@@ -933,19 +925,8 @@ img{display:block}
   </div>
 </div>
 
-<!-- INSTALL BANNER -->
-<div id="install-banner">
-  <div class="ib-row">
-    <div class="ib-ico"><i class="ti ti-download"></i></div>
-    <div class="ib-body">
-      <div class="ib-title">Instalar Cento</div>
-      <div class="ib-sub">Compartilhar &#8594; Adicionar &#224; Tela Inicial</div>
-    </div>
-    <button class="ib-close" onclick="document.getElementById('install-banner').style.display='none'">OK</button>
-  </div>
-</div>
-
 <script>
+
 // \u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550
 //  CONFIG + INIT
 // \u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550
@@ -1014,11 +995,35 @@ window.addEventListener('DOMContentLoaded', function() {
 // \u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550
 //  AUTH
 // \u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550
-function showAuth(){
+function showAuth(tab){
   document.getElementById('loading').style.display='none';
-  document.getElementById('auth').style.display='flex';
+  document.getElementById('auth').style.display='none';
   document.getElementById('ob').style.display='none';
   document.getElementById('app').style.display='none';
+  var lp=document.getElementById('landing');
+  if(lp){lp.style.display='flex';buildCompare();}
+  else{document.getElementById('auth').style.display='flex';}
+  if(tab){document.getElementById('auth').style.display='flex';lp.style.display='none';switchTab(tab);}
+}
+function goToLanding(){
+  document.getElementById('auth').style.display='none';
+  var lp=document.getElementById('landing');
+  if(lp) lp.style.display='flex';
+}
+function buildCompare(){
+  var el=document.getElementById('lp-compare-rows');if(!el)return;
+  var rows=[
+    ['Brasil + EUA simultneo',true,false],
+    ['IA financeira pessoal',true,false],
+    ['Score de risco',true,false],
+    ['Plano 12 meses',true,false],
+    ['Mercado ao vivo',true,false],
+    ['3 idiomas PT/EN/ES',true,false],
+    ['100% gratuito',true,'Parcial']
+  ];
+  el.innerHTML=rows.map(function(r){
+    return '<div class="lp-compare-row"><div style="padding:12px;font-size:12px;color:rgba(240,239,232,.7)">'+r[0]+'</div><div style="padding:12px;text-align:center;border-left:1px solid rgba(255,255,255,.05);font-size:'+(r[1]===true||r[1]===false?'16':'12')+'px">'+(r[1]===true?'✅':r[1]===false?'❌':r[1])+'</div><div style="padding:12px;text-align:center;border-left:1px solid rgba(255,255,255,.05);font-size:'+(r[2]===true||r[2]===false?'16':'12')+'px;color:'+(r[2]==='Parcial'?'var(--or)':'inherit')+'">'+(r[2]===true?'✅':r[2]===false?'❌':r[2])+'</div></div>';
+  }).join('');
 }
 
 function authMsg(txt,type){
@@ -2574,65 +2579,7 @@ nav = function(page){
   resize();
   animate();
 })();
-</script>
-<!-- MODAL: PRO -->
-<div class="modal-overlay" id="modal-pro">
-<div class="modal-sheet">
-  <div class="sheet-pill"></div>
-  <div class="sheet-hdr">
-    <div class="sheet-title" style="display:flex;align-items:center;gap:8px">&#10024; <span>Cento Pro</span></div>
-    <button class="sheet-close" onclick="closeModal('pro')"><i class="ti ti-x"></i></button>
-  </div>
-  <!-- PRICING CARDS -->
-  <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:18px">
-    <div style="background:var(--sf2);border:1.5px solid var(--bd2);border-radius:16px;padding:16px;text-align:center">
-      <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:var(--mu);margin-bottom:10px">Gratuito</div>
-      <div style="font-size:28px;font-weight:800;letter-spacing:-1px;margin-bottom:4px">R$0</div>
-      <div style="font-size:11px;color:var(--mu);margin-bottom:14px">Para sempre</div>
-      <div style="display:flex;flex-direction:column;gap:6px;text-align:left">
-        <div style="font-size:12px;color:var(--mu);display:flex;align-items:center;gap:6px"><i class="ti ti-check" style="color:var(--ac);font-size:14px"></i>Transa&#231;&#245;es</div>
-        <div style="font-size:12px;color:var(--mu);display:flex;align-items:center;gap:6px"><i class="ti ti-check" style="color:var(--ac);font-size:14px"></i>Or&#231;amentos</div>
-        <div style="font-size:12px;color:var(--mu);display:flex;align-items:center;gap:6px"><i class="ti ti-check" style="color:var(--ac);font-size:14px"></i>Metas</div>
-        <div style="font-size:12px;color:var(--mu);display:flex;align-items:center;gap:6px"><i class="ti ti-check" style="color:var(--ac);font-size:14px"></i>3 idiomas</div>
-        <div style="font-size:12px;color:var(--mu2);display:flex;align-items:center;gap:6px"><i class="ti ti-x" style="font-size:14px"></i>Risco &amp; Plano</div>
-        <div style="font-size:12px;color:var(--mu2);display:flex;align-items:center;gap:6px"><i class="ti ti-x" style="font-size:14px"></i>IA avan&#231;ada</div>
-      </div>
-    </div>
-    <div style="background:linear-gradient(135deg,rgba(245,200,66,.12),rgba(255,154,60,.08));border:1.5px solid rgba(245,200,66,.4);border-radius:16px;padding:16px;text-align:center;position:relative">
-      <div style="position:absolute;top:-10px;left:50%;transform:translateX(-50%);background:#f5c842;color:#1a1200;font-size:10px;font-weight:800;padding:3px 10px;border-radius:100px;white-space:nowrap">EM BREVE</div>
-      <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:#f5c842;margin-bottom:10px">Pro</div>
-      <div style="font-size:28px;font-weight:800;letter-spacing:-1px;color:#f5c842;margin-bottom:4px">R$19</div>
-      <div style="font-size:11px;color:var(--mu);margin-bottom:14px">por m&#234;s</div>
-      <div style="display:flex;flex-direction:column;gap:6px;text-align:left">
-        <div style="font-size:12px;color:var(--tx);display:flex;align-items:center;gap:6px"><i class="ti ti-check" style="color:#f5c842;font-size:14px"></i>Tudo do gratuito</div>
-        <div style="font-size:12px;color:var(--tx);display:flex;align-items:center;gap:6px"><i class="ti ti-check" style="color:#f5c842;font-size:14px"></i>Risco financeiro</div>
-        <div style="font-size:12px;color:var(--tx);display:flex;align-items:center;gap:6px"><i class="ti ti-check" style="color:#f5c842;font-size:14px"></i>Plano 12 meses</div>
-        <div style="font-size:12px;color:var(--tx);display:flex;align-items:center;gap:6px"><i class="ti ti-check" style="color:#f5c842;font-size:14px"></i>Investimentos</div>
-        <div style="font-size:12px;color:var(--tx);display:flex;align-items:center;gap:6px"><i class="ti ti-check" style="color:#f5c842;font-size:14px"></i>IA ilimitada</div>
-        <div style="font-size:12px;color:var(--tx);display:flex;align-items:center;gap:6px"><i class="ti ti-check" style="color:#f5c842;font-size:14px"></i>Alertas avan&#231;ados</div>
-      </div>
-    </div>
-  </div>
-  <!-- FEATURES LIST -->
-  <div style="background:var(--sf2);border-radius:14px;padding:14px;margin-bottom:16px">
-    <div style="font-size:13px;font-weight:700;margin-bottom:12px;letter-spacing:-.2px">O que voc&#234; vai desbloquear</div>
-    <div style="display:flex;flex-direction:column;gap:10px">
-      <div style="display:flex;align-items:center;gap:12px"><div style="width:34px;height:34px;border-radius:10px;background:rgba(245,200,66,.15);display:flex;align-items:center;justify-content:center;flex-shrink:0"><i class="ti ti-shield-exclamation" style="color:#f5c842;font-size:17px"></i></div><div><div style="font-size:13px;font-weight:600;margin-bottom:2px">Risco Financeiro</div><div style="font-size:12px;color:var(--mu)">Score de risco, fatores e dicas personalizadas</div></div></div>
-      <div style="display:flex;align-items:center;gap:12px"><div style="width:34px;height:34px;border-radius:10px;background:rgba(245,200,66,.15);display:flex;align-items:center;justify-content:center;flex-shrink:0"><i class="ti ti-chart-line" style="color:#f5c842;font-size:17px"></i></div><div><div style="font-size:13px;font-weight:600;margin-bottom:2px">Plano 12 Meses</div><div style="font-size:12px;color:var(--mu)">Proje&#231;&#227;o m&#234;s a m&#234;s com seus n&#250;meros reais</div></div></div>
-      <div style="display:flex;align-items:center;gap:12px"><div style="width:34px;height:34px;border-radius:10px;background:rgba(245,200,66,.15);display:flex;align-items:center;justify-content:center;flex-shrink:0"><i class="ti ti-trending-up" style="color:#f5c842;font-size:17px"></i></div><div><div style="font-size:13px;font-weight:600;margin-bottom:2px">Investimentos</div><div style="font-size:12px;color:var(--mu)">Carteira pessoal com % de valoriza&#231;&#227;o</div></div></div>
-      <div style="display:flex;align-items:center;gap:12px"><div style="width:34px;height:34px;border-radius:10px;background:rgba(245,200,66,.15);display:flex;align-items:center;justify-content:center;flex-shrink:0"><i class="ti ti-sparkles" style="color:#f5c842;font-size:17px"></i></div><div><div style="font-size:13px;font-weight:600;margin-bottom:2px">Assistente IA Completo</div><div style="font-size:12px;color:var(--mu)">Chat ilimitado com contexto financeiro completo</div></div></div>
-    </div>
-  </div>
-  <!-- WAITLIST -->
-  <div style="background:rgba(245,200,66,.08);border:1.5px solid rgba(245,200,66,.25);border-radius:14px;padding:16px;margin-bottom:6px">
-    <div style="font-size:14px;font-weight:700;margin-bottom:4px">&#128276; Lista de espera</div>
-    <div style="font-size:12px;color:var(--mu);margin-bottom:12px;line-height:1.6">Seja o primeiro a saber quando o Pro chegar. Quem entrar na lista tem 30 dias gr&#225;tis!</div>
-    <input class="form-input" id="pro-email" type="email" placeholder="seu@email.com" style="margin-bottom:10px">
-    <button onclick="joinWaitlist()" style="width:100%;padding:14px;border-radius:12px;background:#f5c842;color:#1a1200;font-size:14px;font-weight:700;border:none;cursor:pointer;-webkit-tap-highlight-color:transparent" id="pro-join-btn">Quero ser avisado!</button>
-    <div id="pro-join-msg" style="display:none;text-align:center;font-size:13px;color:var(--ac);margin-top:10px;font-weight:500">&#10003; Voc&#234; est&#225; na lista! Obrigado.</div>
-  </div>
-</div>
-</div>
 
+</script>
 </body>
 </html>
