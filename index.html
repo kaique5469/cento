@@ -1298,16 +1298,29 @@ function drNav(page){toggleDrawer();setTimeout(function(){nav(page);},60);}
 
 function updateDrawer(){
   if(!USER)return;
-  console.log('USER profile:', JSON.stringify(USER.profile));
-  console.log('isPro:', isPro());
+  var pro=isPro();
   var name=USER.name||'';
   var ini=name?name[0].toUpperCase():'?';
-  var el=document.getElementById('dr-av'); if(el)el.textContent=ini;
-  var nl=document.getElementById('dr-name'); if(nl)nl.textContent=name;
-  var em=document.getElementById('dr-email'); if(em)em.textContent=CU&&CU.email||'';
+  var el=document.getElementById('dr-av');
+  if(el){
+    el.textContent=ini;
+    el.style.background=pro?'linear-gradient(135deg,#f5c842,#ff9500)':'var(--ac)';
+  }
+  var nl=document.getElementById('dr-name');
+  if(nl){
+    if(pro){
+      nl.innerHTML=name+' <span style="display:inline-block;font-size:10px;font-weight:800;padding:2px 8px;border-radius:100px;background:linear-gradient(90deg,#f5c842,#ff9500);color:#1a1200;vertical-align:middle;margin-left:5px;letter-spacing:.3px">PRO</span>';
+    } else {
+      nl.textContent=name;
+    }
+  }
+  var em=document.getElementById('dr-email');
+  if(em) em.textContent=CU&&CU.email||'';
   var ml=document.getElementById('dr-mode-lbl');
-  var mmap={br:'Brasil \ud83c\udde7\ud83c\uddf7',us:'EUA \ud83c\uddfa\ud83c\uddf8',both:'BR + EUA \ud83c\udf0e'};
-  if(ml)ml.textContent=mmap[USER.mode||'br']||'Brasil';
+  var mmap={br:'Brasil',us:'EUA',both:'BR + EUA'};
+  if(ml) ml.textContent=mmap[USER.mode||'br']||'Brasil';
+  var banner=document.getElementById('pro-banner');
+  if(banner) banner.style.display=pro?'none':'block';
 }
 
 // \u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550
