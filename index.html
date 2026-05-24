@@ -1234,7 +1234,12 @@ function finishOnboarding(){
 //  APP INIT
 // \u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550
 function isPro(){
-  return USER && USER.profile && USER.profile.is_pro === true;
+  if(!USER) return false;
+  // Check in profile jsonb column
+  if(USER.profile && USER.profile.is_pro === true) return true;
+  // Check top-level is_pro field
+  if(USER.is_pro === true) return true;
+  return false;
 }
 
 function initApp(){
@@ -1282,6 +1287,8 @@ function drNav(page){toggleDrawer();setTimeout(function(){nav(page);},60);}
 
 function updateDrawer(){
   if(!USER)return;
+  console.log('USER profile:', JSON.stringify(USER.profile));
+  console.log('isPro:', isPro());
   var name=USER.name||'';
   var ini=name?name[0].toUpperCase():'?';
   var el=document.getElementById('dr-av'); if(el)el.textContent=ini;
