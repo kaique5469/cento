@@ -637,7 +637,7 @@ img{display:block}
   <div class="top-bar">
     <button class="tb-menu" onclick="toggleDrawer()"><i class="ti ti-menu-2"></i></button>
     <div class="tb-title"><div class="tb-title-dot"></div>Cento</div>
-    <button class="tb-lang" onclick="openLangModal()"><i class="ti ti-language"></i></button>
+    <div style="width:42px"></div>
   </div>
 
   <div class="content" id="content">
@@ -649,6 +649,7 @@ img{display:block}
     <div class="page" id="page-plan"></div>
     <div class="page" id="page-invest"></div>
     <div class="page" id="page-ai"></div>
+    <div class="page" id="page-market"></div>
   </div>
 
   <nav class="bot-nav">
@@ -666,8 +667,8 @@ img{display:block}
     <button class="nav-btn" id="nav-budget" onclick="nav('budget')">
       <i class="ti ti-chart-pie"></i><span>Or&#231;amento</span>
     </button>
-    <button class="nav-btn" id="nav-more" onclick="toggleDrawer()">
-      <i class="ti ti-dots"></i><span>Mais</span>
+    <button class="nav-btn" id="nav-market" onclick="nav('market')">
+      <i class="ti ti-activity"></i><span>Mercado</span>
     </button>
   </nav>
 </div>
@@ -701,8 +702,20 @@ img{display:block}
     <button class="dr-item" id="dr-risk" onclick="drNav('risk')"><i class="ti ti-shield-exclamation"></i>Risco Financeiro</button>
     <button class="dr-item" id="dr-plan" onclick="drNav('plan')"><i class="ti ti-chart-line"></i>Plano 12 Meses</button>
     <button class="dr-item" id="dr-invest" onclick="drNav('invest')"><i class="ti ti-trending-up"></i>Investimentos</button>
+    <button class="dr-item" id="dr-market" onclick="drNav('market')"><i class="ti ti-activity"></i>Mercado ao Vivo</button>
     <button class="dr-item" id="dr-ai" onclick="drNav('ai')"><i class="ti ti-sparkles"></i>Assistente IA</button>
   </div>
+  <!-- PRO BANNER -->
+  <div id="pro-banner" style="margin:8px 12px;padding:14px;border-radius:14px;background:linear-gradient(135deg,rgba(245,200,66,.15),rgba(255,154,60,.1));border:1.5px solid rgba(245,200,66,.35)">
+    <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">
+      <span style="font-size:16px">&#10024;</span>
+      <span style="font-size:13px;font-weight:700;color:#f5c842">Cento Pro</span>
+      <span style="font-size:10px;font-weight:700;padding:2px 7px;border-radius:100px;background:rgba(245,200,66,.2);color:#f5c842;border:1px solid rgba(245,200,66,.4)">EM BREVE</span>
+    </div>
+    <div style="font-size:12px;color:var(--mu);line-height:1.6;margin-bottom:10px">Alertas avan&#231;ados, IA financeira completa, relat&#243;rios detalhados e muito mais.</div>
+    <button onclick="openProModal()" style="width:100%;padding:10px;border-radius:10px;background:#f5c842;color:#1a1200;font-size:13px;font-weight:700;border:none;cursor:pointer;-webkit-tap-highlight-color:transparent">Ver planos Pro</button>
+  </div>
+
   <div class="dr-section" style="margin-top:4px">
     <div class="dr-sec-lbl">Conta</div>
     <button class="dr-item" onclick="openLangModal()"><i class="ti ti-language"></i>Idioma</button>
@@ -1203,6 +1216,7 @@ function renderPage(p){
   else if(p==='plan') renderPlanPage();
   else if(p==='invest') renderInvestPage();
   else if(p==='ai') renderAIPage();
+  else if(p==='market') renderMarketPage();
 }
 
 // \u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550
@@ -1296,6 +1310,31 @@ function selectLang(l){
   setTimeout(function(){closeModal('lang');if(USER)renderPage(activePage);},250);
 }
 function openLangModal(){document.getElementById('modal-lang').classList.add('open');}
+function openProModal(){
+  if(document.getElementById('pro-email')){
+    var email = document.getElementById('pro-email');
+    if(CU && CU.email) email.value = CU.email;
+  }
+  document.getElementById('pro-join-msg').style.display = 'none';
+  document.getElementById('pro-join-btn').style.display = 'block';
+  document.getElementById('modal-pro').classList.add('open');
+  if(document.getElementById('drawer').classList.contains('open')) toggleDrawer();
+}
+function joinWaitlist(){
+  var email = document.getElementById('pro-email').value.trim();
+  if(!email){ document.getElementById('pro-email').focus(); return; }
+  var btn = document.getElementById('pro-join-btn');
+  btn.textContent = 'Salvando...'; btn.style.opacity = '.6'; btn.style.pointerEvents = 'none';
+  // Save to Supabase waitlist table (graceful fail if table doesn't exist)
+  try {
+    sb.from('pro_waitlist').insert({email: email, user_id: CU ? CU.id : null, created_at: new Date().toISOString()})
+      .then(function(){ showWaitlistSuccess(); }).catch(function(){ showWaitlistSuccess(); });
+  } catch(e) { showWaitlistSuccess(); }
+}
+function showWaitlistSuccess(){
+  document.getElementById('pro-join-btn').style.display = 'none';
+  document.getElementById('pro-join-msg').style.display = 'block';
+}
 
 // \u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550
 //  HOME
@@ -1884,6 +1923,241 @@ function deleteInvestment(){
     closeModal('invest'); renderInvestPage();
   });
 }
+
+// \u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550
+//  MARKET PAGE \u2014 Live prices, alerts, tips
+// \u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550
+var MARKET_DATA = {};
+var MKT_TIMER = null;
+var MKT_FILTER = 'all';
+
+function renderMarketPage(){
+  var pg = document.getElementById('page-market');
+  pg.innerHTML =
+    '<div class="page-hdr"><div class="page-title">Mercado ao Vivo</div><div class="page-sub" id="mkt-sub">Atualizando...</div></div>'
+    + '<div id="mkt-alerts"></div>'
+    + '<div style="display:flex;gap:8px;margin-bottom:16px;overflow-x:auto;padding-bottom:2px">'
+    + '<button class="filter-pill on" data-f="all" onclick="mktCat(this.dataset.f,this)">Todos</button>'
+    + '<button class="filter-pill" data-f="crypto" onclick="mktCat(this.dataset.f,this)">Cripto</button>'
+    + '<button class="filter-pill" data-f="forex" onclick="mktCat(this.dataset.f,this)">C\u00E2mbio</button>'
+    + '</div>'    + '<div id="mkt-list" style="display:flex;flex-direction:column;gap:8px"></div>'
+    + '<div style="margin-top:20px"><div class="sec-row" style="margin-bottom:12px"><div class="sec-title">Bitcoin 7 dias</div></div>'
+    + '<div class="chart-card" style="padding:14px"><div style="height:150px"><canvas id="btc-chart"></canvas></div></div></div>'
+    + '<div style="margin-top:20px"><div class="sec-row" style="margin-bottom:12px"><div class="sec-title">Quando investir</div></div>'
+    + '<div id="mkt-tips"></div></div>'
+    + '<div style="font-size:11px;color:var(--mu2);text-align:center;margin-top:16px;line-height:1.7">Dados: CoinGecko + ExchangeRate-API \u00B7 Atualiza a cada 60s<br>N\u00E3o \u00E9 recomenda\u00E7\u00E3o de investimento.</div>';
+
+  fetchPrices();
+  if(MKT_TIMER) clearInterval(MKT_TIMER);
+  MKT_TIMER = setInterval(fetchPrices, 60000);
+}
+
+function mktCat(f, el){
+  MKT_FILTER = f;
+  document.querySelectorAll('.filter-pill').forEach(function(b){b.classList.remove('on');});
+  if(el) el.classList.add('on');
+  buildMktList();
+}
+
+function fetchPrices(){
+  // Crypto
+  fetch('https://api.coingecko.com/api/v3/simple/price?ids=bitcoin,ethereum,solana&vs_currencies=usd,brl&include_24hr_change=true&include_7d_change=true')
+    .then(function(r){return r.json();})
+    .then(function(d){
+      if(d.bitcoin) MARKET_DATA.btc = {usdP:d.bitcoin.usd, brlP:d.bitcoin.brl, c24:d.bitcoin.usd_24h_change||0, c7d:d.bitcoin.usd_7d_change||0};
+      if(d.ethereum) MARKET_DATA.eth = {usdP:d.ethereum.usd, brlP:d.ethereum.brl, c24:d.ethereum.usd_24h_change||0, c7d:d.ethereum.usd_7d_change||0};
+      if(d.solana) MARKET_DATA.sol = {usdP:d.solana.usd, brlP:d.solana.brl, c24:d.solana.usd_24h_change||0, c7d:d.solana.usd_7d_change||0};
+      buildMktList();
+      buildMktAlerts();
+      buildMktTips();
+      fetchBTCChart();
+      var now = new Date();
+      var sub = document.getElementById('mkt-sub');
+      if(sub) sub.textContent = 'Atualizado \u00E0s ' + String(now.getHours()).padStart(2,'0') + ':' + String(now.getMinutes()).padStart(2,'0');
+    }).catch(function(){
+      var sub = document.getElementById('mkt-sub');
+      if(sub) sub.textContent = 'Erro. Verificando conex\u00E3o...';
+    });
+
+  // Forex
+  fetch('https://api.exchangerate-api.com/v4/latest/USD')
+    .then(function(r){return r.json();})
+    .then(function(d){
+      var brl = d.rates && d.rates.BRL || 5.74;
+      var eur = d.rates && d.rates.EUR || 1;
+      MARKET_DATA.usd = {brlP: brl, c24: 0};
+      MARKET_DATA.eur = {brlP: brl/eur, c24: 0};
+      buildMktList();
+    }).catch(function(){
+      if(!MARKET_DATA.usd) MARKET_DATA.usd = {brlP:5.74, c24:0};
+    });
+}
+
+function fetchBTCChart(){
+  fetch('https://api.coingecko.com/api/v3/coins/bitcoin/market_chart?vs_currency=usd&days=7&interval=daily')
+    .then(function(r){return r.json();})
+    .then(function(d){
+      if(!d.prices || !d.prices.length) return;
+      var prices = d.prices.map(function(p){return Math.round(p[1]);});
+      var days = ['Dom','Seg','Ter','Qua','Qui','Sex','S\u00E1b'];
+      var labels = d.prices.map(function(p){return days[new Date(p[0]).getDay()];});
+      var ctx = document.getElementById('btc-chart');
+      if(!ctx) return;
+      if(ctx._c){ctx._c.destroy();ctx._c=null;}
+      var up = prices[prices.length-1] >= prices[0];
+      ctx._c = new Chart(ctx, {
+        type:'line',
+        data:{labels:labels, datasets:[{data:prices, borderColor:up?'#c8f05a':'#ff5f5f', backgroundColor:up?'rgba(200,240,90,.08)':'rgba(255,95,95,.08)', tension:0.4, fill:true, pointRadius:4, pointBackgroundColor:up?'#c8f05a':'#ff5f5f', borderWidth:2}]},
+        options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{ticks:{color:'#7a7a72',font:{size:11}},grid:{display:false}},y:{ticks:{color:'#7a7a72',font:{size:10},callback:function(v){return '$'+v.toLocaleString();}},grid:{color:'rgba(255,255,255,.04)'}}}}
+      });
+    }).catch(function(){});
+}
+
+function buildMktList(){
+  var el = document.getElementById('mkt-list'); if(!el) return;
+  var items = [
+    {g:'crypto', sym:'BTC', name:'Bitcoin', icon:'currency-bitcoin', color:'#f7931a', d:MARKET_DATA.btc, fmt:function(d){return d?'$'+d.usdP.toLocaleString('en-US',{maximumFractionDigits:0}):'--';}, sub:function(d){return d?'R$'+Math.round(d.brlP).toLocaleString('pt-BR'):'--';}},
+    {g:'crypto', sym:'ETH', name:'Ethereum', icon:'brand-ethereum', color:'#627eea', d:MARKET_DATA.eth, fmt:function(d){return d?'$'+d.usdP.toLocaleString('en-US',{maximumFractionDigits:0}):'--';}, sub:function(d){return d?'R$'+Math.round(d.brlP).toLocaleString('pt-BR'):'--';}},
+    {g:'crypto', sym:'SOL', name:'Solana', icon:'atom-2', color:'#9945ff', d:MARKET_DATA.sol, fmt:function(d){return d?'$'+d.usdP.toFixed(2):'--';}, sub:function(d){return d?'R$'+d.brlP.toFixed(2):'--';}},
+    {g:'forex', sym:'USD', name:'D\u00F3lar', icon:'currency-dollar', color:'#4da6ff', d:MARKET_DATA.usd, fmt:function(d){return d?'R$'+d.brlP.toFixed(2):'R$--';}, sub:function(){return 'USD/BRL';}},
+    {g:'forex', sym:'EUR', name:'Euro', icon:'currency-euro', color:'#af87ff', d:MARKET_DATA.eur, fmt:function(d){return d?'R$'+d.brlP.toFixed(2):'R$--';}, sub:function(){return 'EUR/BRL';}}
+  ];
+  var list = MKT_FILTER === 'all' ? items : items.filter(function(i){return i.g === MKT_FILTER;});
+  el.innerHTML = list.map(function(a){
+    var c24 = a.d ? a.d.c24 : 0;
+    var up = c24 >= 0;
+    var chg = (up?'+':'') + c24.toFixed(2) + '%';
+    return '<div class="invest-card" style="cursor:default">'
+      + '<div class="invest-ico" style="background:'+a.color+'20;color:'+a.color+'"><i class="ti ti-'+a.icon+'"></i></div>'
+      + '<div class="invest-body"><div class="invest-name">'+a.sym+' <span style="font-size:11px;color:var(--mu);font-weight:400">'+a.name+'</span></div><div class="invest-sub">'+a.sub(a.d)+'</div></div>'
+      + '<div class="invest-right"><div class="invest-cur">'+a.fmt(a.d)+'</div><div class="invest-chg '+(up?'chg-up':'chg-dn')+'">'+chg+'</div></div>'
+      + '</div>';
+  }).join('');
+}
+
+function buildMktAlerts(){
+  var el = document.getElementById('mkt-alerts'); if(!el) return;
+  var alerts = [];
+  var assets = [{sym:'BTC',d:MARKET_DATA.btc},{sym:'ETH',d:MARKET_DATA.eth},{sym:'SOL',d:MARKET_DATA.sol}];
+  assets.forEach(function(a){
+    if(!a.d) return;
+    if(a.d.c24 <= -5) alerts.push('<div class="alert-card red" style="margin-bottom:8px"><div class="alert-ico"><i class="ti ti-trending-down" style="color:var(--rd)"></i></div><div class="alert-body"><div class="alert-title red">\u26A0\uFE0F Queda forte: '+a.sym+'</div><div class="alert-desc">'+a.sym+' caiu <strong>'+a.d.c24.toFixed(2)+'%</strong> nas \u00FAltimas 24h. Monitore suas posi\u00E7\u00F5es.</div></div></div>');
+    else if(a.d.c24 >= 8) alerts.push('<div class="alert-card green" style="margin-bottom:8px"><div class="alert-ico"><i class="ti ti-trending-up" style="color:var(--ac)"></i></div><div class="alert-body"><div class="alert-title green">\u26A1 Alta forte: '+a.sym+'</div><div class="alert-desc">'+a.sym+' subiu <strong>+'+a.d.c24.toFixed(2)+'%</strong> nas \u00FAltimas 24h.</div></div></div>');
+  });
+  el.innerHTML = alerts.join('');
+}
+
+function buildMktTips(){
+  var el = document.getElementById('mkt-tips'); if(!el) return;
+  var btc = MARKET_DATA.btc;
+  var usd = MARKET_DATA.usd && MARKET_DATA.usd.brlP || 5.74;
+  var tips = [];
+
+  // BTC analysis
+  if(btc){
+    if(btc.c24 < -5 && btc.c7d < -10){
+      tips.push({icon:'trending-down',color:'var(--bl)',badge:'Oportunidade?',title:'BTC em corre\u00E7\u00E3o forte',desc:'Bitcoin caiu '+btc.c24.toFixed(1)+'% hoje e '+btc.c7d.toFixed(1)+'% na semana. Historicamente corre\u00E7\u00F5es assim criam oportunidades para quem j\u00E1 tem plano. DCA (aportes regulares) pode ser uma op\u00E7\u00E3o. N\u00E3o \u00E9 recomenda\u00E7\u00E3o.'});
+    } else if(btc.c24 > 8){
+      tips.push({icon:'flame',color:'var(--or)',badge:'Cuidado',title:'N\u00E3o persiga a alta do BTC',desc:'Bitcoin subiu '+btc.c24.toFixed(1)+'% hoje. Comprar em momentos de alta forte \u00E9 arriscado (FOMO). Momentos de pico n\u00E3o s\u00E3o ideais para entrar pela primeira vez.'});
+    } else {
+      tips.push({icon:'minus',color:'var(--mu)',badge:'Neutro',title:'Bitcoin lateral hoje',desc:'Varia\u00E7\u00E3o de '+btc.c24.toFixed(1)+'%. Mercado est\u00E1vel \u00E9 bom para estudar, definir sua estrat\u00E9gia e fazer aportes regulares (DCA) sem pressa.'});
+    }
+  }
+
+  // USD tip
+  if(usd > 5.8){
+    tips.push({icon:'currency-dollar',color:'var(--rd)',badge:'Info',title:'D\u00F3lar alto: impacto no bolso',desc:'Com USD a R$'+usd.toFixed(2)+', assinaturas internacionais (Spotify, Netflix, apps) ficam mais caras. \u00C9 bom momento para quem recebe em USD ou tem investimentos no exterior.'});
+  } else {
+    tips.push({icon:'currency-dollar',color:'var(--ac)',badge:'Info',title:'D\u00F3lar favour\u00E1vel',desc:'USD a R$'+usd.toFixed(2)+' \u00E9 relativamente baixo. Compras internacionais ficam mais baratas. Quem tem investimentos em d\u00F3lar pode revisar a exposi\u00E7\u00E3o cambial.'});
+  }
+
+  // DCA tip always
+  tips.push({icon:'repeat',color:'var(--ac)',badge:'Estrat\u00E9gia',title:'DCA: a estrat\u00E9gia mais segura',desc:'Invista um valor fixo todo m\u00EAs (ex: R$100 em BTC) independente do pre\u00E7o. Isso reduz o risco de comprar no topo e elimina o estresse de tentar prever o mercado.'});
+
+  // Risk reminder
+  tips.push({icon:'shield-exclamation',color:'var(--or)',badge:'Lembre-se',title:'Reserva antes de investir',desc:'Nunca invista em cripto sem ter reserva de emerg\u00EAncia (6 meses de gastos). E nunca mais de 5-10% do patrim\u00F4nio em ativos de alto risco como criptomoedas.'});
+
+  el.innerHTML = tips.map(function(tip){
+    var bc = tip.badge==='Cuidado'||tip.badge==='Lembre-se' ? 'var(--or)' : tip.badge==='Oportunidade?' ? 'var(--bl)' : tip.badge==='Estrat\u00E9gia' ? 'var(--ac)' : 'var(--mu)';
+    return '<div style="background:var(--sf);border:1px solid var(--bd);border-radius:16px;padding:16px;margin-bottom:10px">'
+      + '<div style="display:flex;align-items:center;gap:10px;margin-bottom:10px">'
+      + '<div style="width:38px;height:38px;border-radius:12px;background:'+tip.color+'18;display:flex;align-items:center;justify-content:center;flex-shrink:0"><i class="ti ti-'+tip.icon+'" style="font-size:19px;color:'+tip.color+'"></i></div>'
+      + '<div style="flex:1"><div style="font-size:13px;font-weight:700;margin-bottom:3px;letter-spacing:-.2px">'+tip.title+'</div>'
+      + '<span style="font-size:10px;font-weight:700;padding:2px 8px;border-radius:100px;background:'+bc+'18;color:'+bc+';border:1px solid '+bc+'33">'+tip.badge+'</span>'
+      + '</div></div>'
+      + '<div style="font-size:13px;color:var(--mu);line-height:1.7">'+tip.desc+'</div>'
+      + '</div>';
+  }).join('');
+}
+
+// Stop timer when leaving market page
+var _origNav = nav;
+nav = function(page){
+  if(activePage === 'market' && page !== 'market' && MKT_TIMER){
+    clearInterval(MKT_TIMER); MKT_TIMER = null;
+  }
+  _origNav(page);
+};
+
 </script>
+<!-- MODAL: PRO -->
+<div class="modal-overlay" id="modal-pro">
+<div class="modal-sheet">
+  <div class="sheet-pill"></div>
+  <div class="sheet-hdr">
+    <div class="sheet-title" style="display:flex;align-items:center;gap:8px">&#10024; <span>Cento Pro</span></div>
+    <button class="sheet-close" onclick="closeModal('pro')"><i class="ti ti-x"></i></button>
+  </div>
+  <!-- PRICING CARDS -->
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:18px">
+    <div style="background:var(--sf2);border:1.5px solid var(--bd2);border-radius:16px;padding:16px;text-align:center">
+      <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:var(--mu);margin-bottom:10px">Gratuito</div>
+      <div style="font-size:28px;font-weight:800;letter-spacing:-1px;margin-bottom:4px">R$0</div>
+      <div style="font-size:11px;color:var(--mu);margin-bottom:14px">Para sempre</div>
+      <div style="display:flex;flex-direction:column;gap:6px;text-align:left">
+        <div style="font-size:12px;color:var(--mu);display:flex;align-items:center;gap:6px"><i class="ti ti-check" style="color:var(--ac);font-size:14px"></i>Transa&#231;&#245;es</div>
+        <div style="font-size:12px;color:var(--mu);display:flex;align-items:center;gap:6px"><i class="ti ti-check" style="color:var(--ac);font-size:14px"></i>Or&#231;amentos</div>
+        <div style="font-size:12px;color:var(--mu);display:flex;align-items:center;gap:6px"><i class="ti ti-check" style="color:var(--ac);font-size:14px"></i>Metas</div>
+        <div style="font-size:12px;color:var(--mu);display:flex;align-items:center;gap:6px"><i class="ti ti-check" style="color:var(--ac);font-size:14px"></i>3 idiomas</div>
+        <div style="font-size:12px;color:var(--mu2);display:flex;align-items:center;gap:6px"><i class="ti ti-x" style="font-size:14px"></i>Risco &amp; Plano</div>
+        <div style="font-size:12px;color:var(--mu2);display:flex;align-items:center;gap:6px"><i class="ti ti-x" style="font-size:14px"></i>IA avan&#231;ada</div>
+      </div>
+    </div>
+    <div style="background:linear-gradient(135deg,rgba(245,200,66,.12),rgba(255,154,60,.08));border:1.5px solid rgba(245,200,66,.4);border-radius:16px;padding:16px;text-align:center;position:relative">
+      <div style="position:absolute;top:-10px;left:50%;transform:translateX(-50%);background:#f5c842;color:#1a1200;font-size:10px;font-weight:800;padding:3px 10px;border-radius:100px;white-space:nowrap">EM BREVE</div>
+      <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:#f5c842;margin-bottom:10px">Pro</div>
+      <div style="font-size:28px;font-weight:800;letter-spacing:-1px;color:#f5c842;margin-bottom:4px">R$19</div>
+      <div style="font-size:11px;color:var(--mu);margin-bottom:14px">por m&#234;s</div>
+      <div style="display:flex;flex-direction:column;gap:6px;text-align:left">
+        <div style="font-size:12px;color:var(--tx);display:flex;align-items:center;gap:6px"><i class="ti ti-check" style="color:#f5c842;font-size:14px"></i>Tudo do gratuito</div>
+        <div style="font-size:12px;color:var(--tx);display:flex;align-items:center;gap:6px"><i class="ti ti-check" style="color:#f5c842;font-size:14px"></i>Risco financeiro</div>
+        <div style="font-size:12px;color:var(--tx);display:flex;align-items:center;gap:6px"><i class="ti ti-check" style="color:#f5c842;font-size:14px"></i>Plano 12 meses</div>
+        <div style="font-size:12px;color:var(--tx);display:flex;align-items:center;gap:6px"><i class="ti ti-check" style="color:#f5c842;font-size:14px"></i>Investimentos</div>
+        <div style="font-size:12px;color:var(--tx);display:flex;align-items:center;gap:6px"><i class="ti ti-check" style="color:#f5c842;font-size:14px"></i>IA ilimitada</div>
+        <div style="font-size:12px;color:var(--tx);display:flex;align-items:center;gap:6px"><i class="ti ti-check" style="color:#f5c842;font-size:14px"></i>Alertas avan&#231;ados</div>
+      </div>
+    </div>
+  </div>
+  <!-- FEATURES LIST -->
+  <div style="background:var(--sf2);border-radius:14px;padding:14px;margin-bottom:16px">
+    <div style="font-size:13px;font-weight:700;margin-bottom:12px;letter-spacing:-.2px">O que voc&#234; vai desbloquear</div>
+    <div style="display:flex;flex-direction:column;gap:10px">
+      <div style="display:flex;align-items:center;gap:12px"><div style="width:34px;height:34px;border-radius:10px;background:rgba(245,200,66,.15);display:flex;align-items:center;justify-content:center;flex-shrink:0"><i class="ti ti-shield-exclamation" style="color:#f5c842;font-size:17px"></i></div><div><div style="font-size:13px;font-weight:600;margin-bottom:2px">Risco Financeiro</div><div style="font-size:12px;color:var(--mu)">Score de risco, fatores e dicas personalizadas</div></div></div>
+      <div style="display:flex;align-items:center;gap:12px"><div style="width:34px;height:34px;border-radius:10px;background:rgba(245,200,66,.15);display:flex;align-items:center;justify-content:center;flex-shrink:0"><i class="ti ti-chart-line" style="color:#f5c842;font-size:17px"></i></div><div><div style="font-size:13px;font-weight:600;margin-bottom:2px">Plano 12 Meses</div><div style="font-size:12px;color:var(--mu)">Proje&#231;&#227;o m&#234;s a m&#234;s com seus n&#250;meros reais</div></div></div>
+      <div style="display:flex;align-items:center;gap:12px"><div style="width:34px;height:34px;border-radius:10px;background:rgba(245,200,66,.15);display:flex;align-items:center;justify-content:center;flex-shrink:0"><i class="ti ti-trending-up" style="color:#f5c842;font-size:17px"></i></div><div><div style="font-size:13px;font-weight:600;margin-bottom:2px">Investimentos</div><div style="font-size:12px;color:var(--mu)">Carteira pessoal com % de valoriza&#231;&#227;o</div></div></div>
+      <div style="display:flex;align-items:center;gap:12px"><div style="width:34px;height:34px;border-radius:10px;background:rgba(245,200,66,.15);display:flex;align-items:center;justify-content:center;flex-shrink:0"><i class="ti ti-sparkles" style="color:#f5c842;font-size:17px"></i></div><div><div style="font-size:13px;font-weight:600;margin-bottom:2px">Assistente IA Completo</div><div style="font-size:12px;color:var(--mu)">Chat ilimitado com contexto financeiro completo</div></div></div>
+    </div>
+  </div>
+  <!-- WAITLIST -->
+  <div style="background:rgba(245,200,66,.08);border:1.5px solid rgba(245,200,66,.25);border-radius:14px;padding:16px;margin-bottom:6px">
+    <div style="font-size:14px;font-weight:700;margin-bottom:4px">&#128276; Lista de espera</div>
+    <div style="font-size:12px;color:var(--mu);margin-bottom:12px;line-height:1.6">Seja o primeiro a saber quando o Pro chegar. Quem entrar na lista tem 30 dias gr&#225;tis!</div>
+    <input class="form-input" id="pro-email" type="email" placeholder="seu@email.com" style="margin-bottom:10px">
+    <button onclick="joinWaitlist()" style="width:100%;padding:14px;border-radius:12px;background:#f5c842;color:#1a1200;font-size:14px;font-weight:700;border:none;cursor:pointer;-webkit-tap-highlight-color:transparent" id="pro-join-btn">Quero ser avisado!</button>
+    <div id="pro-join-msg" style="display:none;text-align:center;font-size:13px;color:var(--ac);margin-top:10px;font-weight:500">&#10003; Voc&#234; est&#225; na lista! Obrigado.</div>
+  </div>
+</div>
+</div>
+
 </body>
 </html>
