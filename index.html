@@ -1300,14 +1300,259 @@ function setView(v){viewCurr=v;renderPage(activePage);}
 // \u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550
 //  LANG
 // \u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550
+
+// \u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550
+//  TRANSLATIONS (PT / EN / ES)
+// \u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550
+var TR = {
+  pt: {
+    login:'Entrar',signup:'Criar conta',email:'E-mail',password:'Senha',name:'Nome',
+    login_btn:'Entrar \u2192',signup_btn:'Criar conta \u2192',forgot:'Esqueceu a senha? Recuperar',
+    tagline:'Suas finan\u00e7as. Em qualquer lugar.',
+    err_fill:'Preencha e-mail e senha.',err_name:'Digite seu nome.',
+    err_email:'Digite seu e-mail.',err_pass:'Senha: m\u00ednimo 6 caracteres.',
+    err_creds:'E-mail ou senha incorretos.',err_conn:'Erro de conex\u00e3o.',
+    ok_signup:'Verifique seu e-mail para confirmar!',
+    home_title:'In\u00edcio',tx_title:'Transa\u00e7\u00f5es',
+    budget_title:'Or\u00e7amentos',budget_sub:'Toque para editar o limite',
+    goals_title:'Metas',goals_add:'Nova Meta',
+    risk_title:'Risco Financeiro',risk_sub:'Sa\u00fade e vulnerabilidade do seu dinheiro',
+    plan_title:'Plano 12 Meses',plan_sub:'Proje\u00e7\u00e3o com seus n\u00fameros reais',
+    invest_title:'Investimentos',invest_sub:'Sua carteira pessoal',
+    ai_title:'Assistente IA',ai_sub:'Conhece toda sua vida financeira',
+    market_title:'Mercado ao Vivo',
+    nav_home:'In\u00edcio',nav_tx:'Gastos',nav_new:'Novo',nav_budget:'Or\u00e7amento',nav_market:'Mercado',
+    dr_mode_br:'Brasil',dr_mode_us:'EUA',dr_mode_both:'BR + EUA',
+    kpi_income:'Receitas',kpi_expense:'Despesas',kpi_balance:'Saldo',
+    recent:'Recentes',view_all:'Ver tudo',flow:'Fluxo mensal',
+    tx_all:'Todas',tx_exp:'Despesas',tx_inc:'Receitas',
+    tx_empty_t:'Nenhuma transa\u00e7\u00e3o',tx_empty_s:'Toque em + para adicionar.',
+    alert_none:'\ud83d\udfe2 Tudo certo! Nenhum alerta este m\u00eas.',
+    alert_over:'Or\u00e7amento de {cat} excedido',
+    alert_over_d:'Gastou {spent} de {limit} ({pct}%).',
+    alert_warn:'{cat} em {pct}% do limite',
+    alert_warn_d:'Faltam {rem} para o limite.',
+    alert_neg_bal:'Despesas superaram receitas',
+    alert_neg_d:'Voc\u00ea gastou {val} a mais.',
+    alert_no_inc:'Nenhuma receita registrada',
+    alert_no_inc_d:'Adicione suas entradas para ver o saldo real.',
+    alert_goal:'{name} em {pct}%',
+    alert_goal_d:'Poupando {monthly}/m\u00eas \u2014 {months} meses para a meta.',
+    bg_ok:'OK',bg_warn:'Aten\u00e7\u00e3o',bg_over:'Excedido',bg_vs_spent:'Or\u00e7ado vs. Gasto',
+    gl_saved:'poupados',gl_missing:'faltam',gl_monthly:'/m\u00eas',
+    gl_months:'meses',gl_no_monthly:'Defina um valor mensal',
+    gl_empty_t:'Nenhuma meta ainda',gl_empty_s:'Crie sua primeira meta financeira.',
+    risk_low:'Baixo Risco',risk_mod:'Moderado',risk_high:'Elevado',risk_crit:'Cr\u00edtico',
+    risk_hint:'Quanto menor, melhor. Abaixo de 20 = finan\u00e7as saud\u00e1veis.',
+    risk_factors:'Fatores',risk_tips:'Dicas priorit\u00e1rias',
+    plan_projection:'Mantendo o padr\u00e3o atual',
+    plan_conservative:' (85% da renda)',
+    plan_variable_title:'Renda vari\u00e1vel detectada',
+    plan_variable_d:'C\u00e1lculo conservador com 85% da renda m\u00e9dia.',
+    plan_monthly:'M\u00eas a m\u00eas',plan_now:' \u2014 Agora',
+    pm_income:'Receita',pm_expense:'Gastos',pm_save:'Guarda',
+    invest_total:'Patrim\u00f4nio total em investimentos',
+    invest_since:'desde o in\u00edcio',invest_portfolio:'Minha Carteira',
+    invest_invested:'Investido: ',invest_add:'Adicionar Investimento',
+    invest_tips:'Dicas de Investimento',
+    invest_tip1_t:'Comece pelo Tesouro Direto',
+    invest_tip1_d:'Tesouro SELIC rende mais que poupan\u00e7a, tem liquidez di\u00e1ria e \u00e9 garantido pelo governo.',
+    invest_tip2_t:'FIIs pagam renda mensal',
+    invest_tip2_d:'Fundos Imobili\u00e1rios distribuem dividendos mensais isentos de IR.',
+    ai_greeting:'Ol\u00e1, {name}! Sou seu assistente financeiro. Como posso ajudar?',
+    ai_chip1:'Analise minhas despesas',ai_chip2:'Como economizar mais?',
+    ai_chip3:'Plano de 30 dias',ai_chip4:'Credit score nos EUA',
+    ai_ph:'Pergunte sobre suas finan\u00e7as...',ai_err:'Erro. Tente novamente.',
+    sup_title:'Suporte IA',sup_status:'Online 24h',
+    sup_greeting:'Ol\u00e1! Sou o assistente de suporte do Cento. Como posso ajudar?',
+    sup_chip1:'Como adicionar transa\u00e7\u00f5es?',sup_chip2:'Como funciona o or\u00e7amento?',
+    sup_chip3:'Esqueci minha senha',sup_ph:'Escreva sua d\u00favida...',sup_err:'Desculpe, tente novamente.',
+    mkt_updating:'Atualizando...',mkt_updated:'Atualizado \u00e0s ',mkt_err:'Erro de conex\u00e3o...',
+    mkt_all:'Todos',mkt_crypto:'Cripto',mkt_forex:'C\u00e2mbio',
+    mkt_btc7:'Bitcoin 7 dias',mkt_when:'Quando investir',
+    new_tx:'Nova Transa\u00e7\u00e3o',edit_tx:'Editar Transa\u00e7\u00e3o',
+    new_goal:'Nova Meta',edit_goal:'Editar Meta',
+    new_inv:'Adicionar Investimento',edit_inv:'Editar Investimento',
+    bg_ok_badge:'OK',bg_warn_badge:'Aten\u00e7\u00e3o',bg_over_badge:'Excedido',
+    save:'Salvar',ai_err2:'Erro. Tente novamente.',sup_err2:'Desculpe, tente novamente.',
+    months:['Janeiro','Fevereiro','Mar\u00e7o','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'],
+    months_s:['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'],
+    days:['Dom','Seg','Ter','Qua','Qui','Sex','S\u00e1b']
+  },
+  en: {
+    login:'Sign in',signup:'Create account',email:'Email',password:'Password',name:'Name',
+    login_btn:'Sign in \u2192',signup_btn:'Create account \u2192',forgot:'Forgot password? Reset',
+    tagline:'Your finances. Anywhere.',
+    err_fill:'Please fill in email and password.',err_name:'Please enter your name.',
+    err_email:'Please enter your email.',err_pass:'Password: minimum 6 characters.',
+    err_creds:'Incorrect email or password.',err_conn:'Connection error.',
+    ok_signup:'Check your email to confirm!',
+    home_title:'Home',tx_title:'Transactions',
+    budget_title:'Budgets',budget_sub:'Tap to edit limit',
+    goals_title:'Goals',goals_add:'New Goal',
+    risk_title:'Financial Risk',risk_sub:'Health and vulnerability of your money',
+    plan_title:'12-Month Plan',plan_sub:'Projection with your real numbers',
+    invest_title:'Investments',invest_sub:'Your personal portfolio',
+    ai_title:'AI Assistant',ai_sub:'Knows your entire financial life',
+    market_title:'Live Market',
+    nav_home:'Home',nav_tx:'Expenses',nav_new:'New',nav_budget:'Budget',nav_market:'Market',
+    dr_mode_br:'Brazil',dr_mode_us:'USA',dr_mode_both:'BR + USA',
+    kpi_income:'Income',kpi_expense:'Expenses',kpi_balance:'Balance',
+    recent:'Recent',view_all:'View all',flow:'Monthly cash flow',
+    tx_all:'All',tx_exp:'Expenses',tx_inc:'Income',
+    tx_empty_t:'No transactions',tx_empty_s:'Tap + to add one.',
+    alert_none:'\ud83d\udfe2 All good! No alerts this month.',
+    alert_over:'{cat} budget exceeded',
+    alert_over_d:'Spent {spent} of {limit} ({pct}%).',
+    alert_warn:'{cat} at {pct}% of limit',
+    alert_warn_d:'{rem} remaining before limit.',
+    alert_neg_bal:'Expenses exceeded income',
+    alert_neg_d:'You spent {val} more than you earned.',
+    alert_no_inc:'No income recorded',
+    alert_no_inc_d:'Add your earnings to see the real balance.',
+    alert_goal:'{name} at {pct}%',
+    alert_goal_d:'Saving {monthly}/month \u2014 {months} months to goal.',
+    bg_ok:'OK',bg_warn:'Warning',bg_over:'Over',bg_vs_spent:'Budget vs. Spent',
+    gl_saved:'saved',gl_missing:'remaining',gl_monthly:'/month',
+    gl_months:'months',gl_no_monthly:'Set a monthly amount',
+    gl_empty_t:'No goals yet',gl_empty_s:'Create your first financial goal.',
+    risk_low:'Low Risk',risk_mod:'Moderate',risk_high:'High',risk_crit:'Critical',
+    risk_hint:'Lower is better. Below 20 = healthy finances.',
+    risk_factors:'Factors',risk_tips:'Priority tips',
+    plan_projection:'Maintaining current pattern',
+    plan_conservative:' (85% of income)',
+    plan_variable_title:'Variable income detected',
+    plan_variable_d:'Conservative calculation with 85% of average income.',
+    plan_monthly:'Month by month',plan_now:' \u2014 Now',
+    pm_income:'Income',pm_expense:'Expenses',pm_save:'Saves',
+    invest_total:'Total investment portfolio',
+    invest_since:'since start',invest_portfolio:'My Portfolio',
+    invest_invested:'Invested: ',invest_add:'Add Investment',
+    invest_tips:'Investment Tips',
+    invest_tip1_t:'Start with Government Bonds',
+    invest_tip1_d:'Government bonds are safe, daily liquid, and yield more than savings accounts.',
+    invest_tip2_t:'REITs pay monthly income',
+    invest_tip2_d:'Real Estate Investment Trusts pay monthly dividends tax-free.',
+    ai_greeting:'Hello, {name}! I am your Cento AI assistant. How can I help?',
+    ai_chip1:'Analyze my expenses',ai_chip2:'How to save more?',
+    ai_chip3:'30-day plan',ai_chip4:'Credit score in the US',
+    ai_ph:'Ask about your finances...',ai_err:'Error. Please try again.',
+    sup_title:'AI Support',sup_status:'Online 24/7',
+    sup_greeting:'Hello! I am Cento support assistant. How can I help?',
+    sup_chip1:'How to add transactions?',sup_chip2:'How does the budget work?',
+    sup_chip3:'I forgot my password',sup_ph:'Write your question...',sup_err:'Sorry, try again.',
+    mkt_updating:'Updating...',mkt_updated:'Updated at ',mkt_err:'Connection error...',
+    mkt_all:'All',mkt_crypto:'Crypto',mkt_forex:'Forex',
+    mkt_btc7:'Bitcoin 7 days',mkt_when:'When to invest',
+    new_tx:'New Transaction',edit_tx:'Edit Transaction',
+    new_goal:'New Goal',edit_goal:'Edit Goal',
+    new_inv:'Add Investment',edit_inv:'Edit Investment',
+    save:'Save',ai_err2:'Error. Try again.',sup_err2:'Sorry, try again.',
+    months:['January','February','March','April','May','June','July','August','September','October','November','December'],
+    months_s:['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'],
+    days:['Sun','Mon','Tue','Wed','Thu','Fri','Sat']
+  },
+  es: {
+    login:'Iniciar sesi\u00f3n',signup:'Crear cuenta',email:'Correo',password:'Contrase\u00f1a',name:'Nombre',
+    login_btn:'Iniciar sesi\u00f3n \u2192',signup_btn:'Crear cuenta \u2192',forgot:'\u00bfOlvidaste tu contrase\u00f1a? Recuperar',
+    tagline:'Tus finanzas. En cualquier lugar.',
+    err_fill:'Completa correo y contrase\u00f1a.',err_name:'Ingresa tu nombre.',
+    err_email:'Ingresa tu correo.',err_pass:'Contrase\u00f1a: m\u00ednimo 6 caracteres.',
+    err_creds:'Correo o contrase\u00f1a incorrectos.',err_conn:'Error de conexi\u00f3n.',
+    ok_signup:'\u00a1Verifica tu correo para confirmar!',
+    home_title:'Inicio',tx_title:'Transacciones',
+    budget_title:'Presupuestos',budget_sub:'Toca para editar el l\u00edmite',
+    goals_title:'Metas',goals_add:'Nueva Meta',
+    risk_title:'Riesgo Financiero',risk_sub:'Salud y vulnerabilidad de tu dinero',
+    plan_title:'Plan 12 Meses',plan_sub:'Proyecci\u00f3n con tus n\u00fameros reales',
+    invest_title:'Inversiones',invest_sub:'Tu cartera personal',
+    ai_title:'Asistente IA',ai_sub:'Conoce toda tu vida financiera',
+    market_title:'Mercado en Vivo',
+    nav_home:'Inicio',nav_tx:'Gastos',nav_new:'Nuevo',nav_budget:'Presupuesto',nav_market:'Mercado',
+    dr_mode_br:'Brasil',dr_mode_us:'EE.UU.',dr_mode_both:'BR + EE.UU.',
+    kpi_income:'Ingresos',kpi_expense:'Gastos',kpi_balance:'Saldo',
+    recent:'Recientes',view_all:'Ver todo',flow:'Flujo mensual',
+    tx_all:'Todas',tx_exp:'Gastos',tx_inc:'Ingresos',
+    tx_empty_t:'Sin transacciones',tx_empty_s:'Toca + para agregar.',
+    alert_none:'\ud83d\udfe2 \u00a1Todo bien! Sin alertas este mes.',
+    alert_over:'Presupuesto de {cat} superado',
+    alert_over_d:'Gastaste {spent} de {limit} ({pct}%).',
+    alert_warn:'{cat} al {pct}% del l\u00edmite',
+    alert_warn_d:'Quedan {rem} para el l\u00edmite.',
+    alert_neg_bal:'Los gastos superaron los ingresos',
+    alert_neg_d:'Gastaste {val} m\u00e1s de lo que recibiste.',
+    alert_no_inc:'Ning\u00fan ingreso registrado',
+    alert_no_inc_d:'Agrega tus entradas para ver el saldo real.',
+    alert_goal:'{name} al {pct}%',
+    alert_goal_d:'Ahorrando {monthly}/mes \u2014 {months} meses para la meta.',
+    bg_ok:'OK',bg_warn:'Atenci\u00f3n',bg_over:'Excedido',bg_vs_spent:'Presupuestado vs. Gastado',
+    gl_saved:'ahorrados',gl_missing:'faltan',gl_monthly:'/mes',
+    gl_months:'meses',gl_no_monthly:'Define un monto mensual',
+    gl_empty_t:'Sin metas a\u00fan',gl_empty_s:'Crea tu primera meta financiera.',
+    risk_low:'Riesgo Bajo',risk_mod:'Moderado',risk_high:'Elevado',risk_crit:'Cr\u00edtico',
+    risk_hint:'Menor es mejor. Menos de 20 = finanzas saludables.',
+    risk_factors:'Factores',risk_tips:'Consejos prioritarios',
+    plan_projection:'Manteniendo el patr\u00f3n actual',
+    plan_conservative:' (85% del ingreso)',
+    plan_variable_title:'Ingreso variable detectado',
+    plan_variable_d:'C\u00e1lculo conservador con 85% del ingreso promedio.',
+    plan_monthly:'Mes a mes',plan_now:' \u2014 Ahora',
+    pm_income:'Ingreso',pm_expense:'Gastos',pm_save:'Ahorra',
+    invest_total:'Patrimonio total en inversiones',
+    invest_since:'desde el inicio',invest_portfolio:'Mi Cartera',
+    invest_invested:'Invertido: ',invest_add:'Agregar Inversi\u00f3n',
+    invest_tips:'Consejos de Inversi\u00f3n',
+    invest_tip1_t:'Empieza con bonos del gobierno',
+    invest_tip1_d:'Los bonos del gobierno son seguros, l\u00edquidos y rinden m\u00e1s que las cuentas de ahorro.',
+    invest_tip2_t:'Los REITs pagan ingresos mensuales',
+    invest_tip2_d:'Los Fondos de Inversi\u00f3n Inmobiliaria pagan dividendos mensuales libres de impuestos.',
+    ai_greeting:'\u00a1Hola, {name}! Soy tu asistente de Cento. \u00bfC\u00f3mo puedo ayudar?',
+    ai_chip1:'Analiza mis gastos',ai_chip2:'\u00bfC\u00f3mo ahorrar m\u00e1s?',
+    ai_chip3:'Plan de 30 d\u00edas',ai_chip4:'Credit score en EE.UU.',
+    ai_ph:'Pregunta sobre tus finanzas...',ai_err:'Error. Int\u00e9ntalo de nuevo.',
+    sup_title:'Soporte IA',sup_status:'En l\u00ednea 24h',
+    sup_greeting:'\u00a1Hola! Soy el asistente de soporte de Cento. \u00bfC\u00f3mo puedo ayudar?',
+    sup_chip1:'\u00bfC\u00f3mo agregar transacciones?',sup_chip2:'\u00bfC\u00f3mo funciona el presupuesto?',
+    sup_chip3:'Olvid\u00e9 mi contrase\u00f1a',sup_ph:'Escribe tu pregunta...',sup_err:'Disculpa, int\u00e9ntalo de nuevo.',
+    mkt_updating:'Actualizando...',mkt_updated:'Actualizado a las ',mkt_err:'Error de conexi\u00f3n...',
+    mkt_all:'Todos',mkt_crypto:'Cripto',mkt_forex:'Divisas',
+    mkt_btc7:'Bitcoin 7 d\u00edas',mkt_when:'Cu\u00e1ndo invertir',
+    new_tx:'Nueva Transacci\u00f3n',edit_tx:'Editar Transacci\u00f3n',
+    new_goal:'Nueva Meta',edit_goal:'Editar Meta',
+    new_inv:'Agregar Inversi\u00f3n',edit_inv:'Editar Inversi\u00f3n',
+    save:'Guardar',ai_err2:'Error. Int\u00e9ntalo.',sup_err2:'Disculpa, int\u00e9ntalo.',
+    months:['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'],
+    months_s:['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'],
+    days:['Dom','Lun','Mar','Mi\u00e9','Jue','Vie','S\u00e1b']
+  }
+};
+
+function i(key, vars) {
+  var lang = TR[LANG] || TR['pt'];
+  var str = lang[key];
+  if (str === undefined) str = (TR['pt'][key] !== undefined ? TR['pt'][key] : key);
+  if (vars && typeof str === 'string') {
+    var keys = Object.keys(vars);
+    for (var k = 0; k < keys.length; k++) {
+      str = str.split('{' + keys[k] + '}').join(String(vars[keys[k]]));
+    }
+  }
+  return str;
+}
+
 function setLang(l){
   LANG=l; try{localStorage.setItem('cento_lang',l);}catch(e){}
   document.querySelectorAll('.lang-btn').forEach(function(b){b.classList.toggle('on',b.dataset.lang===l);});
+  applyLang();
+}
+function applyLang(){
+  updateDrawer();
+  if(USER) renderPage(activePage);
 }
 function selectLang(l){
   setLang(l);
   document.querySelectorAll('.lang-option').forEach(function(b){b.classList.toggle('sel',b.dataset.lang===l);});
-  setTimeout(function(){closeModal('lang');if(USER)renderPage(activePage);},250);
+  setTimeout(function(){closeModal('lang');},250);
 }
 function openLangModal(){document.getElementById('modal-lang').classList.add('open');}
 function openProModal(){
@@ -1355,17 +1600,17 @@ function renderHome(){
     mbar='<div class="curr-bar"><div class="curr-info">1 USD = <strong>R$\u00a05,74</strong></div><div class="curr-toggle"><button class="curr-btn brl'+(viewCurr==='brl'?' on':'')+'" onclick="setView(\'brl\')">R$</button><button class="curr-btn usd'+(viewCurr==='usd'?' on':'')+'" onclick="setView(\'usd\')">$</button></div></div>';
   }
   var extraBanner=extra>0?('<div class="alert-card blue" style="margin-bottom:14px"><div class="alert-ico"><i class="ti ti-stars" style="color:var(--bl)"></i></div><div class="alert-body"><div class="alert-title blue">Renda Extra em '+MONTH_NAMES[new Date().getMonth()]+'</div><div class="alert-desc">Voc\u00ea teve <strong>'+fV(extra)+'</strong> de renda extra este m\u00eas. Considere guardar 50%!</div></div></div>'):'';
-  var alertsHTML=alerts.length?('<div class="alert-list">'+alerts.map(function(a){return '<div class="alert-card '+a.type+'"><div class="alert-ico"><i class="ti ti-'+a.icon+'" style="color:var(--'+a.ic+')"></i></div><div class="alert-body"><div class="alert-title '+a.type+'">'+a.title+'</div><div class="alert-desc">'+a.desc+'</div></div></div>';}).join('')+'</div>'):('<div style="font-size:13px;color:var(--mu);padding:6px 0;margin-bottom:14px">\ud83d\udfe2 Tudo certo! Nenhum alerta este m\u00eas.</div>');
+  var alertsHTML=alerts.length?('<div class="alert-list">'+alerts.map(function(a){return '<div class="alert-card '+a.type+'"><div class="alert-ico"><i class="ti ti-'+a.icon+'" style="color:var(--'+a.ic+')"></i></div><div class="alert-body"><div class="alert-title '+a.type+'">'+a.title+'</div><div class="alert-desc">'+a.desc+'</div></div></div>';}).join('')+'</div>'):('<div style="font-size:13px;color:var(--mu);padding:6px 0;margin-bottom:14px">'+i('alert_none')+'</div>');
   var now=new Date();
   var recent=getModeTX().slice(0,5);
   var recentHTML=recent.length?recent.map(txItem).join(''):'<div class="empty"><i class="ti ti-arrows-sort"></i><div class="empty-title">Nenhuma transa\u00e7\u00e3o</div><div class="empty-sub">Toque no <strong>+</strong> abaixo para adicionar.</div></div>';
   document.getElementById('page-home').innerHTML=
-    '<div class="page-hdr"><div class="page-title">In\u00edcio</div><div class="page-sub">'+MONTH_NAMES[now.getMonth()]+' '+now.getFullYear()+'</div></div>'
+    '<div class="page-hdr"><div class="page-title">'+i('home_title')+'</div><div class="page-sub">'+MONTH_NAMES[now.getMonth()]+' '+now.getFullYear()+'</div></div>'
     +mbar
     +'<div class="kpi-grid"><div class="kpi-card"><div class="kpi-label">Receitas</div><div class="kpi-val green">'+fV(inc)+'</div></div><div class="kpi-card"><div class="kpi-label">Despesas</div><div class="kpi-val red">'+fV(exp)+'</div></div><div class="kpi-card"><div class="kpi-label">Saldo</div><div class="kpi-val '+(bal>=0?'green':'red')+'">'+(bal<0?'-':'')+fV(Math.abs(bal))+'</div></div></div>'
     +extraBanner+alertsHTML
-    +'<div class="chart-card"><div class="chart-header"><div class="chart-title">Fluxo mensal</div><div class="chart-sub">6 meses</div></div><div style="height:150px"><canvas id="flow-chart"></canvas></div></div>'
-    +'<div class="sec-row"><div class="sec-title">Recentes</div><button class="sec-link" onclick="nav(\'tx\')">Ver tudo</button></div>'
+    +'<div class="chart-card"><div class="chart-header"><div class="chart-title">'+i('flow')+'</div><div class="chart-sub">6 meses</div></div><div style="height:150px"><canvas id="flow-chart"></canvas></div></div>'
+    +'<div class="sec-row"><div class="sec-title">'+i('recent')+'</div><button class="sec-link" onclick="nav(\'tx\')">Ver tudo</button></div>'
     +'<div class="tx-list">'+recentHTML+'</div>';
   setTimeout(renderFlowChart,80);
 }
@@ -1392,10 +1637,10 @@ function buildAlerts(inc,exp,extra){
   var alerts=[];
   if(BUDGETS) BUDGETS.forEach(function(b){
     var s=catSpent(b.cat),p=b.limit_val>0?(s/b.limit_val)*100:0;
-    if(p>100)alerts.push({type:'red',ic:'rd',icon:'alert-triangle',title:'Or\u00e7amento de '+b.label+' excedido',desc:'Gastou '+fV(s)+' de '+fV(b.limit_val)+' ('+p.toFixed(0)+'%).'});
+    if(p>100)alerts.push({type:'red',ic:'rd',icon:'alert-triangle',title:i('alert_over',{cat:b.label}),desc:i('alert_over_d',{spent:fV(s),limit:fV(b.limit_val),pct:p.toFixed(0)})});
     else if(p>80)alerts.push({type:'orange',ic:'or',icon:'alert-circle',title:b.label+' em '+p.toFixed(0)+'% do limite',desc:'Faltam '+fV(b.limit_val-s)+' para o limite.'});
   });
-  if(inc>0&&exp>inc)alerts.push({type:'red',ic:'rd',icon:'trending-down',title:'Despesas superaram receitas',desc:'Voc\u00ea gastou '+fV(exp-inc)+' a mais do que recebeu.'});
+  if(inc>0&&exp>inc)alerts.push({type:'red',ic:'rd',icon:'trending-down',title:i('alert_neg_bal'),desc:i('alert_neg_d',{val:fV(exp-inc)})});
   else if(inc===0&&exp>0)alerts.push({type:'blue',ic:'bl',icon:'info-circle',title:'Nenhuma receita registrada',desc:'Adicione suas entradas para ver o saldo real.'});
   if(GOALS.length){
     var best=GOALS.slice().sort(function(a,b){return(b.current_val/b.target)-(a.current_val/a.target);})[0];
@@ -1427,7 +1672,7 @@ function renderTxPage(){
   var list=txFilter==='all'?all:all.filter(function(t){return t.type===txFilter;});
   var html=list.length?list.map(txItem).join(''):'<div class="empty"><i class="ti ti-arrows-sort"></i><div class="empty-title">Nenhuma transa\u00e7\u00e3o</div><div class="empty-sub">Toque em <strong>+</strong> para adicionar.</div></div>';
   document.getElementById('page-tx').innerHTML=
-    '<div class="page-hdr"><div class="page-title">Transa\u00e7\u00f5es</div></div>'
+    '<div class="page-hdr"><div class="page-title">'+i('tx_title')+'</div></div>'
     +'<div class="filter-row"><button class="filter-pill'+(txFilter==='all'?' on':'')+'" onclick="setTxF(\'all\')">Todas</button><button class="filter-pill'+(txFilter==='expense'?' on':'')+'" onclick="setTxF(\'expense\')">\u2193 Despesas</button><button class="filter-pill'+(txFilter==='income'?' on':'')+'" onclick="setTxF(\'income\')">\u2191 Receitas</button></div>'
     +'<div class="tx-list">'+html+'</div>';
 }
@@ -1445,7 +1690,7 @@ function renderBudgetPage(){
     var s=catSpent(b.cat),p=b.limit_val>0?Math.min(100,(s/b.limit_val)*100):0;
     var ov=s>b.limit_val&&b.limit_val>0;
     var warn=p>80&&!ov;
-    var badge=ov?'<span class="budget-badge bb-over">Excedido</span>':warn?'<span class="budget-badge bb-warn">Aten\u00e7\u00e3o</span>':'<span class="budget-badge bb-ok">OK</span>';
+    var badge=ov?'<span class="budget-badge bb-over">'+i('bg_over')+'</span>':warn?'<span class="budget-badge bb-warn">'+i('bg_warn')+'</span>':'<span class="budget-badge bb-ok">'+i('bg_ok')+'</span>';
     var barColor=ov?'var(--rd)':warn?'var(--or)':(b.color||'var(--ac)');
     return '<div class="budget-item'+(ov?' over':'')+'" onclick="openEditBudget(\''+b.cat+'\')">'
       +'<div class="budget-top"><div class="budget-ico" style="background:'+(b.color||'#c8f05a')+'20"><i class="ti ti-'+(b.tiIcon||'wallet')+'" style="color:'+(b.color||'#c8f05a')+'"></i></div>'
@@ -1455,9 +1700,9 @@ function renderBudgetPage(){
       +'</div>';
   }).join('');
   document.getElementById('page-budget').innerHTML=
-    '<div class="page-hdr"><div class="page-title">Or\u00e7amentos</div><div class="page-sub">Toque para editar o limite</div></div>'
+    '<div class="page-hdr"><div class="page-title">'+i('budget_title')+'</div><div class="page-sub">'+i('budget_sub')+'</div></div>'
     +'<div class="budget-list">'+items+'</div>'
-    +'<div class="chart-card"><div class="chart-header"><div class="chart-title">Or\u00e7ado vs. Gasto</div></div><div style="height:170px"><canvas id="bg-chart"></canvas></div></div>';
+    +'<div class="chart-card"><div class="chart-header"><div class="chart-title">'+i('bg_vs_spent')+'</div></div><div style="height:170px"><canvas id="bg-chart"></canvas></div></div>';
   setTimeout(function(){
     var ctx=document.getElementById('bg-chart');if(!ctx)return;
     if(ctx._c){ctx._c.destroy();ctx._c=null;}
@@ -1483,7 +1728,7 @@ function renderGoalsPage(){
       +'</div>';
   }).join(''):'<div class="empty"><i class="ti ti-target"></i><div class="empty-title">Nenhuma meta ainda</div><div class="empty-sub">Crie sua primeira meta financeira.</div></div>';
   document.getElementById('page-goals').innerHTML=
-    '<div class="page-hdr"><div class="page-title">Metas</div></div>'
+    '<div class="page-hdr"><div class="page-title">'+i('goals_title')+'</div></div>'
     +'<div class="goals-list">'+items+'</div>'
     +'<button class="ghost-btn" onclick="openModal(\'goal\')"><i class="ti ti-plus"></i>Nova Meta</button>';
 }
@@ -1515,7 +1760,7 @@ function renderRiskPage(){
   // 4. income stability
   var s4=incType==='variable'?10:incType==='mixed'?5:0; score+=s4;
   factors.push({col:s4===0?'var(--ac)':'var(--or)',icon:'trending-up',name:'Estabilidade da Renda',desc:incType==='fixed'?'Renda fixa \u2014 baixo risco':incType==='mixed'?'Renda mista \u2014 risco moderado':'Renda vari\u00e1vel \u2014 risco elevado',val:incType==='fixed'?'Fixa':incType==='mixed'?'Mista':'Vari\u00e1vel'});
-  var rLbl=score<20?'Baixo Risco':score<40?'Moderado':score<65?'Elevado':'Cr\u00edtico';
+  var rLbl=score<20?i('risk_low'):score<40?i('risk_mod'):score<65?i('risk_high'):i('risk_crit');
   var rCol=score<20?'var(--ac)':score<40?'var(--yl)':score<65?'var(--or)':'var(--rd)';
   var factorsHTML=factors.map(function(f){
     return '<div class="risk-factor"><div class="rf-icon" style="background:'+f.col+'18"><i class="ti ti-'+f.icon+'" style="color:'+f.col+'"></i></div><div class="rf-body"><div class="rf-name">'+f.name+'</div><div class="rf-desc">'+f.desc+'</div></div><div class="rf-value" style="color:'+f.col+'">'+f.val+'</div></div>';
@@ -1527,7 +1772,7 @@ function renderRiskPage(){
   if(incType==='variable')tips.push({icon:'shield',title:'Fundo de seguran\u00e7a maior',desc:'Com renda vari\u00e1vel, mantenha 6-12 meses de reserva (o dobro do normal).'});
   var tipsHTML=tips.length?tips.map(function(tip){return '<div class="alert-card green"><div class="alert-ico"><i class="ti ti-'+tip.icon+'" style="color:var(--ac)"></i></div><div class="alert-body"><div class="alert-title green">'+tip.title+'</div><div class="alert-desc">'+tip.desc+'</div></div></div>';}).join(''):'<div class="alert-card green"><div class="alert-ico"><i class="ti ti-star" style="color:var(--ac)"></i></div><div class="alert-body"><div class="alert-title green">Parab\u00e9ns!</div><div class="alert-desc">Seu risco financeiro est\u00e1 bem controlado. Continue assim!</div></div></div>';
   document.getElementById('page-risk').innerHTML=
-    '<div class="page-hdr"><div class="page-title">Risco Financeiro</div><div class="page-sub">Sa\u00fade e vulnerabilidade do seu dinheiro</div></div>'
+    '<div class="page-hdr"><div class="page-title">'+i('risk_title')+'</div><div class="page-sub">'+i('risk_sub')+'</div></div>'
     +'<div class="risk-score-card"><div class="risk-num" style="color:'+rCol+'">'+score+'</div><div class="risk-lbl" style="color:'+rCol+'">'+rLbl+'</div><div class="risk-hint">Quanto menor, melhor. Abaixo de 20 = finan\u00e7as saud\u00e1veis.</div></div>'
     +'<div class="sec-row" style="margin-bottom:10px"><div class="sec-title">Fatores</div></div>'
     +'<div class="risk-factors">'+factorsHTML+'</div>'
@@ -1546,7 +1791,7 @@ function renderPlanPage(){
   var balance=GOALS.reduce(function(s,g){return s+g.current_val;},0);
   var now=new Date();
   var months=[];
-  var mShort=['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'];
+  var mShort=i('months_s');
   for(var i=0;i<12;i++){
     var d=new Date(now.getFullYear(),now.getMonth()+i,1);
     var monthSave=savings*(incType==='variable'?0.85:1);
@@ -1561,7 +1806,7 @@ function renderPlanPage(){
     var savePct=Math.min(100,Math.max(0,(m.save/m.inc)*100)).toFixed(0);
     return '<div class="plan-month">'
       +'<div class="pm-dot'+(m.now?' now':'')+'">'+( m.now?'\u2022':(idx+1))+'</div>'
-      +'<div class="pm-card"><div class="pm-header"><div class="pm-name">'+m.name+(m.now?' \u2014 Agora':'')+'</div><div class="pm-bal" style="color:'+(m.bal>=0?'var(--ac)':'var(--rd)')+'">'+fBRL(m.bal)+'</div></div>'
+      +'<div class="pm-card"><div class="pm-header"><div class="pm-name">'+m.name+(m.now?i('plan_now'):'')+'</div><div class="pm-bal" style="color:'+(m.bal>=0?'var(--ac)':'var(--rd)')+'">'+fBRL(m.bal)+'</div></div>'
       +'<div class="pm-bars">'
       +'<div class="pm-bar-row"><div class="pm-bar-lbl">Receita</div><div class="pm-bar-track"><div class="pm-bar-fill" style="width:100%;background:var(--ac)"></div></div><div class="pm-bar-val" style="color:var(--ac)">'+fBRL(m.inc)+'</div></div>'
       +'<div class="pm-bar-row"><div class="pm-bar-lbl">Gastos</div><div class="pm-bar-track"><div class="pm-bar-fill" style="width:'+expPct+'%;background:var(--rd)"></div></div><div class="pm-bar-val" style="color:var(--rd)">'+fBRL(m.exp)+'</div></div>'
@@ -1569,7 +1814,7 @@ function renderPlanPage(){
       +'</div></div></div>';
   }).join('');
   document.getElementById('page-plan').innerHTML=
-    '<div class="page-hdr"><div class="page-title">Plano 12 Meses</div><div class="page-sub">Proje\u00e7\u00e3o com seus n\u00fameros reais</div></div>'
+    '<div class="page-hdr"><div class="page-title">'+i('plan_title')+'</div><div class="page-sub">'+i('plan_sub')+'</div></div>'
     +'<div class="plan-hero"><div class="plan-hero-lbl">Em '+months[11].name+' voc\u00ea ter\u00e1</div><div class="plan-hero-val">'+fBRL(finalBal)+'</div><div class="plan-hero-sub">Mantendo o padr\u00e3o atual'+(incType==='variable'?' (estimativa conservadora, 85% da renda)':'')+'</div></div>'
     +(incType==='variable'?'<div class="alert-card orange" style="margin-bottom:16px"><div class="alert-ico"><i class="ti ti-info-circle" style="color:var(--or)"></i></div><div class="alert-body"><div class="alert-title orange">Renda vari\u00e1vel detectada</div><div class="alert-desc">C\u00e1lculo conservador com 85% da renda m\u00e9dia. Meses bons podem acelerar!</div></div></div>':'')
     +'<div class="sec-row" style="margin-bottom:14px"><div class="sec-title">M\u00eas a m\u00eas</div></div>'
@@ -1594,7 +1839,7 @@ function renderInvestPage(){
     return '<div class="invest-card" onclick="openEditInv(\''+inv.id+'\')"><div class="invest-ico" style="background:'+col+'20;color:'+col+'"><i class="ti ti-'+ico+'"></i></div><div class="invest-body"><div class="invest-name">'+esc(inv.name||'')+'</div><div class="invest-sub">Investido: '+fBRL(inv.amount_invested)+'</div></div><div class="invest-right"><div class="invest-cur">'+fBRL(inv.current_value)+'</div><div class="invest-chg '+(cp>=0?'chg-up':'chg-dn')+'">'+(cp>=0?'+':'')+cp.toFixed(2)+'%</div></div></div>';
   }).join('');
   document.getElementById('page-invest').innerHTML=
-    '<div class="page-hdr"><div class="page-title">Investimentos</div><div class="page-sub">Sua carteira pessoal</div></div>'
+    '<div class="page-hdr"><div class="page-title">'+i('invest_title')+'</div><div class="page-sub">'+i('invest_sub')+'</div></div>'
     +'<div class="invest-hero"><div class="invest-hero-lbl">Patrim\u00f4nio total em investimentos</div><div class="invest-hero-val">'+fBRL(totalCur)+'</div><div class="invest-change-row"><i class="ti ti-'+(changePct>=0?'trending-up':'trending-down')+'" style="color:'+(changePct>=0?'var(--ac)':'var(--rd)')+'"></i><span style="color:'+(changePct>=0?'var(--ac)':'var(--rd)')+'">'+(changePct>=0?'+':'')+changePct.toFixed(2)+'%</span><span style="color:var(--mu);font-weight:400">desde o in\u00edcio</span></div></div>'
     +(INVS.length?('<div class="sec-row" style="margin-bottom:10px"><div class="sec-title">Minha Carteira</div></div><div class="invest-cards">'+cardsHTML+'</div>'):'')
     +'<button class="invest-add-btn" onclick="openModal(\'invest\')"><i class="ti ti-plus"></i>Adicionar Investimento</button>'
@@ -1611,7 +1856,7 @@ function renderAIPage(){
   var pg=document.getElementById('page-ai');
   if(pg.querySelector('.ai-msgs'))return;
   var n=(USER&&USER.name?USER.name:'').split(' ')[0];
-  pg.innerHTML='<div class="page-hdr"><div class="page-title">Assistente IA</div><div class="page-sub">Conhece toda sua vida financeira</div></div>'
+  pg.innerHTML='<div class="page-hdr"><div class="page-title">'+i('ai_title')+'</div><div class="page-sub">'+i('ai_sub')+'</div></div>'
     +'<div class="ai-wrap"><div class="ai-chips">'
     +'<button class="ai-chip" onclick="aiChip(this)">Analise minhas despesas</button>'
     +'<button class="ai-chip" onclick="aiChip(this)">Como economizar mais?</button>'
@@ -1646,7 +1891,7 @@ function sendAI(){
   fetch('https://api.groq.com/openai/v1/chat/completions',{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer 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'},body:JSON.stringify({model:'llama-3.3-70b-versatile',max_tokens:800,messages:[{role:'system',content:sys}].concat(CHAT)})})
   .then(function(r){return r.json();})
   .then(function(d){
-    var reply=d.choices&&d.choices[0]&&d.choices[0].message&&d.choices[0].message.content||'Erro. Tente novamente.';
+    var reply=d.choices&&d.choices[0]&&d.choices[0].message&&d.choices[0].message.content||i('ai_err');
     CHAT.push({role:'assistant',content:reply});
     var typ=document.getElementById('ai-typ'); if(typ)typ.remove();
     var ms2=document.getElementById('ai-msgs');
@@ -1693,7 +1938,7 @@ function sendSupport(){
   fetch('https://api.groq.com/openai/v1/chat/completions',{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer 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'},body:JSON.stringify({model:'llama-3.3-70b-versatile',max_tokens:400,messages:[{role:'system',content:sys},{role:'user',content:msg}]})})
   .then(function(r){return r.json();})
   .then(function(d){
-    var reply=d.choices&&d.choices[0]&&d.choices[0].message&&d.choices[0].message.content||'Desculpe, tente novamente.';
+    var reply=d.choices&&d.choices[0]&&d.choices[0].message&&d.choices[0].message.content||i('sup_err');
     var typ=document.getElementById('sup-typ');if(typ)typ.remove();
     var ms2=document.getElementById('sup-msgs');
     if(ms2){ms2.innerHTML+='<div class="ai-msg"><div class="ai-av bot"><i class="ti ti-sparkles"></i></div><div class="ai-bubble bot">'+md2html(reply)+'</div></div>';ms2.scrollTop=99999;}
@@ -1710,7 +1955,7 @@ function autoResize(el){el.style.height='auto';el.style.height=Math.min(el.scrol
 function openModal(which){
   if(which==='tx'){
     txEditId=null;txType='expense';txCurr='BRL';txCat='';txExtra=false;
-    document.getElementById('mtx-title').textContent='Nova Transa\u00e7\u00e3o';
+    document.getElementById('mtx-title').textContent=i('new_tx');
     document.getElementById('tx-desc').value='';
     document.getElementById('tx-amount').value='';
     document.getElementById('tx-date').value=nowDate();
@@ -1721,7 +1966,7 @@ function openModal(which){
     setTimeout(function(){document.getElementById('tx-desc').focus();},300);
   } else if(which==='goal'){
     goalEditId=null; goalCurr='BRL';
-    document.getElementById('mgoal-title').textContent='Nova Meta';
+    document.getElementById('mgoal-title').textContent=i('new_goal');
     ['g-name','g-emoji','g-target','g-current','g-monthly'].forEach(function(id){document.getElementById(id).value='';});
     document.getElementById('goal-del-btn').style.display='none';
     document.getElementById('g-brl').className='curr-opt brl';
@@ -1729,7 +1974,7 @@ function openModal(which){
     document.getElementById('modal-goal').classList.add('open');
   } else if(which==='invest'){
     invEditId=null; invType='acoes';
-    document.getElementById('minv-title').textContent='Adicionar Investimento';
+    document.getElementById('minv-title').textContent=i('new_inv');
     document.getElementById('inv-name').value='';
     document.getElementById('inv-invested').value='';
     document.getElementById('inv-current').value='';
@@ -1743,7 +1988,7 @@ function openModal(which){
 function openEditTx(id){
   var tx=TX.find(function(x){return x.id===id;}); if(!tx)return;
   txEditId=id; txType=tx.type; txCurr=tx.curr; txCat=tx.cat; txExtra=tx.is_extra||false;
-  document.getElementById('mtx-title').textContent='Editar Transa\u00e7\u00e3o';
+  document.getElementById('mtx-title').textContent=i('edit_tx');
   document.getElementById('tx-desc').value=tx.description||tx.desc||'';
   document.getElementById('tx-amount').value=Math.abs(tx.amount)||'';
   document.getElementById('tx-date').value=tx.date||nowDate();
@@ -1756,7 +2001,7 @@ function openEditTx(id){
 function openEditGoal(id){
   var g=GOALS.find(function(x){return x.id===id;}); if(!g)return;
   goalEditId=id; goalCurr=g.curr||'BRL';
-  document.getElementById('mgoal-title').textContent='Editar Meta';
+  document.getElementById('mgoal-title').textContent=i('edit_goal');
   document.getElementById('g-name').value=g.name||'';
   document.getElementById('g-emoji').value=g.emoji||'';
   document.getElementById('g-target').value=g.target||'';
@@ -1780,7 +2025,7 @@ function openEditBudget(cat){
 function openEditInv(id){
   var inv=INVS.find(function(x){return x.id===id;}); if(!inv)return;
   invEditId=id; invType=inv.inv_type||'acoes';
-  document.getElementById('minv-title').textContent='Editar Investimento';
+  document.getElementById('minv-title').textContent=i('edit_inv');
   document.getElementById('inv-name').value=inv.name||'';
   document.getElementById('inv-invested').value=inv.amount_invested||'';
   document.getElementById('inv-current').value=inv.current_value||'';
