@@ -1950,95 +1950,98 @@ function renderRiskPage(){
 // \u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550
 function renderPlanPage(){
   var pg = document.getElementById('page-plan');
-  // Use real TX data for projections
+  if(!pg) return;
+
+  // Get real data
   var txs = getModeTX();
   var now = new Date();
   var ym = now.getFullYear()+'-'+String(now.getMonth()+1).padStart(2,'0');
-  var monthTx = txs.filter(function(t){return t.date&&t.date.startsWith(ym);});
-  var realInc = monthTx.filter(function(t){return t.type==='income';}).reduce(function(s,t){return s+Math.abs(cvt(t.amount,t.curr));},0);
-  var realExp = monthTx.filter(function(t){return t.type==='expense';}).reduce(function(s,t){return s+Math.abs(cvt(t.amount,t.curr));},0);
-  var p = USER&&USER.profile||{};
-  // Prefer real data, fallback to profile estimates
-  var inc = realInc > 0 ? realInc : (p.income||0);
-  var exp = realExp > 0 ? realExp : (p.expenses||0);
-  var debt = p.debt||0;
-  var incType = p.incomeType||'fixed';
-  var hasData = inc > 0 || exp > 0 || TX.length > 0;
+  var mthTx = txs.filter(function(t){return t.date&&t.date.startsWith(ym);});
+  var realInc = mthTx.filter(function(t){return t.type==='income';}).reduce(function(acc,t){return acc+Math.abs(cvt(t.amount,t.curr));},0);
+  var realExp = mthTx.filter(function(t){return t.type==='expense';}).reduce(function(acc,t){return acc+Math.abs(cvt(t.amount,t.curr));},0);
+  var prof = USER&&USER.profile||{};
+  var inc = realInc > 0 ? realInc : (prof.income||0);
+  var exp2 = realExp > 0 ? realExp : (prof.expenses||0);
+  var debt = prof.debt||0;
+  var incType = prof.incomeType||'fixed';
+  var hasData = inc > 0 || exp2 > 0 || TX.length > 0;
+  var mShort = i('months_s');
 
-  pg.innerHTML = '<div class="page-hdr"><div class="page-title">'+i('plan_title')+'</div><div class="page-sub">'+i('plan_sub')+'</div></div>'
-    + '<div id="plan-content"></div>';
+  // Build header
+  var html = '<div class="page-hdr"><div class="page-title">'+i('plan_title')+'</div><div class="page-sub">'+i('plan_sub')+'</div></div>';
 
   if(!hasData){
-    // No data yet \u2014 show onboarding CTA
-    document.getElementById('plan-content').innerHTML =
-      '<div style="background:rgba(22,22,21,.8);border:1px solid rgba(255,255,255,.08);border-radius:20px;padding:28px 20px;text-align:center;margin-bottom:16px">'
+    html += '<div style="background:rgba(22,22,21,.8);border:1px solid rgba(255,255,255,.08);border-radius:20px;padding:28px 20px;text-align:center;margin-bottom:16px">'
       +'<div style="font-size:40px;margin-bottom:14px">&#128200;</div>'
-      +'<div style="font-size:18px;font-weight:700;letter-spacing:-.4px;margin-bottom:8px">Seu plano est\u00E1 vazio</div>'
-      +'<div style="font-size:14px;color:var(--mu);line-height:1.7;margin-bottom:20px">Adicione pelo menos uma transa\u00E7\u00E3o para a IA criar seu plano personalizado de 12 meses.</div>'
-      +'<button onclick="addFirstTx()" style="padding:14px 28px;border-radius:14px;background:var(--ac);color:#0a0a0a;font-size:15px;font-weight:700;border:none;cursor:pointer">+ Adicionar primeira transa\u00e7\u00e3o</button>'
+      +'<div style="font-size:18px;font-weight:700;margin-bottom:8px;letter-spacing:-.3px">Seu plano est\u00E1 vazio</div>'
+      +'<div style="font-size:14px;color:var(--mu);line-height:1.7;margin-bottom:20px">Adicione pelo menos uma transa\u00E7\u00E3o para a IA criar seu plano personalizado.</div>'
+      +'<button onclick="addFirstTx()" style="padding:14px 28px;border-radius:14px;background:var(--ac);color:#0a0a0a;font-size:15px;font-weight:700;border:none;cursor:pointer">+ Adicionar transa\u00E7\u00E3o</button>'
       +'</div>'
-      +'<div class="alert-card blue"><div class="alert-ico"><i class="ti ti-info-circle" style="color:var(--bl)"></i></div><div class="alert-body"><div class="alert-title blue">Como funciona</div><div class="alert-desc">A IA analisa suas receitas, despesas e metas reais para projetar seu patrim\u00F4nio m\u00EAs a m\u00EAs, com dicas personalizadas para cada per\u00EDodo.</div></div></div>';
+      +'<div class="alert-card blue"><div class="alert-ico"><i class="ti ti-info-circle" style="color:var(--bl)"></i></div><div class="alert-body"><div class="alert-title blue">Como funciona</div><div class="alert-desc">A IA usa suas receitas e despesas reais para projetar seu patrim\u00F4nio m\u00EAs a m\u00EAs com dicas personalizadas.</div></div></div>';
+    pg.innerHTML = html;
     return;
   }
 
-  // Build projection with real numbers
-  var savings = inc - exp;
-  var balance = GOALS.reduce(function(s,g){return s+g.current_val;},0);
-  var mShort = i('months_s');
+  // Build 12-month projection
+  var savings = inc - exp2;
+  var balance = GOALS.reduce(function(acc,g){return acc+g.current_val;},0);
   var months = [];
   var debtLeft = debt;
-  for(var pmi=0; pmi<12; pmi++){
-    var d = new Date(now.getFullYear(), now.getMonth()+pmi, 1);
-    var monthFactor = incType==='variable' ? (0.75 + Math.random()*0.3) : 1;
-    var monthInc = Math.round(inc * monthFactor);
-    var monthExp = Math.round(exp * (0.9 + Math.random()*0.2));
-    var debtPay = debtLeft>0 ? Math.min(debtLeft, monthInc*0.15) : 0;
-    var monthSave = monthInc - monthExp - debtPay;
-    balance += monthSave;
-    if(debtLeft>0) debtLeft = Math.max(0, debtLeft-debtPay);
+  for(var mi=0; mi<12; mi++){
+    var md = new Date(now.getFullYear(), now.getMonth()+mi, 1);
+    var mInc = Math.round(inc);
+    var mExp = Math.round(exp2);
+    var mDebtPay = debtLeft>0 ? Math.min(debtLeft, mInc*0.15) : 0;
+    var mSave = mInc - mExp - mDebtPay;
+    balance += mSave;
+    if(debtLeft>0) debtLeft = Math.max(0, debtLeft - mDebtPay);
     months.push({
-      name: mShort[d.getMonth()]+'/'+String(d.getFullYear()).slice(2),
+      name: mShort[md.getMonth()]+'/'+String(md.getFullYear()).slice(2),
       bal: Math.round(balance),
-      inc: monthInc, exp: monthExp,
-      save: Math.round(monthSave),
+      inc: mInc, exp: mExp,
+      save: Math.round(mSave),
       debt: Math.round(debtLeft),
       isNow: mi===0
     });
   }
   var finalBal = months[11].bal;
-  var totalSaved = months[11].bal - (months[0].bal - months[0].save);
 
-  // Show projection + AI insights button
-  document.getElementById('plan-content').innerHTML =
-    '<div class="plan-hero">'
+  html += '<div class="plan-hero">'
     +'<div class="plan-hero-lbl">Em '+months[11].name+' voc\u00EA ter\u00E1</div>'
     +'<div class="plan-hero-val" style="color:'+(finalBal>=0?'var(--ac)':'var(--rd)')+'">'+fBRL(finalBal)+'</div>'
-    +'<div class="plan-hero-sub">'+i('plan_projection')+(incType==='variable'?' (proje\u00E7\u00E3o conservadora)':'')+'</div>'
-    +'</div>'
-    +(inc===0&&exp===0?'<div class="alert-card orange" style="margin-bottom:14px"><div class="alert-ico"><i class="ti ti-alert-circle" style="color:var(--or)"></i></div><div class="alert-body"><div class="alert-title orange">Dados do perfil sendo usados</div><div class="alert-desc">Adicione transa\u00E7\u00F5es deste m\u00EAs para uma proje\u00E7\u00E3o mais precisa.</div></div></div>':'')
-    +'<div style="background:rgba(22,22,21,.8);border:1px solid rgba(255,255,255,.08);border-radius:16px;padding:16px;margin-bottom:16px">'
-    +'<button onclick="generateAIPlan()" id="ai-plan-btn" style="width:100%;padding:14px;border-radius:12px;background:linear-gradient(135deg,var(--ac2),var(--bl2));border:1.5px solid var(--ac3);color:var(--ac);font-size:14px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:9px;letter-spacing:-.2px">'
-    +'<i class="ti ti-sparkles" style="font-size:18px"></i>Gerar caminho com IA para seus 12 meses</button>'
-    +'<div id="ai-plan-result" style="margin-top:0"></div>'
-    +'</div>'
-    +'<div class="sec-row" style="margin-bottom:14px"><div class="sec-title">'+i('plan_monthly')+'</div></div>'
-    +'<div class="plan-months">'+months.map(function(m,idx){
-      var expPct = Math.min(100,(m.exp/Math.max(m.inc,1))*100).toFixed(0);
-      var savePct = Math.max(0,Math.min(100,(m.save/Math.max(m.inc,1))*100)).toFixed(0);
-      var isGood = m.save > 0;
-      return '<div class="plan-month">'
-        +'<div class="pm-dot'+(m.isNow?' now':isGood?' good':'')+'>'+(m.isNow?'\u2022':(idx+1))+'</div>'
-        +'<div class="pm-card">'
-        +'<div class="pm-header"><div class="pm-name">'+m.name+(m.isNow?' \u2014 Agora':'')+'</div>'
-        +'<div class="pm-bal" style="color:'+(m.bal>=0?'var(--ac)':'var(--rd)')+'">'+fBRL(m.bal)+'</div></div>'
-        +'<div class="pm-bars">'
-        +'<div class="pm-bar-row"><div class="pm-bar-lbl">'+i('pm_income')+'</div><div class="pm-bar-track"><div class="pm-bar-fill" style="width:100%;background:var(--ac)"></div></div><div class="pm-bar-val" style="color:var(--ac)">'+fBRL(m.inc)+'</div></div>'
-        +'<div class="pm-bar-row"><div class="pm-bar-lbl">'+i('pm_expense')+'</div><div class="pm-bar-track"><div class="pm-bar-fill" style="width:'+expPct+'%;background:var(--rd)"></div></div><div class="pm-bar-val" style="color:var(--rd)">'+fBRL(m.exp)+'</div></div>'
-        +'<div class="pm-bar-row"><div class="pm-bar-lbl">'+i('pm_save')+'</div><div class="pm-bar-track"><div class="pm-bar-fill" style="width:'+savePct+'%;background:'+(isGood?'var(--bl)':'var(--rd)')+'"></div></div><div class="pm-bar-val" style="color:'+(isGood?'var(--bl)':'var(--rd)')+'">'+fBRL(m.save)+'</div></div>'
-        +(m.debt>0?'<div class="pm-bar-row"><div class="pm-bar-lbl" style="color:var(--or)">D\u00EDvida</div><div class="pm-bar-track"><div class="pm-bar-fill" style="width:100%;background:var(--or)"></div></div><div class="pm-bar-val" style="color:var(--or)">'+fBRL(m.debt)+'</div></div>':'')
-        +'</div></div></div>';
-    }).join('')+'</div>';
+    +'<div class="plan-hero-sub">'+i('plan_projection')+'</div>'
+    +'</div>';
+
+  html += '<div style="background:rgba(22,22,21,.8);border:1px solid rgba(255,255,255,.08);border-radius:16px;padding:16px;margin-bottom:16px">'
+    +'<button onclick="generateAIPlan()" id="ai-plan-btn" style="width:100%;padding:14px;border-radius:12px;background:linear-gradient(135deg,var(--ac2),var(--bl2));border:1.5px solid var(--ac3);color:var(--ac);font-size:14px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:9px">'
+    +'<i class="ti ti-sparkles" style="font-size:18px"></i>Gerar caminho personalizado com IA'
+    +'</button>'
+    +'<div id="ai-plan-result"></div>'
+    +'</div>';
+
+  html += '<div class="sec-row" style="margin-bottom:14px"><div class="sec-title">'+i('plan_monthly')+'</div></div>';
+  html += '<div class="plan-months">';
+  for(var mj=0; mj<months.length; mj++){
+    var mo = months[mj];
+    var expPct = mo.inc>0 ? Math.min(100,Math.round((mo.exp/mo.inc)*100)) : 0;
+    var savePct = mo.inc>0 ? Math.max(0,Math.min(100,Math.round((Math.abs(mo.save)/mo.inc)*100))) : 0;
+    var isPos = mo.save >= 0;
+    html += '<div class="plan-month">'
+      +'<div class="pm-dot'+(mo.isNow?' now':'')+'>'+(mo.isNow?'\u2022':(mj+1))+'</div>'
+      +'<div class="pm-card">'
+      +'<div class="pm-header"><div class="pm-name">'+mo.name+(mo.isNow?' \u2014 Agora':'')+'</div>'
+      +'<div class="pm-bal" style="color:'+(mo.bal>=0?'var(--ac)':'var(--rd)')+'">'+fBRL(mo.bal)+'</div></div>'
+      +'<div class="pm-bars">'
+      +'<div class="pm-bar-row"><div class="pm-bar-lbl">'+i('pm_income')+'</div><div class="pm-bar-track"><div class="pm-bar-fill" style="width:100%;background:var(--ac)"></div></div><div class="pm-bar-val" style="color:var(--ac)">'+fBRL(mo.inc)+'</div></div>'
+      +'<div class="pm-bar-row"><div class="pm-bar-lbl">'+i('pm_expense')+'</div><div class="pm-bar-track"><div class="pm-bar-fill" style="width:'+expPct+'%;background:var(--rd)"></div></div><div class="pm-bar-val" style="color:var(--rd)">'+fBRL(mo.exp)+'</div></div>'
+      +'<div class="pm-bar-row"><div class="pm-bar-lbl">'+i('pm_save')+'</div><div class="pm-bar-track"><div class="pm-bar-fill" style="width:'+savePct+'%;background:'+(isPos?'var(--bl)':'var(--rd)')+'"></div></div><div class="pm-bar-val" style="color:'+(isPos?'var(--bl)':'var(--rd)')+'">'+fBRL(mo.save)+'</div></div>'
+      +(mo.debt>0?'<div class="pm-bar-row"><div class="pm-bar-lbl" style="color:var(--or)">D\u00EDvida</div><div class="pm-bar-track"><div class="pm-bar-fill" style="width:100%;background:var(--or)"></div></div><div class="pm-bar-val" style="color:var(--or)">'+fBRL(mo.debt)+'</div></div>':'')
+      +'</div></div></div>';
+  }
+  html += '</div>';
+  pg.innerHTML = html;
 }
+
 
 function generateAIPlan(){
   var btn = document.getElementById('ai-plan-btn');
