@@ -1832,13 +1832,55 @@ function txItem(t){
   return '<div class="tx-item" onclick="openEditTx(\''+t.id+'\')"><div class="tx-icon" style="background:'+cat.c+'20"><i class="ti ti-'+cat.i+'" style="color:'+cat.c+'"></i></div><div class="tx-body"><div class="tx-name">'+esc(t.description||t.desc||'')+tagU+tagX+'</div><div class="tx-meta">'+cat.n+' \u00b7 '+(t.date||'')+'</div></div><div class="tx-right"><div class="tx-amount '+(isExp?'exp':'inc')+'">'+(isExp?'-':'+')+fV(v)+'</div>'+conv+'</div></div>';
 }
 
+
+function exportCSV(){
+  var all = getModeTX();
+  if(!all.length){ return; }
+  var rows = [['Data','Descri\u00e7\u00e3o','Tipo','Categoria','Valor','Moeda','Valor BRL']];
+  all.forEach(function(t){
+    var cat = getCat(t.cat);
+    var val = Math.abs(t.amount);
+    var valBRL = Math.abs(cvt(t.amount, t.curr)).toFixed(2);
+    rows.push([
+      t.date||'',
+      (t.description||'').replace(/,/g,' '),
+      t.type==='income'?'Receita':'Despesa',
+      cat?cat.label:'Outros',
+      val.toFixed(2),
+      t.curr||'BRL',
+      valBRL
+    ]);
+  });
+  var csv = rows.map(function(r){ return r.join(','); }).join('\n');
+  var bom = '\uFEFF'; // UTF-8 BOM for Excel
+  var blob = new Blob([bom+csv], {type:'text/csv;charset=utf-8;'});
+  var url = URL.createObjectURL(blob);
+  var a = document.createElement('a');
+  var now = new Date();
+  var fname = 'cento-transacoes-'+now.getFullYear()+'-'+String(now.getMonth()+1).padStart(2,'0')+'.csv';
+  a.href = url; a.download = fname;
+  document.body.appendChild(a); a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+  // Visual feedback
+  var btn = document.querySelector('[onclick="exportCSV()"]');
+  if(btn){
+    var orig = btn.innerHTML;
+    btn.innerHTML = '<i class="ti ti-check" style="font-size:15px;color:var(--ac)"></i><span style="color:var(--ac)">Baixado!</span>';
+    setTimeout(function(){ btn.innerHTML = orig; }, 2000);
+  }
+}
+
 function renderTxPage(){
   var all=getModeTX();
   var list=txFilter==='all'?all:all.filter(function(t){return t.type===txFilter;});
-  var html=list.length?list.map(txItem).join(''):'<div class="empty"><i class="ti ti-arrows-sort"></i><div class="empty-title">Nenhuma transa\u00e7\u00e3o</div><div class="empty-sub">Toque em <strong>+</strong> para adicionar.</div></div>';
+  var html=list.length?list.map(txItem).join(''):'<div class="empty"><i class="ti ti-arrows-sort"></i><div class="empty-title">'+i('tx_empty_t')+'</div><div class="empty-sub">'+i('tx_empty_s')+'</div></div>';
   document.getElementById('page-tx').innerHTML=
-    '<div class="page-hdr"><div class="page-title">'+i('tx_title')+'</div></div>'
-    +'<div class="filter-row"><button class="filter-pill'+(txFilter==='all'?' on':'')+'" onclick="setTxF(\'all\')">Todas</button><button class="filter-pill'+(txFilter==='expense'?' on':'')+'" onclick="setTxF(\'expense\')">\u2193 Despesas</button><button class="filter-pill'+(txFilter==='income'?' on':'')+'" onclick="setTxF(\'income\')">\u2191 Receitas</button></div>'
+    '<div class="page-hdr" style="display:flex;align-items:center;justify-content:space-between">'
+    +'<div><div class="page-title">'+i('tx_title')+'</div></div>'
+    +(all.length?'<button onclick="exportCSV()" style="display:flex;align-items:center;gap:6px;padding:9px 14px;border-radius:12px;background:rgba(22,22,21,.8);border:1.5px solid rgba(255,255,255,.1);color:var(--mu);font-size:12px;font-weight:600;cursor:pointer;-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px)"><i class="ti ti-download" style="font-size:15px"></i>CSV</button>':'')
+    +'</div>'
+    +'<div class="filter-row"><button class="filter-pill'+(txFilter==='all'?' on':'')+'" onclick="setTxF(\'all\')">'+i('tx_all')+'</button><button class="filter-pill'+(txFilter==='expense'?' on':'')+'" onclick="setTxF(\'expense\')">\u2193 '+i('tx_exp')+'</button><button class="filter-pill'+(txFilter==='income'?' on':'')+'" onclick="setTxF(\'income\')">\u2191 '+i('tx_inc')+'</button></div>'
     +'<div class="tx-list">'+html+'</div>';
 }
 function setTxF(f){txFilter=f;renderTxPage();}
