@@ -1,0 +1,800 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="Dicas de finanças, investimentos e saúde financeira para brasileiros no Brasil e nos EUA. Conteúdo real, sem enrolação.">
+<title>Cento — Finanças que funcionam</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,300;0,700;0,900;1,300;1,700&family=Plus+Jakarta+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#0c0c0a;
+  --bg2:#141412;
+  --bg3:#1c1c19;
+  --tx:#f0efe8;
+  --tx2:rgba(240,239,232,.65);
+  --tx3:rgba(240,239,232,.35);
+  --lime:#c8f05a;
+  --lime2:rgba(200,240,90,.12);
+  --lime3:rgba(200,240,90,.06);
+  --red:#e05a4a;
+  --blue:#4da6ff;
+  --gold:#f0b84a;
+  --bd:rgba(240,239,232,.08);
+  --bd2:rgba(240,239,232,.14);
+  --serif:'Fraunces',Georgia,serif;
+  --sans:'Plus Jakarta Sans',system-ui,sans-serif;
+  --r:clamp(20px,5vw,72px);
+}
+html{background:var(--bg);color:var(--tx);-webkit-text-size-adjust:100%;scroll-behavior:smooth}
+body{font-family:var(--sans);font-size:16px;line-height:1.6;min-height:100vh;overflow-x:hidden}
+a{color:inherit;text-decoration:none}
+img{max-width:100%;display:block}
+button{font-family:inherit;cursor:pointer}
+
+/* ── GRAIN ── */
+body::after{
+  content:'';position:fixed;inset:0;z-index:9999;pointer-events:none;opacity:.025;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* ── NAV ── */
+nav{
+  position:sticky;top:0;z-index:100;
+  background:rgba(12,12,10,.92);border-bottom:1px solid var(--bd);
+  padding:0 var(--r);
+  display:flex;align-items:center;justify-content:space-between;
+  height:64px;
+  -webkit-backdrop-filter:blur(20px);backdrop-filter:blur(20px);
+}
+.nav-logo{
+  font-family:var(--serif);font-size:22px;font-weight:900;
+  letter-spacing:-.5px;display:flex;align-items:center;gap:8px;
+}
+.nav-logo-dot{width:7px;height:7px;border-radius:50%;background:var(--lime);flex-shrink:0}
+.nav-links{display:flex;gap:28px;font-size:13px;font-weight:500;color:var(--tx3)}
+.nav-links a:hover{color:var(--tx);transition:color .15s}
+.nav-right{display:flex;align-items:center;gap:12px}
+.nav-app{
+  padding:9px 18px;border-radius:8px;
+  background:var(--lime);color:#0c0c0a;
+  font-size:13px;font-weight:600;border:none;
+  transition:opacity .15s;
+}
+.nav-app:hover{opacity:.9}
+@media(max-width:768px){.nav-links{display:none}}
+
+/* ── HERO ── */
+.hero{
+  padding:80px var(--r) 60px;
+  border-bottom:1px solid var(--bd);
+  overflow:hidden;position:relative;
+}
+.hero::before{
+  content:'';position:absolute;top:-200px;right:-200px;
+  width:600px;height:600px;border-radius:50%;
+  background:radial-gradient(circle,rgba(200,240,90,.07) 0%,transparent 70%);
+  pointer-events:none;
+}
+.hero-eyebrow{
+  display:inline-flex;align-items:center;gap:8px;
+  padding:5px 14px;border-radius:100px;
+  background:var(--lime2);border:1px solid rgba(200,240,90,.2);
+  font-size:12px;font-weight:600;color:var(--lime);
+  margin-bottom:24px;letter-spacing:.3px;
+}
+.hero-eyebrow span{width:6px;height:6px;border-radius:50%;background:var(--lime);animation:pulse 1.5s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+.hero-grid{display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:start}
+.hero-main h1{
+  font-family:var(--serif);font-size:clamp(40px,5.5vw,72px);
+  font-weight:900;letter-spacing:-2px;line-height:1.05;
+  margin-bottom:20px;
+}
+.hero-main h1 em{font-style:italic;color:var(--lime)}
+.hero-main p{
+  font-size:17px;color:var(--tx2);line-height:1.8;
+  margin-bottom:32px;max-width:480px;font-weight:300;
+}
+.hero-tags{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:32px}
+.hero-tag{
+  padding:6px 14px;border-radius:100px;
+  border:1px solid var(--bd2);font-size:12px;
+  color:var(--tx3);cursor:pointer;transition:all .15s;
+}
+.hero-tag:hover,.hero-tag.on{border-color:var(--lime);color:var(--lime);background:var(--lime2)}
+.hero-featured{
+  background:var(--bg2);border:1px solid var(--bd);border-radius:20px;
+  overflow:hidden;cursor:pointer;transition:border-color .2s;
+}
+.hero-featured:hover{border-color:var(--bd2)}
+.hero-feat-img{
+  height:220px;display:flex;align-items:center;justify-content:center;
+  font-family:var(--serif);font-size:80px;font-weight:900;
+  color:rgba(200,240,90,.15);letter-spacing:-4px;
+  position:relative;overflow:hidden;
+}
+.hero-feat-body{padding:24px}
+.feat-cat{
+  font-size:11px;font-weight:600;letter-spacing:.8px;text-transform:uppercase;
+  color:var(--lime);margin-bottom:10px;
+}
+.feat-title{
+  font-family:var(--serif);font-size:22px;font-weight:700;
+  line-height:1.3;letter-spacing:-.4px;margin-bottom:10px;
+}
+.feat-deck{font-size:14px;color:var(--tx2);line-height:1.7;font-weight:300;margin-bottom:16px}
+.feat-meta{display:flex;align-items:center;gap:10px;font-size:12px;color:var(--tx3)}
+.feat-dot{width:3px;height:3px;border-radius:50%;background:var(--tx3)}
+@media(max-width:900px){.hero-grid{grid-template-columns:1fr}}
+
+/* ── TICKER ── */
+.ticker{
+  background:var(--bg2);border-bottom:1px solid var(--bd);
+  padding:10px 0;overflow:hidden;
+}
+.ticker-track{display:flex;gap:0;animation:tick 40s linear infinite;white-space:nowrap}
+.ticker-item{
+  display:flex;align-items:center;gap:8px;padding:0 28px;
+  border-right:1px solid var(--bd);font-size:12px;font-weight:500;
+}
+.ticker-item:last-child{border-right:none}
+.t-label{color:var(--tx3)}
+.t-val{color:var(--tx)}
+.t-chg{font-size:11px;font-weight:600;padding:2px 7px;border-radius:100px}
+.t-up{background:rgba(109,204,109,.12);color:#6dcc6d}
+.t-dn{background:rgba(224,90,74,.12);color:var(--red)}
+@keyframes tick{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+
+/* ── SECTION ── */
+.section{padding:56px var(--r);border-bottom:1px solid var(--bd)}
+.section-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:36px}
+.section-title{
+  font-family:var(--serif);font-size:28px;font-weight:700;letter-spacing:-.8px;
+  display:flex;align-items:center;gap:12px;
+}
+.section-title::before{content:'';width:3px;height:28px;background:var(--lime);border-radius:2px;flex-shrink:0}
+.section-more{font-size:13px;font-weight:500;color:var(--lime);display:flex;align-items:center;gap:6px;border:none;background:none}
+.section-more::after{content:'→'}
+
+/* ── ARTICLE GRID ── */
+.articles{display:grid;grid-template-columns:repeat(3,1fr);gap:24px}
+@media(max-width:900px){.articles{grid-template-columns:1fr 1fr}}
+@media(max-width:600px){.articles{grid-template-columns:1fr}}
+.article-card{
+  background:var(--bg2);border:1px solid var(--bd);border-radius:16px;
+  overflow:hidden;cursor:pointer;
+  transition:border-color .2s,transform .2s;
+}
+.article-card:hover{border-color:var(--bd2);transform:translateY(-3px)}
+.ac-img{
+  height:160px;display:flex;align-items:center;justify-content:center;
+  font-family:var(--serif);font-size:52px;font-weight:900;
+  letter-spacing:-3px;position:relative;overflow:hidden;
+}
+.ac-body{padding:20px}
+.ac-cat{
+  font-size:11px;font-weight:600;letter-spacing:.8px;
+  text-transform:uppercase;color:var(--lime);margin-bottom:8px;
+}
+.ac-title{
+  font-family:var(--serif);font-size:18px;font-weight:700;
+  line-height:1.35;letter-spacing:-.3px;margin-bottom:8px;
+}
+.ac-deck{font-size:13px;color:var(--tx2);line-height:1.65;margin-bottom:14px;font-weight:300}
+.ac-meta{display:flex;align-items:center;gap:8px;font-size:11px;color:var(--tx3)}
+
+/* ── BIG STORY ── */
+.big-story{
+  display:grid;grid-template-columns:1fr 1fr;gap:0;
+  border-radius:20px;overflow:hidden;border:1px solid var(--bd);
+}
+.bs-left{
+  background:linear-gradient(135deg,#0a1a0a,#0a0a1a);
+  padding:48px 40px;display:flex;flex-direction:column;justify-content:space-between;
+}
+.bs-right{
+  background:var(--bg2);padding:48px 40px;
+  border-left:1px solid var(--bd);
+}
+.bs-tag{
+  display:inline-flex;align-items:center;gap:7px;
+  padding:5px 14px;border-radius:100px;
+  background:rgba(200,240,90,.1);border:1px solid rgba(200,240,90,.2);
+  font-size:11px;font-weight:600;color:var(--lime);
+  margin-bottom:24px;letter-spacing:.4px;
+}
+.bs-title{
+  font-family:var(--serif);font-size:clamp(28px,3.5vw,42px);
+  font-weight:900;letter-spacing:-1.5px;line-height:1.1;
+  margin-bottom:18px;
+}
+.bs-title em{font-style:italic;color:var(--lime)}
+.bs-deck{font-size:15px;color:var(--tx2);line-height:1.8;font-weight:300;margin-bottom:28px}
+.bs-cta{
+  display:inline-flex;align-items:center;gap:8px;
+  padding:12px 22px;border-radius:10px;
+  background:var(--lime);color:#0c0c0a;
+  font-size:13px;font-weight:700;border:none;
+  transition:opacity .15s;
+}
+.bs-cta:hover{opacity:.9}
+.bs-stats{display:flex;flex-direction:column;gap:20px}
+.bs-stat-num{
+  font-family:var(--serif);font-size:52px;font-weight:900;
+  letter-spacing:-2px;line-height:1;color:var(--lime);
+}
+.bs-stat-lbl{font-size:13px;color:var(--tx3);margin-top:4px;font-weight:300}
+.bs-divider{width:100%;height:1px;background:var(--bd)}
+@media(max-width:800px){.big-story{grid-template-columns:1fr}.bs-right{border-left:none;border-top:1px solid var(--bd)}}
+
+/* ── NEWSLETTER ── */
+.newsletter{
+  padding:64px var(--r);
+  background:var(--bg2);border-bottom:1px solid var(--bd);
+  display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:center;
+}
+.nl-label{font-size:11px;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:var(--lime);margin-bottom:12px}
+.nl-h{font-family:var(--serif);font-size:clamp(26px,3.5vw,40px);font-weight:900;letter-spacing:-1.2px;line-height:1.15;margin-bottom:12px}
+.nl-p{font-size:15px;color:var(--tx2);line-height:1.8;font-weight:300}
+.nl-form{display:flex;flex-direction:column;gap:12px}
+.nl-row{display:flex;gap:0;border-radius:12px;overflow:hidden;border:1.5px solid var(--bd2)}
+.nl-inp{flex:1;padding:14px 18px;background:var(--bg3);border:none;color:var(--tx);font-size:15px;font-family:var(--sans);outline:none}
+.nl-inp::placeholder{color:var(--tx3)}
+.nl-btn{padding:14px 20px;background:var(--lime);color:#0c0c0a;border:none;font-size:13px;font-weight:700;white-space:nowrap;transition:opacity .15s}
+.nl-btn:hover{opacity:.9}
+.nl-note{font-size:12px;color:var(--tx3)}
+.nl-ok{display:none;font-size:13px;color:var(--lime);font-weight:500}
+@media(max-width:800px){.newsletter{grid-template-columns:1fr}}
+
+/* ── APP NUDGE (subtle) ── */
+.app-nudge{
+  margin:0 var(--r) 48px;
+  padding:24px 28px;border-radius:16px;
+  background:var(--lime3);border:1px solid rgba(200,240,90,.12);
+  display:flex;align-items:center;gap:20px;
+}
+.an-icon{
+  width:48px;height:48px;border-radius:14px;background:var(--bg2);
+  border:1px solid var(--bd);display:flex;align-items:center;justify-content:center;
+  font-family:var(--serif);font-size:20px;font-weight:900;color:var(--lime);flex-shrink:0;
+}
+.an-body{flex:1}
+.an-title{font-size:14px;font-weight:600;margin-bottom:3px}
+.an-sub{font-size:13px;color:var(--tx2);font-weight:300}
+.an-btn{
+  padding:10px 18px;border-radius:8px;background:var(--lime);color:#0c0c0a;
+  font-size:12px;font-weight:700;border:none;flex-shrink:0;transition:opacity .15s;
+}
+.an-btn:hover{opacity:.9}
+@media(max-width:600px){.app-nudge{flex-direction:column;text-align:center}}
+
+/* ── TOPICS ── */
+.topics{
+  padding:32px var(--r);border-bottom:1px solid var(--bd);
+  display:flex;gap:10px;flex-wrap:wrap;
+}
+.topic{
+  padding:8px 18px;border-radius:100px;border:1px solid var(--bd);
+  font-size:13px;font-weight:500;color:var(--tx3);cursor:pointer;transition:all .15s;
+}
+.topic:hover,.topic.on{border-color:var(--lime);color:var(--lime);background:var(--lime2)}
+
+/* ── ARTICLE PAGE ── */
+#article-page{
+  position:fixed;inset:0;z-index:200;
+  background:var(--bg);overflow-y:auto;-webkit-overflow-scrolling:touch;
+  transform:translateX(100%);transition:transform .4s cubic-bezier(.4,0,.2,1);
+}
+#article-page.open{transform:translateX(0)}
+.ap-nav{
+  position:sticky;top:0;background:rgba(12,12,10,.95);border-bottom:1px solid var(--bd);
+  padding:0 var(--r);height:60px;display:flex;align-items:center;justify-content:space-between;
+  -webkit-backdrop-filter:blur(20px);backdrop-filter:blur(20px);z-index:10;
+}
+.ap-back{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--tx3);border:none;background:none;cursor:pointer}
+.ap-back:hover{color:var(--tx)}
+.ap-body{max-width:700px;margin:0 auto;padding:48px clamp(20px,4vw,40px) 100px}
+.ap-cat{font-size:11px;font-weight:600;letter-spacing:.8px;text-transform:uppercase;color:var(--lime);margin-bottom:14px}
+.ap-title{font-family:var(--serif);font-size:clamp(30px,5vw,52px);font-weight:900;letter-spacing:-1.5px;line-height:1.1;margin-bottom:20px}
+.ap-deck{font-size:18px;color:var(--tx2);line-height:1.75;margin-bottom:24px;font-weight:300;border-left:3px solid var(--lime);padding-left:18px}
+.ap-meta{display:flex;align-items:center;gap:14px;font-size:12px;color:var(--tx3);padding:16px 0;border-top:1px solid var(--bd);border-bottom:1px solid var(--bd);margin-bottom:40px}
+.ap-av{width:32px;height:32px;border-radius:50%;background:var(--lime);color:#0c0c0a;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;flex-shrink:0}
+.ap-content h2{font-family:var(--serif);font-size:26px;font-weight:700;letter-spacing:-.5px;margin:40px 0 14px;color:var(--tx)}
+.ap-content p{font-size:17px;color:var(--tx2);line-height:1.9;margin-bottom:22px;font-weight:300}
+.ap-content strong{color:var(--tx);font-weight:600}
+.ap-content ul{padding-left:20px;margin-bottom:22px}
+.ap-content li{font-size:17px;color:var(--tx2);line-height:1.9;margin-bottom:10px;font-weight:300}
+.ap-callout{background:var(--lime2);border-left:3px solid var(--lime);padding:18px 22px;border-radius:0 12px 12px 0;margin:28px 0}
+.ap-callout p{margin-bottom:0;font-size:16px;color:var(--tx)}
+.ap-cta-inline{
+  margin:40px 0;padding:24px;border-radius:16px;
+  background:var(--bg2);border:1px solid var(--bd);
+  display:flex;align-items:center;gap:18px;
+}
+.ap-cta-icon{width:44px;height:44px;border-radius:12px;background:var(--lime);color:#0c0c0a;display:flex;align-items:center;justify-content:center;font-family:var(--serif);font-size:18px;font-weight:900;flex-shrink:0}
+.ap-cta-text{flex:1;font-size:14px;color:var(--tx2);line-height:1.6}
+.ap-cta-text strong{display:block;color:var(--tx);font-size:15px;margin-bottom:3px}
+.ap-cta-btn{padding:10px 16px;background:var(--lime);color:#0c0c0a;font-size:12px;font-weight:700;border:none;border-radius:8px;cursor:pointer;white-space:nowrap;flex-shrink:0}
+
+/* ── PROGRESS BAR ── */
+#progress{position:fixed;top:0;left:0;z-index:9999;height:2px;background:var(--lime);width:0%;transition:width .1s linear}
+
+/* ── FOOTER ── */
+footer{
+  padding:48px var(--r);border-top:1px solid var(--bd);
+  display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:40px;
+}
+.f-brand{font-family:var(--serif);font-size:24px;font-weight:900;letter-spacing:-.5px;margin-bottom:10px;display:flex;align-items:center;gap:8px}
+.f-brand-dot{width:7px;height:7px;border-radius:50%;background:var(--lime)}
+.f-desc{font-size:13px;color:var(--tx3);line-height:1.7;max-width:240px;font-weight:300}
+.f-title{font-size:11px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:var(--tx3);margin-bottom:14px;padding-bottom:10px;border-bottom:1px solid var(--bd)}
+.f-links{display:flex;flex-direction:column;gap:9px}
+.f-links a{font-size:13px;color:var(--tx3);font-weight:300;transition:color .15s}
+.f-links a:hover{color:var(--lime)}
+.f-bottom{
+  padding:20px var(--r);border-top:1px solid var(--bd);
+  display:flex;align-items:center;justify-content:space-between;
+  font-size:12px;color:var(--tx3);
+}
+@media(max-width:800px){footer{grid-template-columns:1fr 1fr}}
+@media(max-width:500px){footer{grid-template-columns:1fr}}
+</style>
+<!-- Rewardful Affiliate Tracking -->
+<script>(function(w,r){w._rwq=r;w[r]=w[r]||function(){(w[r].q=w[r].q||[]).push(arguments)}})(window,'rewardful');
+function openAppWithRef(){
+  var url = 'https://mycento.finance';
+  if(window.Rewardful && window.Rewardful.referral){
+    url += '?via=' + window.Rewardful.referral;
+  }
+  window.open(url, '_blank');
+}
+</script>
+<script async src="https://r.wdfl.co/rw.js" data-rewardful="6f3341"></script>
+</head>
+<body>
+<div id="progress"></div>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo"><div class="nav-logo-dot"></div>Cento</div>
+  <div class="nav-links">
+    <a href="#" onclick="filterTag('investimentos')">Investimentos</a>
+    <a href="#" onclick="filterTag('vida-nos-eua')">Vida nos EUA</a>
+    <a href="#" onclick="filterTag('orcamento')">Or&ccedil;amento</a>
+    <a href="#" onclick="filterTag('dividas')">D&iacute;vidas</a>
+    <a href="#" onclick="scrollTo('newsletter')">Newsletter</a>
+  </div>
+  <div class="nav-right">
+    <button class="nav-app" onclick="openAppWithRef()">Abrir o app &rarr;</button>
+  </div>
+</nav>
+
+<!-- TICKER -->
+<div class="ticker">
+  <div class="ticker-track">
+    <div class="ticker-item"><span class="t-label">USD/BRL</span><span class="t-val">5,74</span><span class="t-chg t-up">+0,3%</span></div>
+    <div class="ticker-item"><span class="t-label">SELIC</span><span class="t-val">10,75%</span><span class="t-chg t-dn">a.a.</span></div>
+    <div class="ticker-item"><span class="t-label">BTC</span><span class="t-val">$107.420</span><span class="t-chg t-up">+2,1%</span></div>
+    <div class="ticker-item"><span class="t-label">ETH</span><span class="t-val">$2.580</span><span class="t-chg t-dn">-0,4%</span></div>
+    <div class="ticker-item"><span class="t-label">IBOV</span><span class="t-val">135.420</span><span class="t-chg t-up">+0,8%</span></div>
+    <div class="ticker-item"><span class="t-label">S&amp;P 500</span><span class="t-val">5.840</span><span class="t-chg t-up">+0,2%</span></div>
+    <div class="ticker-item"><span class="t-label">IPCA</span><span class="t-val">5,1%</span><span class="t-chg t-dn">a.a.</span></div>
+    <div class="ticker-item"><span class="t-label">CDI</span><span class="t-val">10,65%</span><span class="t-chg t-up">a.a.</span></div>
+    <div class="ticker-item"><span class="t-label">USD/BRL</span><span class="t-val">5,74</span><span class="t-chg t-up">+0,3%</span></div>
+    <div class="ticker-item"><span class="t-label">SELIC</span><span class="t-val">10,75%</span><span class="t-chg t-dn">a.a.</span></div>
+    <div class="ticker-item"><span class="t-label">BTC</span><span class="t-val">$107.420</span><span class="t-chg t-up">+2,1%</span></div>
+    <div class="ticker-item"><span class="t-label">ETH</span><span class="t-val">$2.580</span><span class="t-chg t-dn">-0,4%</span></div>
+    <div class="ticker-item"><span class="t-label">IBOV</span><span class="t-val">135.420</span><span class="t-chg t-up">+0,8%</span></div>
+    <div class="ticker-item"><span class="t-label">S&amp;P 500</span><span class="t-val">5.840</span><span class="t-chg t-up">+0,2%</span></div>
+    <div class="ticker-item"><span class="t-label">IPCA</span><span class="t-val">5,1%</span><span class="t-chg t-dn">a.a.</span></div>
+    <div class="ticker-item"><span class="t-label">CDI</span><span class="t-val">10,65%</span><span class="t-chg t-up">a.a.</span></div>
+  </div>
+</div>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-eyebrow"><span></span>Atualizado hoje &mdash; <span id="hero-date">25 de Maio, 2026</span></div>
+  <div class="hero-grid">
+    <div class="hero-main">
+      <h1>Finan&ccedil;as<br>que <em>funcionam</em><br>de verdade</h1>
+      <p>Conte&uacute;do real sobre dinheiro para brasileiros no Brasil e nos EUA. Sem papo de rico, sem enrola&ccedil;&atilde;o. S&oacute; o que voc&ecirc; pode usar hoje.</p>
+      <div class="hero-tags">
+        <button class="hero-tag on" onclick="filterTag('todos')">Todos</button>
+        <button class="hero-tag" onclick="filterTag('investimentos')">Investimentos</button>
+        <button class="hero-tag" onclick="filterTag('orcamento')">Or&ccedil;amento</button>
+        <button class="hero-tag" onclick="filterTag('vida-nos-eua')">Vida nos EUA</button>
+        <button class="hero-tag" onclick="filterTag('dividas')">D&iacute;vidas</button>
+        <button class="hero-tag" onclick="filterTag('habitos')">H&aacute;bitos</button>
+      </div>
+    </div>
+    <div class="hero-featured" onclick="openPost('impostos-eua')">
+      <div class="hero-feat-img" style="background:linear-gradient(135deg,#0a1a0a,#0c0a1a)">67%</div>
+      <div class="hero-feat-body">
+        <div class="feat-cat">&#128293; Em alta esta semana</div>
+        <div class="feat-title">O brasileiro nos EUA paga mais imposto do que deveria — e d&aacute; pra resolver</div>
+        <div class="feat-deck">Milhares de imigrantes pagam tributo em dobro por n&atilde;o conhecerem o tratado Brasil-EUA. Entenda o que muda.</div>
+        <div class="feat-meta">
+          <span>Rafael Andrade</span>
+          <div class="feat-dot"></div>
+          <span>8 min</span>
+          <div class="feat-dot"></div>
+          <span>Vida nos EUA</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TOPICS -->
+<div class="topics">
+  <button class="topic on" onclick="filterTag('todos')">Todos</button>
+  <button class="topic" onclick="filterTag('investimentos')">&#128200; Investimentos</button>
+  <button class="topic" onclick="filterTag('orcamento')">&#128203; Or&ccedil;amento</button>
+  <button class="topic" onclick="filterTag('vida-nos-eua')">&#127482;&#127480; Vida nos EUA</button>
+  <button class="topic" onclick="filterTag('dividas')">&#128176; D&iacute;vidas</button>
+  <button class="topic" onclick="filterTag('habitos')">&#129504; H&aacute;bitos</button>
+  <button class="topic" onclick="filterTag('imigrante')">&#9992;&#65039; Imigrante</button>
+  <button class="topic" onclick="filterTag('selic')">&#127981; SELIC &amp; Juros</button>
+</div>
+
+<!-- ARTICLES -->
+<section class="section" id="articles-section">
+  <div class="section-hdr">
+    <div class="section-title">Leituras recentes</div>
+  </div>
+  <div class="articles" id="articles-grid"></div>
+</section>
+
+<!-- BIG STORY -->
+<section class="section">
+  <div class="big-story">
+    <div class="bs-left">
+      <div>
+        <div class="bs-tag">&#9889; Leitura especial</div>
+        <div class="bs-title">Como brasileiros<br>constroem <em>patrim&ocirc;nio</em><br>nos EUA do zero</div>
+        <p class="bs-deck">Entrevistamos 12 brasileiros que chegaram com menos de $5.000 e hoje t&ecirc;m mais de $200.000. O que todos fizeram igual.</p>
+      </div>
+      <button class="bs-cta" onclick="openPost('patrimonio-eua')">Ler o especial &#8594;</button>
+    </div>
+    <div class="bs-right">
+      <div class="bs-stats">
+        <div>
+          <div class="bs-stat-num">12</div>
+          <div class="bs-stat-lbl">brasileiros entrevistados</div>
+        </div>
+        <div class="bs-divider"></div>
+        <div>
+          <div class="bs-stat-num">$200k+</div>
+          <div class="bs-stat-lbl">patrim&ocirc;nio m&eacute;dio em 7 anos</div>
+        </div>
+        <div class="bs-divider"></div>
+        <div>
+          <div class="bs-stat-num">3</div>
+          <div class="bs-stat-lbl">h&aacute;bitos em comum entre todos</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- APP NUDGE -->
+<div class="app-nudge">
+  <div class="an-icon">C</div>
+  <div class="an-body">
+    <div class="an-title">Transforme o que aprendeu em a&ccedil;&atilde;o</div>
+    <div class="an-sub">O Cento aplica essas dicas nos seus n&uacute;meros reais. Gratuito, sem cart&atilde;o, sem burocracia.</div>
+  </div>
+  <button class="an-btn" onclick="openAppWithRef()">Testar gr&aacute;tis &#8594;</button>
+</div>
+
+<!-- NEWSLETTER -->
+<section class="newsletter" id="newsletter">
+  <div>
+    <div class="nl-label">Newsletter semanal</div>
+    <div class="nl-h">Uma dica por semana.<br>Direto ao ponto.</div>
+    <p class="nl-p">Toda segunda-feira: 1 dica que voc&ecirc; pode usar hoje, 1 n&uacute;mero que importa e o que est&aacute; movendo o mercado. 6.200+ assinantes. Taxa de abertura de 58%.</p>
+  </div>
+  <div class="nl-form">
+    <div class="nl-row">
+      <input class="nl-inp" id="nl-email" type="email" placeholder="seu@email.com">
+      <button class="nl-btn" onclick="subscribe()">Assinar agora</button>
+    </div>
+    <div class="nl-ok" id="nl-ok">&#10003; Voc&ecirc; est&aacute; na lista! Confira seu email.</div>
+    <div class="nl-note">Sem spam. Cancele quando quiser. Gratu&iacute;to para sempre.</div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div>
+    <div class="f-brand"><div class="f-brand-dot"></div>Cento</div>
+    <div class="f-desc">Conte&uacute;do financeiro honesto para brasileiros no Brasil e nos EUA. Sem enrola&ccedil;&atilde;o.</div>
+  </div>
+  <div>
+    <div class="f-title">Editorias</div>
+    <div class="f-links">
+      <a href="#">Investimentos</a>
+      <a href="#">Or&ccedil;amento</a>
+      <a href="#">Vida nos EUA</a>
+      <a href="#">D&iacute;vidas</a>
+      <a href="#">H&aacute;bitos</a>
+    </div>
+  </div>
+  <div>
+    <div class="f-title">Cento App</div>
+    <div class="f-links">
+      <a href="https://mycento.finance" target="_blank">Acessar o app</a>
+      <a href="#">Play Store (em breve)</a>
+      <a href="#">iPhone: como instalar</a>
+      <a href="#">O que &eacute; o Pro?</a>
+    </div>
+  </div>
+  <div>
+    <div class="f-title">Sobre</div>
+    <div class="f-links">
+      <a href="#">Sobre o Cento</a>
+      <a href="#">Newsletter</a>
+      <a href="#">Privacidade</a>
+      <a href="#">Contato</a>
+    </div>
+  </div>
+</footer>
+<div class="f-bottom">
+  <span>&copy; 2026 Cento. Conte&uacute;do informativo. N&atilde;o &eacute; recomenda&ccedil;&atilde;o de investimento.</span>
+  <span>Feito para brasileiros &#127463;&#127479; &#127482;&#127480;</span>
+</div>
+
+<!-- ARTICLE PAGE -->
+<div id="article-page">
+  <nav class="ap-nav">
+    <button class="ap-back" onclick="closePost()">&#8592; Voltar</button>
+    <div style="font-family:var(--serif);font-size:17px;font-weight:700;letter-spacing:-.3px">Cento</div>
+    <button class="nav-app" onclick="openAppWithRef()">Abrir app</button>
+  </nav>
+  <div class="ap-body" id="ap-body"></div>
+</div>
+
+<script>
+// ── DATE ──
+var months = ['Janeiro','Fevereiro','Mar\u00e7o','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
+var now = new Date();
+var dateStr = now.getDate()+' de '+months[now.getMonth()]+', '+now.getFullYear();
+var el = document.getElementById('hero-date');
+if(el) el.textContent = dateStr;
+
+// ── POSTS DATA ──
+var POSTS = [
+  {
+    id:'delivery',tag:'orcamento',cat:'Or\u00e7amento',
+    title:'O custo real do delivery que voc\u00ea n\u00e3o est\u00e1 calculando',
+    deck:'R$35 aqui, R$42 ali. Quando voc\u00ea some tudo, o delivery pode estar consumindo 15% da sua renda.',
+    author:'Ana Costa',time:'6 min',
+    bg:'linear-gradient(135deg,#1a0a0a,#2a1a0a)',num:'R$420',
+    deck2:'Parece barato. N\u00e3o \u00e9.',
+    content:[
+      {t:'p',v:'R$35 aqui, R$42 ali. Uma pizza na sexta, um almo\u00e7o que n\u00e3o deu tempo de fazer. O delivery virou rotina e a gente j\u00e1 nem conta como gasto real. Mas \u00e9.'},
+      {t:'h2',v:'O problema n\u00e3o \u00e9 o delivery em si'},
+      {t:'p',v:'O problema \u00e9 que ele \u00e9 invisivamente caro e emocionalmente conveniente. Voc\u00ea paga com um toque, n\u00e3o sente o dinheiro sair, e o prazer chega imediato. O c\u00e9rebro \u00e9 p\u00e9ssimo para resistir a isso.'},
+      {t:'p',v:'Quando analisamos dados de usu\u00e1rios do Cento, descobrimos que a m\u00e9dia gasta <strong>R$420 por m\u00eas</strong> em delivery. Para quem ganha R$3.000, isso \u00e9 14% da renda.'},
+      {t:'box',v:'\ud83d\udca1 R$420/m\u00eas em delivery = R$5.040/ano = uma viagem internacional ou 6 meses de reserva de emerg\u00eancia.'},
+      {t:'h2',v:'Como calcular o seu n\u00famero'},
+      {t:'p',v:'Abra o hist\u00f3rico do seu app de delivery. Some os \u00faltimos 3 meses. Divide por 3. Esse \u00e9 o seu n\u00famero mensal. Agora multiplica por 12. Esse \u00e9 o seu custo anual.'},
+      {t:'p',v:'A solu\u00e7\u00e3o n\u00e3o \u00e9 parar de pedir. \u00c9 definir um limite e acompanhar. R$200/m\u00eas j\u00e1 \u00e9 muito melhor que R$420.'},
+      {t:'cta',v:'O Cento categoriza delivery automaticamente e avisa quando voc\u00ea est\u00e1 perto do limite.',btn:'Testar gr\u00e1tis'}
+    ]
+  },
+  {
+    id:'selic-2026',tag:'investimentos',cat:'Investimentos',
+    title:'SELIC a 10,75%: o que fazer com o seu dinheiro agora',
+    deck:'Com a taxa b\u00e1sica de juros nesse patamar, qual \u00e9 a ordem certa para investir em 2026?',
+    author:'Rafael Andrade',time:'5 min',
+    bg:'linear-gradient(135deg,#0a1a0a,#0a0a1a)',num:'10,75%',
+    deck2:'Renda fixa voltou a ser atraente.',
+    content:[
+      {t:'p',v:'Com a SELIC a 10,75% ao ano, a renda fixa voltou a entregar retornos reais interessantes. Um CDB que paga 100% do CDI est\u00e1 rendendo cerca de 0,85% ao m\u00eas, sem volatilidade.'},
+      {t:'h2',v:'A ordem certa para investir'},
+      {t:'p',v:'Antes de qualquer coisa: <strong>1)</strong> Quite d\u00edvidas com juros acima de 15% ao ano (cart\u00e3o, cheque especial). <strong>2)</strong> Monte reserva de emerg\u00eancia em CDB ou Tesouro Selic. <strong>3)</strong> S\u00f3 depois invista o excedente.'},
+      {t:'box',v:'\ud83d\udca1 Com SELIC alta, n\u00e3o faz sentido arriscar em a\u00e7\u00f5es pagando 10% de risco quando a renda fixa entrega 10,75% sem risco. Mude a estrat\u00e9gia quando a taxa cair.'},
+      {t:'h2',v:'Para quem j\u00e1 tem a reserva montada'},
+      {t:'p',v:'Tesouro Prefixado e IPCA+ est\u00e3o com taxas historicamente altas. Travar 13% ao ano por 5 anos pode ser uma \u00f3tima jogada de longo prazo caso a Selic caia nos pr\u00f3ximos anos.'},
+      {t:'p',v:'FIIs de papel (CRI/CRA) tamb\u00e9m se beneficiam do cen\u00e1rio atual e pagam dividendos mensais isentos de IR para pessoa f\u00edsica.'},
+      {t:'cta',v:'Acompanhe sua carteira e veja a rentabilidade real em tempo real no Cento.',btn:'Ver meus investimentos'}
+    ]
+  },
+  {
+    id:'credit-score',tag:'vida-nos-eua',cat:'Vida nos EUA',
+    title:'Credit score do zero: o guia que nenhum brasileiro fez',
+    deck:'Chegou nos EUA sem hist\u00f3rico. Como construir score r\u00e1pido e sem cometer os erros cl\u00e1ssicos.',
+    author:'Julia Santos',time:'8 min',
+    bg:'linear-gradient(135deg,#0a0a1a,#1a0a1a)',num:'750+',
+    deck2:'Score alto em 6 meses.',
+    content:[
+      {t:'p',v:'Todo brasileiro que chega nos EUA passa pelo mesmo susto: sua vida financeira no Brasil n\u00e3o existe aqui. Zero hist\u00f3rico. E sem cr\u00e9dito, \u00e9 dif\u00edcil alugar apartamento, financiar carro ou conseguir cart\u00e3o decente.'},
+      {t:'h2',v:'Por onde come\u00e7ar'},
+      {t:'p',v:'O primeiro passo \u00e9 um <strong>Secured Credit Card</strong> \u2014 um cart\u00e3o onde voc\u00ea deposita $200-500 como garantia e esse valor vira seu limite. Parece ruim, mas \u00e9 o caminho legal mais r\u00e1pido.'},
+      {t:'p',v:'Use para pequenos gastos mensais e pague o total todo m\u00eas, sem exce\u00e7\u00e3o. Em 6 meses voc\u00ea j\u00e1 tem score acima de 650.'},
+      {t:'box',v:'\u26a0\ufe0f Nunca use mais de 30% do limite. O score cai feio com utiliza\u00e7\u00e3o alta, mesmo pagando em dia.'},
+      {t:'h2',v:'O erro mais comum dos brasileiros'},
+      {t:'p',v:'Pedir v\u00e1rios cart\u00f5es ao mesmo tempo. Cada pedido gera um hard inquiry que derruba o score. Comece com um, fa\u00e7a bem feito, e s\u00f3 depois de 6 meses pense no pr\u00f3ximo.'},
+      {t:'cta',v:'Gerencie suas contas em BRL e USD no mesmo app com o Cento.',btn:'Testar gr\u00e1tis'}
+    ]
+  },
+  {
+    id:'reserva',tag:'orcamento',cat:'Fundamentos',
+    title:'Reserva de emerg\u00eancia: a conta que especialistas n\u00e3o fazem pelo brasileiro',
+    deck:'A regra dos 6 meses foi criada para americanos. Para a realidade brasileira, a conta \u00e9 diferente.',
+    author:'Carlos Moura',time:'5 min',
+    bg:'linear-gradient(135deg,#1a1a0a,#0a1a10)',num:'6 meses',
+    deck2:'Para o Brasil, talvez sejam 9.',
+    content:[
+      {t:'p',v:'Todo mundo j\u00e1 ouviu: guarde 6 meses de gastos em reserva de emerg\u00eancia. Mas essa regra foi criada para o mercado americano, com seguro-desemprego robusto e acesso f\u00e1cil a cr\u00e9dito. No Brasil, a conta muda.'},
+      {t:'h2',v:'Por que 6 meses pode ser pouco no Brasil'},
+      {t:'p',v:'O seguro-desemprego brasileiro dura 3 a 5 meses. Recoloca\u00e7\u00e3o leva em m\u00e9dia 4-6 meses para n\u00edvel m\u00e9dio. Para <strong>renda vari\u00e1vel</strong> (freelancer, aut\u00f4nomo), especialistas recomendam 9-12 meses.'},
+      {t:'box',v:'\ud83d\udd11 Regra pr\u00e1tica: some s\u00f3 os gastos essenciais (aluguel, comida, transporte, sa\u00fade). Multiplique pelo n\u00famero de meses desejado. Esse \u00e9 o alvo.'},
+      {t:'h2',v:'Onde guardar'},
+      {t:'p',v:'Liquidez \u00e9 mais importante que rentabilidade aqui. Tesouro Selic ou CDB com liquidez di\u00e1ria s\u00e3o as melhores op\u00e7\u00f5es. Nunca em poupan\u00e7a (rende menos que infla\u00e7\u00e3o) e nunca em ativos de risco.'},
+      {t:'cta',v:'O Cento calcula sua reserva ideal com base nos seus gastos reais.',btn:'Ver meu c\u00e1lculo'}
+    ]
+  },
+  {
+    id:'remessa',tag:'imigrante',cat:'Imigrante',
+    title:'Mandar dinheiro pro Brasil: a compara\u00e7\u00e3o que poucos fazem',
+    deck:'Wise, Remitly, banco americano, cripto. Testamos todos e mostramos onde voc\u00ea perde mais.',
+    author:'Julia Santos',time:'7 min',
+    bg:'linear-gradient(135deg,#0a1a1a,#1a0a0a)',num:'BR&#8596;US',
+    deck2:'Economize na transfer\u00eancia.',
+    content:[
+      {t:'p',v:'Se voc\u00ea mora nos EUA e manda dinheiro para o Brasil regularmente, a escolha do m\u00e9todo de transfer\u00eancia pode fazer uma diferen\u00e7a de centenas de d\u00f3lares por ano.'},
+      {t:'h2',v:'A compara\u00e7\u00e3o direta'},
+      {t:'p',v:'Testamos $1.000 enviados via banco americano tradicional, Wise, Remitly e cripto (USDT via Binance). O banco americano teve a pior taxa de c\u00e2mbio e cobrou $35 de taxa fixa. O resultado final foi quase R$200 a menos que a melhor op\u00e7\u00e3o.'},
+      {t:'box',v:'\ud83c\udfc6 Melhor custo-benef\u00edcio consistente: <strong>Wise</strong>. Usa a taxa m\u00e9dia de c\u00e2mbio real e cobra taxa transparente (~0,6%). Para valores altos, compare sempre com Remitly.'},
+      {t:'h2',v:'O fator imposto'},
+      {t:'p',v:'Remessas acima de $10.000 precisam ser declaradas ao IRS nos EUA. No Brasil, remessas recebidas acima de R$20.000/m\u00eas entram no radar da Receita Federal. Consulte um contador se for o seu caso.'},
+      {t:'cta',v:'Gerencie contas em BRL e USD no mesmo lugar com o Cento.',btn:'Testar gr\u00e1tis'}
+    ]
+  },
+  {
+    id:'401k',tag:'vida-nos-eua',cat:'Vida nos EUA',
+    title:'401k para brasileiros: vale a pena? O que acontece se voc\u00ea voltar?',
+    deck:'A conta de aposentadoria americana tem regras que muita gente n\u00e3o sabe. Especialmente quem pode sair do pa\u00eds.',
+    author:'Rafael Andrade',time:'8 min',
+    bg:'linear-gradient(135deg,#0c0a14,#14100a)',num:'401k',
+    deck2:'Voc\u00ea sabe o que perde ao sair?',
+    content:[
+      {t:'p',v:'O 401k \u00e9 uma das maiores vantagens de trabalhar nos EUA. Se seu empregador faz match (contribui junto), \u00e9 literalmente dinheiro gr\u00e1tis. Mas muitos brasileiros evitam por n\u00e3o entender o que acontece se voltarem para o Brasil.'},
+      {t:'h2',v:'O match do empregador'},
+      {t:'p',v:'Se sua empresa oferece match de 3%, isso significa que para cada 3% do seu sal\u00e1rio que voc\u00ea contribui, ela adiciona mais 3%. Isso \u00e9 um retorno imediato de 100%. N\u00e3o h\u00e1 investimento melhor.'},
+      {t:'box',v:'\u2705 Regra: contribua pelo menos at\u00e9 o limite do match do empregador. Nunca deixe dinheiro gr\u00e1tis na mesa.'},
+      {t:'h2',v:'Se voc\u00ea voltar para o Brasil'},
+      {t:'p',v:'Ao sacar antes dos 59,5 anos, voc\u00ea paga 10% de penalidade + imposto de renda americano. Para muitos brasileiros, isso ainda \u00e9 vantajoso dependendo do valor acumulado. Outra op\u00e7\u00e3o \u00e9 deixar l\u00e1 at\u00e9 a aposentadoria.'},
+      {t:'cta',v:'Acompanhe seus investimentos BR e EUA no mesmo app.',btn:'Testar gr\u00e1tis'}
+    ]
+  },
+  {
+    id:'impostos-eua',tag:'vida-nos-eua',cat:'Vida nos EUA',
+    title:'O brasileiro nos EUA paga mais imposto do que deveria \u2014 e d\u00e1 pra resolver',
+    deck:'Milh\u00f5es de imigrantes pagam tributo em dobro por n\u00e3o conhecerem o tratado Brasil-EUA. Entenda o que muda.',
+    author:'Rafael Andrade',time:'8 min',
+    bg:'linear-gradient(135deg,#0a0a1a,#0a1a0a)',num:'2x \u2260',
+    deck2:'Voc\u00ea n\u00e3o precisa pagar dois.',
+    content:[
+      {t:'p',v:'O Brasil e os EUA t\u00eam um tratado de resid\u00eancia fiscal que a maioria dos imigrantes brasileiros nunca ouviu falar. Entender esse tratado pode economizar milhares de reais por ano.'},
+      {t:'h2',v:'O problema da dupla tributa\u00e7\u00e3o'},
+      {t:'p',v:'Se voc\u00ea trabalha nos EUA e tamb\u00e9m recebe rendimentos no Brasil (aluguel, dividendos, trabalho remoto), pode estar sendo tributado pelos dois pa\u00edses no mesmo rendimento. O tratado existe justamente para evitar isso.'},
+      {t:'box',v:'\u26a0\ufe0f Se voc\u00ea \u00e9 residente fiscal nos EUA (Green Card ou Substantial Presence Test), \u00e9 obrigado a declarar sua renda global ao IRS. Isso inclui renda do Brasil.'},
+      {t:'h2',v:'O que o tratado garante'},
+      {t:'p',v:'O imposto pago em um pa\u00eds pode ser creditado no outro. Mas o mecanismo n\u00e3o \u00e9 autom\u00e1tico \u2014 precisa ser reclamado na declara\u00e7\u00e3o de imposto de renda com os formul\u00e1rios corretos.'},
+      {t:'cta',v:'Organize sua vida financeira em dois pa\u00edses com o Cento.',btn:'Testar gr\u00e1tis'}
+    ]
+  },
+  {
+    id:'patrimonio-eua',tag:'imigrante',cat:'Especial',
+    title:'Como brasileiros constroem patrim\u00f4nio nos EUA do zero',
+    deck:'12 brasileiros. Chegaram com menos de $5.000. Hoje t\u00eam mais de $200.000. O que eles fizeram de diferente.',
+    author:'Julia Santos',time:'14 min',
+    bg:'linear-gradient(135deg,#0a1a0a,#1a0a1a)',num:'$200k',
+    deck2:'Em 7 anos. Do zero.',
+    content:[
+      {t:'p',v:'Mariana chegou em Orlando em 2018 com $3.200 e uma mala. Hoje tem uma casa no valor de $340.000 e carteira de investimentos de $80.000. Ela tem 34 anos.'},
+      {t:'h2',v:'H\u00e1bito 1: gastaram menos do que podiam nos primeiros 2 anos'},
+      {t:'p',v:'Sem exce\u00e7\u00e3o, todos viveram abaixo do padr\u00e3o que podiam pagar nos primeiros anos. Dividiam casa, cozinhavam, evitavam carro novo. N\u00e3o era sacrif\u00edcio \u2014 era estrat\u00e9gia com prazo definido.'},
+      {t:'box',v:'"Os primeiros 2 anos definem tudo. Ou voc\u00ea guarda agora e investe, ou gasta agora e trabalha pra sempre." \u2014 Mariana, 34, Orlando.'},
+      {t:'h2',v:'H\u00e1bito 2: investiram cedo e de forma simples'},
+      {t:'p',v:'Nenhum fez day trade ou perseguiu cripto. A maioria colocou no 401k at\u00e9 o match do empregador e depois em ETFs de \u00edndice. Simples, consistente, sem tentar ser esperto.'},
+      {t:'h2',v:'H\u00e1bito 3: acompanhavam os n\u00fameros ativamente'},
+      {t:'p',v:'Todos usavam algum m\u00e9todo de controle financeiro ativo. N\u00e3o importava o m\u00e9todo \u2014 importava que o n\u00famero era visto todo m\u00eas.'},
+      {t:'cta',v:'O Cento foi criado exatamente para brasileiros como esses. BRL e USD no mesmo lugar.',btn:'Come\u00e7ar agora'}
+    ]
+  }
+];
+
+var currentTag = 'todos';
+
+// ── RENDER GRID ──
+function renderGrid(){
+  var grid = document.getElementById('articles-grid');
+  if(!grid) return;
+  var filtered = currentTag === 'todos' ? POSTS : POSTS.filter(function(p){ return p.tag === currentTag || p.cat.toLowerCase().includes(currentTag); });
+  grid.innerHTML = filtered.map(function(p){
+    return '<div class="article-card" onclick="openPost(\''+p.id+'\')"><div class="ac-img" style="background:'+p.bg+'"><span style="color:rgba(255,255,255,.12)">'+p.num+'</span></div><div class="ac-body"><div class="ac-cat">'+p.cat+'</div><div class="ac-title">'+p.title+'</div><div class="ac-deck">'+p.deck+'</div><div class="ac-meta"><span>'+p.author+'</span><div class="feat-dot"></div><span>'+p.time+'</span></div></div></div>';
+  }).join('');
+}
+renderGrid();
+
+function filterTag(tag){
+  currentTag = tag;
+  document.querySelectorAll('.hero-tag, .topic').forEach(function(b){
+    b.classList.toggle('on', b.textContent.toLowerCase().includes(tag==='todos'?'todos':tag) || tag==='todos');
+  });
+  renderGrid();
+  var sec = document.getElementById('articles-section');
+  if(sec) sec.scrollIntoView({behavior:'smooth'});
+}
+
+// ── OPEN POST ──
+function openPost(id){
+  var post = POSTS.find(function(p){ return p.id === id; });
+  if(!post) return;
+  
+  var html = '<div class="ap-cat">'+post.cat+'</div>'
+    +'<h1 class="ap-title">'+post.title+'</h1>'
+    +'<p class="ap-deck">'+post.deck+'</p>'
+    +'<div class="ap-meta"><div class="ap-av">'+post.author[0]+'</div><span>'+post.author+'</span><span>&middot;</span><span>'+post.time+' de leitura</span></div>'
+    +'<div class="ap-content">';
+  
+  post.content.forEach(function(b){
+    if(b.t==='p') html+='<p>'+b.v+'</p>';
+    else if(b.t==='h2') html+='<h2>'+b.v+'</h2>';
+    else if(b.t==='box') html+='<div class="ap-callout"><p>'+b.v+'</p></div>';
+    else if(b.t==='cta') html+='<div class="ap-cta-inline"><div class="ap-cta-icon">C</div><div class="ap-cta-text"><strong>Coloque em pr\u00e1tica</strong>'+b.v+'</div><button class="ap-cta-btn" onclick="window.open(\'https://mycento.finance\',\'_blank\')">'+b.btn+' &rarr;</button></div>';
+  });
+  
+  html += '</div>';
+  
+  var body = document.getElementById('ap-body');
+  if(body) body.innerHTML = html;
+  
+  var page = document.getElementById('article-page');
+  page.classList.add('open');
+  page.scrollTop = 0;
+  document.body.style.overflow = 'hidden';
+  
+  // Progress bar
+  page.addEventListener('scroll', updateProgress);
+}
+
+function closePost(){
+  var page = document.getElementById('article-page');
+  page.classList.remove('open');
+  document.body.style.overflow = '';
+  page.removeEventListener('scroll', updateProgress);
+  document.getElementById('progress').style.width = '0%';
+}
+
+function updateProgress(){
+  var page = document.getElementById('article-page');
+  var pct = (page.scrollTop / (page.scrollHeight - page.clientHeight)) * 100;
+  document.getElementById('progress').style.width = pct + '%';
+}
+
+// ── NEWSLETTER ──
+function subscribe(){
+  var email = document.getElementById('nl-email');
+  if(!email || !email.value.includes('@')) return;
+  email.value = '';
+  document.getElementById('nl-ok').style.display = 'block';
+}
+
+function scrollTo(id){
+  var el = document.getElementById(id);
+  if(el) el.scrollIntoView({behavior:'smooth'});
+}
+
+// Keyboard close
+document.addEventListener('keydown', function(e){ if(e.key==='Escape') closePost(); });
+</script>
+</body>
+</html>
