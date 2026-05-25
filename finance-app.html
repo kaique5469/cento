@@ -1434,6 +1434,10 @@ function isPro(){
 }
 
 function initApp(){
+  // Set viewCurr based on user mode
+  if(USER && USER.mode === 'us') viewCurr = 'usd';
+  else if(USER && USER.mode === 'br') viewCurr = 'brl';
+  else if(USER && USER.mode === 'both') viewCurr = 'brl';
   updateDrawer();
   nav('home');
   initSupportPanel();
@@ -1963,9 +1967,6 @@ function showWaitlistSuccess(){
 var MONTH_NAMES = ['Janeiro','Fevereiro','Mar\u00e7o','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
 
 function renderHome(){
-  var dbgTx=getMonthTX();
-  var dbgAll=getModeTX();
-  alert('renderHome: month='+dbgTx.length+' mode='+dbgAll.length+' TX='+TX.length+' viewCurr='+viewCurr+' USER.mode='+(USER&&USER.mode)+' sample='+(TX[0]?TX[0].curr+'/'+TX[0].date+'/'+TX[0].amount:'none'));
   var txs=getMonthTX();
   var inc=txs.filter(function(t){return t.type==='income';}).reduce(function(s,t){return s+Math.abs(cvt(t.amount,t.curr));},0);
   var exp=txs.filter(function(t){return t.type==='expense';}).reduce(function(s,t){return s+Math.abs(cvt(t.amount,t.curr));},0);
