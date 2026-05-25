@@ -3369,7 +3369,7 @@ function dismissAndroidBanner(){
 }
 if('serviceWorker' in navigator){
   window.addEventListener('load',function(){
-    navigator.serviceWorker.register('/cento/sw.js')
+    navigator.serviceWorker.register('/sw.js')
       .then(function(){console.log('SW registered');})
       .catch(function(err2){console.log('SW error:',err2);});
   });
