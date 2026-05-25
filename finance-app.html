@@ -649,7 +649,7 @@ button,input,textarea,select{font-family:inherit;-webkit-appearance:none;appeara
           <div class="lp-profile-avatar" style="background:rgba(200,240,90,.12);border:1.5px solid rgba(200,240,90,.2)">&#127463;&#127479;</div>
           <div class="lp-profile-info">
             <div class="lp-profile-name" style="color:var(--ac)">O brasileiro que quer sair do vermelho</div>
-            <div class="lp-profile-role">CLT, aut&ocirc;nomo ou freelancer &mdash; sente que o dinheiro some sem explicação</div>
+            <div class="lp-profile-role">CLT, aut&ocirc;nomo ou freelancer &mdash; sente que o dinheiro some sem explica\u00E7\u00E3o</div>
           </div>
         </div>
         <div class="lp-profile-quote">
@@ -705,7 +705,7 @@ button,input,textarea,select{font-family:inherit;-webkit-appearance:none;appeara
 
     </div>
 
-    <!-- CTA dentro da seção -->
+    <!-- CTA dentro da se\u00E7\u00E3o -->
     <div style="margin-top:24px;text-align:center">
       <button onclick="showAuth('up')" class="lp-btn-main" style="max-width:340px;width:100%">
         Esse sou eu &mdash; quero come&ccedil;ar gr&aacute;tis &#8594;
@@ -898,6 +898,7 @@ button,input,textarea,select{font-family:inherit;-webkit-appearance:none;appeara
     <div class="page" id="page-plan"></div>
     <div class="page" id="page-invest"></div>
     <div class="page" id="page-ai"></div>
+    <div class="page" id="page-afiliados"></div>
     <div class="page" id="page-market"></div>
   </div>
   <nav class="bot-nav">
@@ -939,6 +940,10 @@ button,input,textarea,select{font-family:inherit;-webkit-appearance:none;appeara
     <button class="dr-item dr-pro-item" id="dr-invest" onclick="drNavPro('invest')"><i class="ti ti-trending-up"></i>Investimentos<span class="dr-pro-lock" id="lock-invest"><i class="ti ti-lock"></i>Pro</span></button>
     <button class="dr-item" id="dr-ai" onclick="drNav('ai')"><i class="ti ti-sparkles"></i>Assistente IA</button>
     <button class="dr-item" id="dr-market" onclick="drNav('market')"><i class="ti ti-activity"></i>Mercado ao Vivo</button>
+  </div>
+  <div class="dr-section" style="margin-top:4px">
+    <div class="dr-sec-lbl">Ganhar Dinheiro</div>
+    <button class="dr-item" id="dr-afiliados" onclick="drNav('afiliados')" style="background:linear-gradient(135deg,rgba(200,240,90,.12),rgba(200,240,90,.05));border:1px solid rgba(200,240,90,.2)"><i class="ti ti-users-group" style="color:var(--ac)"></i><span style="color:var(--ac);font-weight:700">Programa de Afiliados</span><span style="margin-left:auto;font-size:10px;font-weight:700;padding:2px 7px;border-radius:100px;background:rgba(200,240,90,.2);color:var(--ac)">10%</span></button>
   </div>
   <div class="dr-section" style="margin-top:4px">
     <div class="dr-sec-lbl">Conta</div>
@@ -1465,6 +1470,7 @@ function renderPage(p){
   else if(p==='invest') renderInvestPage();
   else if(p==='ai') renderAIPage();
   else if(p==='market') renderMarketPage();
+  else if(p==='afiliados') renderAfiliadosPage();
 }
 
 // \u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550
@@ -2695,16 +2701,45 @@ function saveTx(){
   if(!desc){document.getElementById('tx-desc').focus();return;}
   if(!amount||amount<=0){document.getElementById('tx-amount').focus();return;}
   if(!txCat){alert('Escolha uma categoria');return;}
-  var btn=document.getElementById('tx-save-btn'); btn.classList.add('busy'); btn.textContent='Salvando...';
+  var btn=document.getElementById('tx-save-btn');
+  btn.classList.add('busy'); btn.textContent='Salvando...';
   var row={id:txEditId||uid(),user_id:CU.id,description:desc,amount:txType==='expense'?-amount:amount,curr:txCurr,date:date||nowDate(),cat:txCat,type:txType,is_extra:txExtra};
+  
+  // Optimistic update \u2014 mostra na tela imediatamente
+  if(!txEditId){ TX.unshift(row); } 
+  else { var ei=TX.findIndex(function(t){return t.id===txEditId;}); if(ei>=0) TX[ei]=row; }
+  closeModal('tx'); renderPage(activePage);
+  
+  // Salva no Supabase em background
   var op=txEditId?sb.from('transactions').update(row).eq('id',txEditId):sb.from('transactions').insert(row);
+  var timeout=setTimeout(function(){ showToast('Salvando...','info'); },3000);
   op.then(function(r){
-    btn.classList.remove('busy'); btn.innerHTML='<i class="ti ti-check"></i>Salvar Transa\u00e7\u00e3o';
-    if(r.error){alert('Erro ao salvar: '+r.error.message);return;}
-    if(txEditId){var idx=TX.findIndex(function(t){return t.id===txEditId;});if(idx>=0)TX[idx]=row;}
-    else TX.unshift(row);
-    closeModal('tx'); renderPage(activePage);
-  }).catch(function(){btn.classList.remove('busy');btn.innerHTML='<i class="ti ti-check"></i>Salvar Transa\u00e7\u00e3o';alert('Erro de conex\u00e3o.');});
+    clearTimeout(timeout);
+    if(r.error){
+      // Rollback se erro
+      if(!txEditId) TX.shift();
+      showToast('Erro ao salvar: '+r.error.message,'error');
+      renderPage(activePage);
+    } else {
+      showToast('Transa\u00e7\u00e3o salva!','success');
+    }
+  }).catch(function(){
+    clearTimeout(timeout);
+    showToast('Sem conex\u00e3o. Tentando novamente...','error');
+  });
+}
+
+function showToast(msg, type){
+  var existing = document.getElementById('toast-msg');
+  if(existing) existing.remove();
+  var t = document.createElement('div');
+  t.id = 'toast-msg';
+  var bg = type==='success'?'var(--ac)':type==='error'?'#e05a4a':'rgba(77,166,255,.9)';
+  var color = type==='success'?'#0a0a0a':'#fff';
+  t.style.cssText = 'position:fixed;bottom:calc(var(--sab)+80px);left:50%;transform:translateX(-50%);background:'+bg+';color:'+color+';padding:10px 20px;border-radius:100px;font-size:13px;font-weight:600;z-index:9999;animation:fadeIn .2s ease;box-shadow:0 4px 20px rgba(0,0,0,.3);white-space:nowrap';
+  t.textContent = msg;
+  document.body.appendChild(t);
+  setTimeout(function(){ if(t.parentNode) t.remove(); }, 3000);
 }
 
 function deleteTx(){
@@ -2783,6 +2818,109 @@ function deleteInvestment(){
 var MARKET_DATA = {};
 var MKT_TIMER = null;
 var MKT_FILTER = 'all';
+
+
+function renderAfiliadosPage(){
+  var el = document.getElementById('page-afiliados');
+  if(!el) return;
+  
+  var refLink = 'https://mycento.finance?via='+((CU&&CU.email)?CU.email.split('@')[0]:'amigo');
+  var rewardfulLink = 'https://cento-1.getrewardful.com/signup';
+  
+  el.innerHTML = 
+    // Hero
+    '<div style="background:linear-gradient(135deg,rgba(200,240,90,.1),rgba(200,240,90,.03));border-bottom:1px solid rgba(200,240,90,.15);padding:28px 20px 24px">'
+    +'<div style="display:flex;align-items:center;gap:12px;margin-bottom:16px">'
+    +'<div style="width:48px;height:48px;border-radius:16px;background:linear-gradient(135deg,#c8f05a,#8ab03a);display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0">\ud83d\udcb0</div>'
+    +'<div><div style="font-size:20px;font-weight:800;letter-spacing:-.5px">Programa de Afiliados</div>'
+    +'<div style="font-size:13px;color:var(--mu)">Ganhe dinheiro indicando o Cento</div></div>'
+    +'</div>'
+    // Big number
+    +'<div style="background:rgba(0,0,0,.3);border-radius:16px;padding:20px;text-align:center;margin-bottom:16px">'
+    +'<div style="font-size:64px;font-weight:900;color:var(--ac);letter-spacing:-3px;line-height:1">10%</div>'
+    +'<div style="font-size:14px;color:var(--mu);margin-top:4px">de comiss\u00e3o recorrente por assinatura</div>'
+    +'<div style="font-size:12px;color:var(--mu2);margin-top:6px">Enquanto o cliente pagar, voc\u00ea recebe</div>'
+    +'</div>'
+    // Earnings calculator
+    +'<div style="background:rgba(0,0,0,.2);border-radius:14px;padding:16px">'
+    +'<div style="font-size:12px;font-weight:700;color:var(--ac);text-transform:uppercase;letter-spacing:.5px;margin-bottom:12px">\ud83e\udded Simule seus ganhos</div>'
+    +'<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;text-align:center">'
+    +'<div style="background:rgba(200,240,90,.08);border-radius:10px;padding:12px">'
+    +'<div style="font-size:20px;font-weight:800;color:var(--ac)">R$19</div>'
+    +'<div style="font-size:10px;color:var(--mu2);margin-top:2px">por indica\u00e7\u00e3o/m\u00eas</div>'
+    +'</div>'
+    +'<div style="background:rgba(200,240,90,.08);border-radius:10px;padding:12px">'
+    +'<div style="font-size:20px;font-weight:800;color:var(--ac)">R$190</div>'
+    +'<div style="font-size:10px;color:var(--mu2);margin-top:2px">com 10 clientes</div>'
+    +'</div>'
+    +'<div style="background:rgba(200,240,90,.08);border-radius:10px;padding:12px">'
+    +'<div style="font-size:20px;font-weight:800;color:var(--ac)">R$950</div>'
+    +'<div style="font-size:10px;color:var(--mu2);margin-top:2px">com 50 clientes</div>'
+    +'</div>'
+    +'</div></div></div>'
+
+    // How it works
+    +'<div style="padding:20px 20px 0">'
+    +'<div style="font-size:15px;font-weight:700;margin-bottom:14px">Como funciona</div>'
+    +'<div style="display:flex;flex-direction:column;gap:10px;margin-bottom:20px">'
+    +'<div style="display:flex;align-items:flex-start;gap:12px;padding:14px;background:var(--bg2);border-radius:14px;border:1px solid var(--bd)">'
+    +'<div style="width:32px;height:32px;border-radius:50%;background:var(--ac2);border:1.5px solid var(--ac3);color:var(--ac);font-size:13px;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0">1</div>'
+    +'<div><div style="font-size:13px;font-weight:600;margin-bottom:3px">Cadastre-se como afiliado</div>'
+    +'<div style="font-size:12px;color:var(--mu);line-height:1.5">Crie sua conta em segundos e receba seu link exclusivo</div></div></div>'
+    +'<div style="display:flex;align-items:flex-start;gap:12px;padding:14px;background:var(--bg2);border-radius:14px;border:1px solid var(--bd)">'
+    +'<div style="width:32px;height:32px;border-radius:50%;background:var(--ac2);border:1.5px solid var(--ac3);color:var(--ac);font-size:13px;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0">2</div>'
+    +'<div><div style="font-size:13px;font-weight:600;margin-bottom:3px">Compartilhe seu link</div>'
+    +'<div style="font-size:12px;color:var(--mu);line-height:1.5">WhatsApp, Instagram, TikTok, onde quiser. Cada clique \u00e9 rastreado por 90 dias</div></div></div>'
+    +'<div style="display:flex;align-items:flex-start;gap:12px;padding:14px;background:var(--bg2);border-radius:14px;border:1px solid var(--bd)">'
+    +'<div style="width:32px;height:32px;border-radius:50%;background:var(--ac2);border:1.5px solid var(--ac3);color:var(--ac);font-size:13px;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0">3</div>'
+    +'<div><div style="font-size:13px;font-weight:600;margin-bottom:3px">Receba todo m\u00eas via Wise</div>'
+    +'<div style="font-size:12px;color:var(--mu);line-height:1.5">10% de cada cobran\u00e7a recorrente. Sem limite de ganhos</div></div></div>'
+    +'</div>'
+
+    // Perks
+    +'<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:20px">'
+    +'<div style="padding:12px;background:var(--bg2);border-radius:12px;border:1px solid var(--bd);display:flex;align-items:center;gap:8px">'
+    +'<span style="font-size:18px">\u267e\ufe0f</span><div style="font-size:12px;font-weight:600">Recorrente pra sempre</div></div>'
+    +'<div style="padding:12px;background:var(--bg2);border-radius:12px;border:1px solid var(--bd);display:flex;align-items:center;gap:8px">'
+    +'<span style="font-size:18px">\ud83c\udf0e</span><div style="font-size:12px;font-weight:600">Brasil e EUA</div></div>'
+    +'<div style="padding:12px;background:var(--bg2);border-radius:12px;border:1px solid var(--bd);display:flex;align-items:center;gap:8px">'
+    +'<span style="font-size:18px">\ud83d\udd14</span><div style="font-size:12px;font-weight:600">Cookie de 90 dias</div></div>'
+    +'<div style="padding:12px;background:var(--bg2);border-radius:12px;border:1px solid var(--bd);display:flex;align-items:center;gap:8px">'
+    +'<span style="font-size:18px">\ud83d\udcb3</span><div style="font-size:12px;font-weight:600">Pago via Wise</div></div>'
+    +'</div>'
+
+    // CTA
+    +'<button onclick="window.open(\''+rewardfulLink+'\',\'_blank\')" style="width:100%;padding:16px;border-radius:16px;background:linear-gradient(135deg,#c8f05a,#8ab03a);color:#0a0a0a;font-size:16px;font-weight:800;border:none;cursor:pointer;letter-spacing:-.3px;margin-bottom:10px;display:flex;align-items:center;justify-content:center;gap:10px">'
+    +'\ud83d\ude80 Quero ser afiliado agora</button>'
+    +'<button onclick="shareAppLink()" style="width:100%;padding:14px;border-radius:16px;background:rgba(200,240,90,.1);color:var(--ac);font-size:14px;font-weight:700;border:1.5px solid rgba(200,240,90,.25);cursor:pointer;margin-bottom:20px;display:flex;align-items:center;justify-content:center;gap:8px">'
+    +'\ud83d\udd17 Compartilhar meu link agora</button>'
+
+    // Already affiliate
+    +'<div style="background:var(--bg2);border:1px solid var(--bd);border-radius:14px;padding:16px;margin-bottom:28px">'
+    +'<div style="font-size:12px;font-weight:700;color:var(--mu);text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px">J\u00e1 sou afiliado</div>'
+    +'<a href="https://cento-1.getrewardful.com" target="_blank" style="display:flex;align-items:center;justify-content:space-between;padding:12px;background:var(--bg3);border-radius:10px;border:1px solid var(--bd);color:var(--tx)">'
+    +'<span style="font-size:13px;font-weight:500">Ver meu painel de comiss\u00f5es</span>'
+    +'<i class="ti ti-external-link" style="font-size:16px;color:var(--mu)"></i></a>'
+    +'</div></div>';
+}
+
+function shareAppLink(){
+  var link = 'https://mycento.finance';
+  if(window.Rewardful && window.Rewardful.referral){
+    link += '?via=' + window.Rewardful.referral;
+  }
+  if(navigator.share){
+    navigator.share({
+      title: 'Cento \u2014 App de finan\u00e7as inteligente',
+      text: 'Controla suas finan\u00e7as no Brasil e nos EUA com IA. Gratu\u00edto para come\u00e7ar!',
+      url: link
+    });
+  } else {
+    navigator.clipboard.writeText(link).then(function(){
+      showToast('Link copiado!','success');
+    });
+  }
+}
 
 function renderMarketPage(){
   var pg = document.getElementById('page-market');
