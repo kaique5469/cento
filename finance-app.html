@@ -1280,6 +1280,7 @@ function loadAll(){
     sb.from('goals').select('*').eq('user_id',CU.id),
     sb.from('investments').select('*').eq('user_id',CU.id)
   ]).then(function(res){
+    alert('DEBUG loadAll: TX=' + (res[0].data||[]).length + ' err=' + JSON.stringify(res[0].error) + ' CU=' + (CU?CU.id:'null'));
     TX=res[0].data||[];
     var bgs=res[1].data||[]; BUDGETS=bgs.length?bgs:null;
     GOALS=res[2].data||[];
@@ -1288,7 +1289,8 @@ function loadAll(){
     document.getElementById('loading').style.display='none';
     document.getElementById('app').style.display='flex';
     initApp();
-  }).catch(function(){
+  }).catch(function(e){
+    alert('DEBUG loadAll CATCH: ' + e.message);
     document.getElementById('loading').style.display='none';
     document.getElementById('app').style.display='flex';
     initApp();
