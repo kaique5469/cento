@@ -471,6 +471,14 @@ button,input,textarea,select{font-family:inherit;-webkit-appearance:none;appeara
 .lp-final-title{font-size:clamp(26px,7vw,38px);font-weight:800;letter-spacing:-1.2px;line-height:1.1;margin-bottom:14px}
 .lp-final-sub{font-size:14px;color:rgba(240,239,232,.5);margin-bottom:32px;line-height:1.7}
 .lp-final-note{font-size:11px;color:rgba(240,239,232,.3);margin-top:14px;line-height:1.6}
+
+/* PRO LOCKED ITEMS */
+.dr-pro-item{position:relative;justify-content:space-between}
+.dr-pro-lock{display:none;align-items:center;gap:4px;font-size:10px;font-weight:700;padding:2px 8px;border-radius:100px;background:rgba(245,200,66,.15);color:#f5c842;border:1px solid rgba(245,200,66,.3);flex-shrink:0;letter-spacing:.3px}
+.dr-pro-lock i{font-size:11px}
+.dr-locked .dr-pro-lock{display:flex}
+.dr-locked{opacity:.5;cursor:default}
+.dr-locked:active{background:none !important}
 </style>
 </head>
 <body>
@@ -759,9 +767,9 @@ button,input,textarea,select{font-family:inherit;-webkit-appearance:none;appeara
   </div>
   <div class="dr-section" style="margin-top:4px">
     <div class="dr-sec-lbl">Intelig&#234;ncia</div>
-    <button class="dr-item" id="dr-risk" onclick="drNav('risk')"><i class="ti ti-shield-exclamation"></i>Risco Financeiro</button>
-    <button class="dr-item" id="dr-plan" onclick="drNav('plan')"><i class="ti ti-chart-line"></i>Plano 12 Meses</button>
-    <button class="dr-item" id="dr-invest" onclick="drNav('invest')"><i class="ti ti-trending-up"></i>Investimentos</button>
+    <button class="dr-item dr-pro-item" id="dr-risk" onclick="drNavPro('risk')"><i class="ti ti-shield-exclamation"></i>Risco Financeiro<span class="dr-pro-lock" id="lock-risk"><i class="ti ti-lock"></i>Pro</span></button>
+    <button class="dr-item dr-pro-item" id="dr-plan" onclick="drNavPro('plan')"><i class="ti ti-chart-line"></i>Plano 12 Meses<span class="dr-pro-lock" id="lock-plan"><i class="ti ti-lock"></i>Pro</span></button>
+    <button class="dr-item dr-pro-item" id="dr-invest" onclick="drNavPro('invest')"><i class="ti ti-trending-up"></i>Investimentos<span class="dr-pro-lock" id="lock-invest"><i class="ti ti-lock"></i>Pro</span></button>
     <button class="dr-item" id="dr-ai" onclick="drNav('ai')"><i class="ti ti-sparkles"></i>Assistente IA</button>
     <button class="dr-item" id="dr-market" onclick="drNav('market')"><i class="ti ti-activity"></i>Mercado ao Vivo</button>
   </div>
@@ -1262,7 +1270,14 @@ function initApp(){
 // \u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550
 //  NAVIGATION
 // \u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550
+var PRO_PAGES=['risk','plan','invest'];
+
 function nav(page){
+  // Block pro pages for free users
+  if(PRO_PAGES.indexOf(page)>=0 && !isPro()){
+    showProPaywall(page);
+    return;
+  }
   activePage=page;
   document.querySelectorAll('.page').forEach(function(p){p.classList.remove('on');});
   var pg=document.getElementById('page-'+page); if(pg)pg.classList.add('on');
@@ -1296,6 +1311,56 @@ function toggleDrawer(){
 
 function drNav(page){toggleDrawer();setTimeout(function(){nav(page);},60);}
 
+function closePaywall(){var pw=document.getElementById('pro-paywall');if(pw)pw.remove();}
+function closePaywallAndPro(){closePaywall();setTimeout(openProModal,200);}
+function drNavPro(page){
+  if(isPro()){
+    drNav(page);
+  } else {
+    toggleDrawer();
+    setTimeout(function(){ showProPaywall(page); }, 300);
+  }
+}
+
+function showProPaywall(page){
+  var pageNames = {
+    risk:'Risco Financeiro',
+    plan:'Plano 12 Meses',
+    invest:'Investimentos'
+  };
+  var pageName = pageNames[page] || page;
+  var pageIcons = {risk:'ti-shield-exclamation',plan:'ti-chart-line',invest:'ti-trending-up'};
+  var pageDescs = {
+    risk:'Veja seu score de risco financeiro, identifique vulnerabilidades e receba dicas personalizadas para proteger seu dinheiro.',
+    plan:'Projete seu patrim\u00f4nio m\u00eas a m\u00eas pelos pr\u00f3ximos 12 meses com seus n\u00fameros reais.',
+    invest:'Acompanhe sua carteira de investimentos, veja valoriza\u00e7\u00f5es e receba dicas de quando investir.'
+  };
+  var overlay = document.createElement('div');
+  overlay.id = 'pro-paywall';
+  overlay.style.cssText = 'position:fixed;inset:0;z-index:900;background:rgba(0,0,0,.8);display:flex;align-items:flex-end;-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px)';
+  overlay.innerHTML = '<div style="background:rgba(18,18,17,.97);border-radius:24px 24px 0 0;padding:24px 20px calc(var(--sab)+28px);width:100%;border-top:1px solid rgba(255,255,255,.1);animation:sheetUp .25s ease">'
+    +'<div style="width:36px;height:4px;background:rgba(255,255,255,.2);border-radius:2px;margin:0 auto 20px"></div>'
+    +'<div style="text-align:center;margin-bottom:20px">'
+    +'<div style="width:56px;height:56px;border-radius:18px;background:linear-gradient(135deg,rgba(245,200,66,.2),rgba(255,149,0,.15));border:1.5px solid rgba(245,200,66,.4);display:flex;align-items:center;justify-content:center;margin:0 auto 14px"><i class="ti '+(pageIcons[page]||'ti-lock')+'" style="font-size:24px;color:#f5c842"></i></div>'
+    +'<div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:#f5c842;margin-bottom:8px">Recurso Pro</div>'
+    +'<div style="font-size:22px;font-weight:800;letter-spacing:-.5px;margin-bottom:10px">'+pageName+'</div>'
+    +'<div style="font-size:14px;color:rgba(240,239,232,.6);line-height:1.7;max-width:320px;margin:0 auto">'+pageDescs[page]+'</div>'
+    +'</div>'
+    +'<div style="background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:14px;padding:14px;margin-bottom:16px">'
+    +'<div style="font-size:12px;font-weight:700;color:#f5c842;margin-bottom:10px">&#10024; Cento Pro inclui:</div>'
+    +'<div style="display:flex;flex-direction:column;gap:7px">'
+    +'<div style="display:flex;align-items:center;gap:10px;font-size:13px"><i class="ti ti-check" style="color:#f5c842;font-size:16px"></i>Risco Financeiro com score</div>'
+    +'<div style="display:flex;align-items:center;gap:10px;font-size:13px"><i class="ti ti-check" style="color:#f5c842;font-size:16px"></i>Plano 12 meses personalizado</div>'
+    +'<div style="display:flex;align-items:center;gap:10px;font-size:13px"><i class="ti ti-check" style="color:#f5c842;font-size:16px"></i>Carteira de investimentos</div>'
+    +'<div style="display:flex;align-items:center;gap:10px;font-size:13px"><i class="ti ti-check" style="color:#f5c842;font-size:16px"></i>IA financeira ilimitada</div>'
+    +'</div></div>'
+    +'<button onclick="closePaywallAndPro()" style="width:100%;padding:16px;border-radius:14px;background:linear-gradient(135deg,#f5c842,#ff9500);color:#1a1200;font-size:16px;font-weight:800;border:none;cursor:pointer;margin-bottom:10px">Ver planos Pro \u2192</button>'
+    +'<button onclick="closePaywall()" style="width:100%;padding:14px;border-radius:14px;background:none;color:rgba(240,239,232,.5);font-size:14px;font-weight:500;border:none;cursor:pointer">Agora n\u00e3o</button>'
+    +'</div>';
+  overlay.id='pro-paywall';overlay.addEventListener('click',function(e){if(e.target===overlay)closePaywall();});
+  document.body.appendChild(overlay);
+}
+
 function updateDrawer(){
   if(!USER)return;
   var pro=isPro();
@@ -1321,6 +1386,19 @@ function updateDrawer(){
   if(ml) ml.textContent=mmap[USER.mode||'br']||'Brasil';
   var banner=document.getElementById('pro-banner');
   if(banner) banner.style.display=pro?'none':'block';
+  // Toggle locked state on pro items
+  var proItems=['dr-risk','dr-plan','dr-invest'];
+  proItems.forEach(function(id){
+    var btn=document.getElementById(id);
+    if(btn){
+      if(pro){
+        btn.classList.remove('dr-locked');
+        btn.style.opacity='';
+      } else {
+        btn.classList.add('dr-locked');
+      }
+    }
+  });
 }
 
 // \u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550
@@ -2172,17 +2250,22 @@ function saveTx(){
   var date=document.getElementById('tx-date').value;
   if(!desc){document.getElementById('tx-desc').focus();return;}
   if(!amount||amount<=0){document.getElementById('tx-amount').focus();return;}
-  if(!txCat){alert('Escolha uma categoria');return;}
+  if(!txCat){
+    // Highlight cat grid
+    var cg=document.getElementById('cat-grid');
+    if(cg){cg.style.outline='2px solid var(--rd)';cg.style.borderRadius='12px';setTimeout(function(){cg.style.outline='';},1500);}
+    return;
+  }
   var btn=document.getElementById('tx-save-btn'); btn.classList.add('busy'); btn.textContent='Salvando...';
-  var row={id:txEditId||uid(),user_id:CU.id,description:desc,amount:txType==='expense'?-amount:amount,curr:txCurr,date:date||nowDate(),cat:txCat,type:txType,is_extra:txExtra};
+  var row={id:txEditId||uid(),user_id:CU.id,description:desc,amount:txType==='expense'?-amount:amount,curr:txCurr,date:date||nowDate(),cat:txCat,type:txType};
   var op=txEditId?sb.from('transactions').update(row).eq('id',txEditId):sb.from('transactions').insert(row);
   op.then(function(r){
     btn.classList.remove('busy'); btn.innerHTML='<i class="ti ti-check"></i>Salvar Transa\u00e7\u00e3o';
-    if(r.error){alert('Erro ao salvar: '+r.error.message);return;}
+    if(r.error){console.error('Save error:',r.error.message);return;}
     if(txEditId){var idx=TX.findIndex(function(t){return t.id===txEditId;});if(idx>=0)TX[idx]=row;}
     else TX.unshift(row);
     closeModal('tx'); renderPage(activePage);
-  }).catch(function(){btn.classList.remove('busy');btn.innerHTML='<i class="ti ti-check"></i>Salvar Transa\u00e7\u00e3o';alert('Erro de conex\u00e3o.');});
+  }).catch(function(){btn.classList.remove('busy');btn.innerHTML='<i class="ti ti-check"></i>Salvar Transa\u00e7\u00e3o';console.error('Connection error');});
 }
 
 function deleteTx(){
@@ -2204,7 +2287,7 @@ function saveGoal(){
   var op=goalEditId?sb.from('goals').update(row).eq('id',goalEditId):sb.from('goals').insert(row);
   op.then(function(r){
     btn.classList.remove('busy'); btn.innerHTML='<i class="ti ti-check"></i>Salvar Meta';
-    if(r.error){alert('Erro');return;}
+    if(r.error){console.error('Save error');return;}
     if(goalEditId){var idx=GOALS.findIndex(function(g){return g.id===goalEditId;});if(idx>=0)GOALS[idx]=row;}
     else GOALS.push(row);
     closeModal('goal'); renderGoalsPage();
@@ -2226,7 +2309,7 @@ function saveBudget(){
   var b=BUDGETS.find(function(x){return x.cat===bgEditCat;}); if(!b)return;
   sb.from('budgets').update({limit_val:limit}).eq('id',b.id).then(function(r){
     btn.classList.remove('busy'); btn.innerHTML='<i class="ti ti-check"></i>Salvar';
-    if(r.error){alert('Erro');return;}
+    if(r.error){console.error('Save error');return;}
     b.limit_val=limit; closeModal('budget'); renderBudgetPage();
   });
 }
@@ -2240,7 +2323,7 @@ function saveInvestment(){
   var op=invEditId?sb.from('investments').update(row).eq('id',invEditId):sb.from('investments').insert(row);
   op.then(function(r){
     btn.classList.remove('busy'); btn.innerHTML='<i class="ti ti-check"></i>Salvar';
-    if(r.error){alert('Erro');return;}
+    if(r.error){console.error('Save error');return;}
     if(invEditId){var idx=INVS.findIndex(function(i){return i.id===invEditId;});if(idx>=0)INVS[idx]=row;}
     else INVS.push(row);
     closeModal('invest'); renderInvestPage();
