@@ -479,6 +479,20 @@ button,input,textarea,select{font-family:inherit;-webkit-appearance:none;appeara
 .dr-locked .dr-pro-lock{display:flex}
 .dr-locked{opacity:.5;cursor:default}
 .dr-locked:active{background:none !important}
+
+/* ── PARA QUEM E ── */
+.lp-for-whom { padding: 52px 24px; max-width: 540px; margin: 0 auto; width: 100%; }
+.lp-profile-cards { display: flex; flex-direction: column; gap: 14px; }
+.lp-profile { border-radius: 20px; overflow: hidden; border: 1.5px solid rgba(255,255,255,.08); background: rgba(22,22,21,.7); -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px); }
+.lp-profile-top { padding: 18px 18px 14px; display: flex; align-items: flex-start; gap: 14px; }
+.lp-profile-avatar { width: 52px; height: 52px; border-radius: 16px; display: flex; align-items: center; justify-content: center; font-size: 24px; flex-shrink: 0; }
+.lp-profile-info { flex: 1; }
+.lp-profile-name { font-size: 16px; font-weight: 800; letter-spacing: -.4px; margin-bottom: 3px; }
+.lp-profile-role { font-size: 12px; color: var(--mu); line-height: 1.5; }
+.lp-profile-quote { padding: 0 18px 14px; font-size: 13px; color: rgba(240,239,232,.7); line-height: 1.7; font-style: italic; border-bottom: 1px solid rgba(255,255,255,.05); }
+.lp-profile-features { padding: 14px 18px; display: flex; flex-direction: column; gap: 7px; }
+.lp-profile-feat { display: flex; align-items: center; gap: 9px; font-size: 12px; color: rgba(240,239,232,.75); }
+.lp-profile-feat i { font-size: 15px; flex-shrink: 0; }
 </style>
 </head>
 <body>
@@ -546,7 +560,86 @@ button,input,textarea,select{font-family:inherit;-webkit-appearance:none;appeara
     </div>
   </div>
 
-  <div class="lp-sec" style="padding-top:0">
+  
+  <!-- PARA QUEM E -->
+  <div class="lp-for-whom">
+    <div class="lp-sec-lbl">Para quem &eacute;?</div>
+    <h2 class="lp-sec-title">Reconhece algu&eacute;m aqui?</h2>
+    <p class="lp-sec-sub">O Cento foi criado para pessoas reais com desafios reais.</p>
+
+    <div class="lp-profile-cards">
+
+      <!-- Perfil 1: Brasileiro no Brasil -->
+      <div class="lp-profile">
+        <div class="lp-profile-top">
+          <div class="lp-profile-avatar" style="background:rgba(200,240,90,.12);border:1.5px solid rgba(200,240,90,.2)">&#127463;&#127479;</div>
+          <div class="lp-profile-info">
+            <div class="lp-profile-name" style="color:var(--ac)">O brasileiro que quer sair do vermelho</div>
+            <div class="lp-profile-role">CLT, aut&ocirc;nomo ou freelancer &mdash; sente que o dinheiro some sem explicação</div>
+          </div>
+        </div>
+        <div class="lp-profile-quote">
+          &ldquo;Chego no fim do m&ecirc;s sem saber para onde foi o dinheiro. Pago contas, pago cart&atilde;o, e n&atilde;o sobra nada.&rdquo;
+        </div>
+        <div class="lp-profile-features">
+          <div class="lp-profile-feat"><i class="ti ti-chart-pie" style="color:var(--ac)"></i>Or&ccedil;amentos por categoria com alertas de limite</div>
+          <div class="lp-profile-feat"><i class="ti ti-shield-exclamation" style="color:var(--ac)"></i>Score de risco que mostra exatamente onde est&aacute; o problema</div>
+          <div class="lp-profile-feat"><i class="ti ti-sparkles" style="color:var(--ac)"></i>IA que pergunta seus objetivos e monta um plano real de sa&iacute;da</div>
+          <div class="lp-profile-feat"><i class="ti ti-target" style="color:var(--ac)"></i>Metas com contagem regressiva: casa, reserva, viagem</div>
+        </div>
+      </div>
+
+      <!-- Perfil 2: Brasileiro nos EUA -->
+      <div class="lp-profile">
+        <div class="lp-profile-top">
+          <div class="lp-profile-avatar" style="background:rgba(77,166,255,.12);border:1.5px solid rgba(77,166,255,.2)">&#127482;&#127480;</div>
+          <div class="lp-profile-info">
+            <div class="lp-profile-name" style="color:var(--bl)">O imigrante que vive entre dois pa&iacute;ses</div>
+            <div class="lp-profile-role">Mora nos EUA, manda dinheiro pro Brasil e ainda tenta construir vida aqui</div>
+          </div>
+        </div>
+        <div class="lp-profile-quote">
+          &ldquo;Tenho conta aqui e l&aacute;. Nenhum app entende minha situa&ccedil;&atilde;o. Preciso controlar em d&oacute;lar e em real ao mesmo tempo.&rdquo;
+        </div>
+        <div class="lp-profile-features">
+          <div class="lp-profile-feat"><i class="ti ti-currency-dollar" style="color:var(--bl)"></i>Transa&ccedil;&otilde;es em USD e BRL no mesmo app, com convers&atilde;o autom&aacute;tica</div>
+          <div class="lp-profile-feat"><i class="ti ti-world" style="color:var(--bl)"></i>Modo BR, EUA ou os dois &mdash; alterna com um toque</div>
+          <div class="lp-profile-feat"><i class="ti ti-activity" style="color:var(--bl)"></i>C&acirc;mbio ao vivo + alertas quando o d&oacute;lar muda</div>
+          <div class="lp-profile-feat"><i class="ti ti-language" style="color:var(--bl)"></i>Interface em portugu&ecirc;s, ingl&ecirc;s ou espanhol</div>
+        </div>
+      </div>
+
+      <!-- Perfil 3: BR + EUA -->
+      <div class="lp-profile">
+        <div class="lp-profile-top">
+          <div class="lp-profile-avatar" style="background:rgba(175,135,255,.12);border:1.5px solid rgba(175,135,255,.2)">&#127758;</div>
+          <div class="lp-profile-info">
+            <div class="lp-profile-name" style="color:var(--pu)">O n&ocirc;made digital / empreendedor</div>
+            <div class="lp-profile-role">Trabalha remoto, recebe em d&oacute;lar, vive no Brasil &mdash; ou o contr&aacute;rio</div>
+          </div>
+        </div>
+        <div class="lp-profile-quote">
+          &ldquo;Minha renda &eacute; em USD mas meus gastos s&atilde;o em BRL. Nunca sei ao certo quanto tenho de verdade.&rdquo;
+        </div>
+        <div class="lp-profile-features">
+          <div class="lp-profile-feat"><i class="ti ti-chart-line" style="color:var(--pu)"></i>Plano 12 meses considerando renda em moeda diferente dos gastos</div>
+          <div class="lp-profile-feat"><i class="ti ti-trending-up" style="color:var(--pu)"></i>Carteira de investimentos BR e EUA unificada</div>
+          <div class="lp-profile-feat"><i class="ti ti-robot" style="color:var(--pu)"></i>IA que entende sua situa&ccedil;&atilde;o biling&uuml;e e d&aacute; conselhos reais</div>
+          <div class="lp-profile-feat"><i class="ti ti-file-download" style="color:var(--pu)"></i>Exporta CSV para declarar imposto em qualquer pa&iacute;s</div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- CTA dentro da seção -->
+    <div style="margin-top:24px;text-align:center">
+      <button onclick="showAuth('up')" class="lp-btn-main" style="max-width:340px;width:100%">
+        Esse sou eu &mdash; quero come&ccedil;ar gr&aacute;tis &#8594;
+      </button>
+    </div>
+  </div>
+
+<div class="lp-sec" style="padding-top:0">
     <div class="lp-sec-lbl">Depoimentos</div>
     <h2 class="lp-sec-title">Quem usa n&atilde;o larga</h2>
     <div class="lp-testis">
@@ -1475,7 +1568,7 @@ var TR = {
     ok_signup:'Verifique seu e-mail para confirmar!',
     home_title:'In\u00edcio',tx_title:'Transa\u00e7\u00f5es',
     budget_title:'Or\u00e7amentos',budget_sub:'Toque para editar o limite',
-    goals_title:'Metas',goals_add:'Nova Meta',
+    goals_title:'Metas',goals_add:'Nova Meta',goal_target_word:'Meta',
     risk_title:'Risco Financeiro',risk_sub:'Sa\u00fade e vulnerabilidade do seu dinheiro',
     plan_title:'Plano 12 Meses',plan_sub:'Proje\u00e7\u00e3o com seus n\u00fameros reais',
     invest_title:'Investimentos',invest_sub:'Sua carteira pessoal',
@@ -1509,7 +1602,7 @@ var TR = {
     plan_conservative:' (85% da renda)',
     plan_variable_title:'Renda vari\u00e1vel detectada',
     plan_variable_d:'C\u00e1lculo conservador com 85% da renda m\u00e9dia.',
-    plan_monthly:'M\u00eas a m\u00eas',plan_now:' \u2014 Agora',
+    plan_monthly:'M\u00eas a m\u00eas',plan_now:i('plan_now'),
     pm_income:'Receita',pm_expense:'Gastos',pm_save:'Guarda',
     invest_total:'Patrim\u00f4nio total em investimentos',
     invest_since:'desde o in\u00edcio',invest_portfolio:'Minha Carteira',
@@ -1549,7 +1642,7 @@ var TR = {
     ok_signup:'Check your email to confirm!',
     home_title:'Home',tx_title:'Transactions',
     budget_title:'Budgets',budget_sub:'Tap to edit limit',
-    goals_title:'Goals',goals_add:'New Goal',
+    goals_title:'Goals',goals_add:'New Goal',goal_target_word:'Goal',goal_target_word:'Goal',
     risk_title:'Financial Risk',risk_sub:'Health and vulnerability of your money',
     plan_title:'12-Month Plan',plan_sub:'Projection with your real numbers',
     invest_title:'Investments',invest_sub:'Your personal portfolio',
@@ -1572,7 +1665,7 @@ var TR = {
     alert_no_inc_d:'Add your earnings to see the real balance.',
     alert_goal:'{name} at {pct}%',
     alert_goal_d:'Saving {monthly}/month \u2014 {months} months to goal.',
-    bg_ok:'OK',bg_warn:'Warning',bg_over:'Over',bg_vs_spent:'Budget vs. Spent',
+    bg_ok:'OK',bg_ok_badge:'OK',bg_warn:'Warning',bg_over:'Over',bg_vs_spent:'Budget vs. Spent',
     gl_saved:'saved',gl_missing:'remaining',gl_monthly:'/month',
     gl_months:'months',gl_no_monthly:'Set a monthly amount',
     gl_empty_t:'No goals yet',gl_empty_s:'Create your first financial goal.',
@@ -1622,7 +1715,7 @@ var TR = {
     ok_signup:'\u00a1Verifica tu correo para confirmar!',
     home_title:'Inicio',tx_title:'Transacciones',
     budget_title:'Presupuestos',budget_sub:'Toca para editar el l\u00edmite',
-    goals_title:'Metas',goals_add:'Nueva Meta',
+    goals_title:'Metas',goals_add:'Nueva Meta',goal_target_word:'Meta',goal_target_word:'Meta',
     risk_title:'Riesgo Financiero',risk_sub:'Salud y vulnerabilidad de tu dinero',
     plan_title:'Plan 12 Meses',plan_sub:'Proyecci\u00f3n con tus n\u00fameros reales',
     invest_title:'Inversiones',invest_sub:'Tu cartera personal',
@@ -1645,7 +1738,7 @@ var TR = {
     alert_no_inc_d:'Agrega tus entradas para ver el saldo real.',
     alert_goal:'{name} al {pct}%',
     alert_goal_d:'Ahorrando {monthly}/mes \u2014 {months} meses para la meta.',
-    bg_ok:'OK',bg_warn:'Atenci\u00f3n',bg_over:'Excedido',bg_vs_spent:'Presupuestado vs. Gastado',
+    bg_ok:'OK',bg_ok_badge:'OK',bg_warn:'Atenci\u00f3n',bg_over:'Excedido',bg_vs_spent:'Presupuestado vs. Gastado',
     gl_saved:'ahorrados',gl_missing:'faltan',gl_monthly:'/mes',
     gl_months:'meses',gl_no_monthly:'Define un monto mensual',
     gl_empty_t:'Sin metas a\u00fan',gl_empty_s:'Crea tu primera meta financiera.',
@@ -1937,7 +2030,7 @@ function renderGoalsPage(){
   document.getElementById('page-goals').innerHTML=
     '<div class="page-hdr"><div class="page-title">'+i('goals_title')+'</div></div>'
     +'<div class="goals-list">'+items+'</div>'
-    +'<button class="ghost-btn" onclick="openModal(\'goal\')"><i class="ti ti-plus"></i>Nova Meta</button>';
+    +'<button class="ghost-btn" onclick="openModal(\'goal\')"><i class="ti ti-plus"></i>'+i('goals_add')+'</button>';
 }
 
 // \u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550
