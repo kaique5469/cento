@@ -2720,20 +2720,22 @@ function saveTx(){
   closeModal('tx'); renderPage(activePage);
   
   // Salva no Supabase
-  var op=txEditId?sb.from('transactions').update(row).eq('id',txEditId):sb.from('transactions').insert(row);
+  var op=txEditId?sb.from('transactions').update(row).eq('id',txEditId):sb.from('transactions').insert(row).select();
   op.then(function(r){
     if(r.error){
-      if(!txEditId) TX.shift();
+      // Rollback optimistic update
+      if(!txEditId){ var ri=TX.findIndex(function(t){return t.id===row.id;}); if(ri>=0) TX.splice(ri,1); }
       showToast('Erro: '+r.error.message,'error');
       renderPage(activePage);
     } else {
+      // Update local TX with server data if returned
+      if(r.data && r.data[0]){
+        if(!txEditId){ var ei2=TX.findIndex(function(t){return t.id===row.id;}); if(ei2>=0) TX[ei2]=r.data[0]; }
+      }
       showToast('Transa\u00e7\u00e3o salva!','success');
-      // Reload from Supabase to keep in sync
-      sb.from('transactions').select('*').eq('user_id',CU.id).order('date',{ascending:false}).then(function(res){
-        if(res.data) { TX = res.data; renderPage(activePage); }
-      });
+      renderPage(activePage);
     }
-  }).catch(function(e){
+  }).catch(function(){
     showToast('Sem conex\u00e3o. Tentando novamente...','error');
   });
 }
