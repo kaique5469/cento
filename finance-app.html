@@ -2715,16 +2715,17 @@ function saveTx(){
   var timeout=setTimeout(function(){ showToast('Salvando...','info'); },3000);
   op.then(function(r){
     clearTimeout(timeout);
+    alert('DEBUG: error=' + JSON.stringify(r.error) + ' status=' + r.status);
     if(r.error){
-      // Rollback se erro
       if(!txEditId) TX.shift();
-      showToast('Erro ao salvar: '+r.error.message,'error');
+      showToast('Erro: '+r.error.message,'error');
       renderPage(activePage);
     } else {
       showToast('Transa\u00e7\u00e3o salva!','success');
     }
-  }).catch(function(){
+  }).catch(function(e){
     clearTimeout(timeout);
+    alert('DEBUG CATCH: ' + e.message);
     showToast('Sem conex\u00e3o. Tentando novamente...','error');
   });
 }
