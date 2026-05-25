@@ -529,7 +529,45 @@ button,input,textarea,select{font-family:inherit;-webkit-appearance:none;appeara
 .pricing-faq-item{margin-bottom:12px}
 .pricing-faq-q{font-size:13px;font-weight:600;margin-bottom:4px}
 .pricing-faq-a{font-size:12px;color:var(--mu);line-height:1.6}
+
+/* ── iOS INSTALL BANNER ── */
+#ios-install-banner{
+  position:fixed;bottom:0;left:0;right:0;z-index:9000;
+  background:rgba(12,12,11,.97);
+  border-top:1px solid rgba(200,240,90,.2);
+  padding:16px 18px calc(var(--sab)+16px);
+  -webkit-backdrop-filter:blur(24px);backdrop-filter:blur(24px);
+  animation:slideUp .35s cubic-bezier(.4,0,.2,1);
+  display:none;
+}
+@keyframes slideUp{from{transform:translateY(100%)}to{transform:translateY(0)}}
+.ios-banner-top{display:flex;align-items:center;gap:12px;margin-bottom:14px}
+.ios-banner-icon{width:48px;height:48px;border-radius:13px;background:#0a0a0a;border:1.5px solid rgba(200,240,90,.3);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:22px;font-weight:700;color:var(--ac)}
+.ios-banner-info{flex:1}
+.ios-banner-title{font-size:15px;font-weight:800;letter-spacing:-.3px;margin-bottom:2px}
+.ios-banner-sub{font-size:12px;color:var(--mu)}
+.ios-banner-close{width:28px;height:28px;border-radius:50%;background:rgba(255,255,255,.08);border:none;color:var(--mu);cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:16px}
+.ios-steps{display:flex;flex-direction:column;gap:10px;margin-bottom:16px}
+.ios-step{display:flex;align-items:center;gap:12px;padding:11px 14px;border-radius:13px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.07)}
+.ios-step-num{width:24px;height:24px;border-radius:50%;background:var(--ac2);border:1px solid var(--ac3);color:var(--ac);font-size:11px;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.ios-step-text{font-size:13px;color:rgba(240,239,232,.85);line-height:1.4}
+.ios-step-text b{color:var(--tx);font-weight:700}
+.ios-step-icon{font-size:18px;flex-shrink:0;margin-left:auto}
+.ios-banner-cta{width:100%;padding:14px;border-radius:14px;background:var(--ac);color:#0a0a0a;font-size:15px;font-weight:800;border:none;cursor:pointer;letter-spacing:-.3px}
+.ios-banner-skip{width:100%;padding:11px;border-radius:14px;background:none;border:none;color:var(--mu);font-size:13px;cursor:pointer;margin-top:8px}
+/* Arrow pointing to share button */
+.ios-arrow{position:fixed;bottom:calc(var(--sab)+280px);left:50%;transform:translateX(-50%);font-size:28px;animation:bounceUp 1.5s ease-in-out infinite;z-index:9001;display:none}
+@keyframes bounceUp{0%,100%{transform:translateX(-50%) translateY(0)}50%{transform:translateX(-50%) translateY(-8px)}}
 </style>
+  <link rel="manifest" href="manifest.json">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Cento">
+  <meta name="theme-color" content="#0a0a0a">
+<!-- Rewardful Affiliate Tracking -->
+<script>(function(w,r){w._rwq=r;w[r]=w[r]||function(){(w[r].q=w[r].q||[]).push(arguments)}})(window,'rewardful');</script>
+<script async src="https://r.wdfl.co/rw.js" data-rewardful="6f3341"></script>
 </head>
 <body>
 <canvas id="bg-canvas"></canvas>
@@ -3247,6 +3285,11 @@ function goToStripe(){
     url += (url.indexOf('?')>=0 ? '&' : '?') + 'prefilled_email=' + encodeURIComponent(CU.email);
   }
   
+  // Add Rewardful referral token if present
+  if(window.Rewardful && window.Rewardful.referral){
+    url += (url.indexOf('?')>=0 ? '&' : '?') + 'client_reference_id=' + window.Rewardful.referral;
+  }
+  
   // Check if URL is placeholder
   if(url.indexOf('SUBSTITUIR') >= 0){
     showStripeSetupGuide();
@@ -3282,6 +3325,86 @@ function showStripeSetupGuide(){
     +'<button onclick="closePricing()" style="width:100%;padding:15px;border-radius:14px;background:var(--ac);color:#0a0a0a;font-size:15px;font-weight:700;border:none;cursor:pointer">Entendido!</button>';
 }
 
+
+
+
+// iOS/Android Install Banner
+function isIOS(){ return /iphone|ipad|ipod/i.test(navigator.userAgent); }
+function isInStandaloneMode(){ return window.navigator.standalone===true||window.matchMedia('(display-mode: standalone)').matches; }
+function checkIOSInstallBanner(){
+  if(!isIOS()||isInStandaloneMode()) return;
+  try{ var d=localStorage.getItem('cento_ios_banner'); if(d&&Date.now()-parseInt(d)<7*24*60*60*1000) return; }catch(err){}
+  setTimeout(function(){ var b=document.getElementById('ios-install-banner'); if(b){b.style.display='block';} },3000);
+}
+function dismissIOSBanner(skip){
+  var b=document.getElementById('ios-install-banner');
+  if(b){b.style.transform='translateY(100%)';b.style.transition='transform .25s ease';setTimeout(function(){b.style.display='none';b.style.transform='';},250);}
+  try{ localStorage.setItem('cento_ios_banner',Date.now().toString()); }catch(err){}
+}
+var deferredPrompt=null;
+window.addEventListener('beforeinstallprompt',function(e){
+  e.preventDefault(); deferredPrompt=e;
+  if(!isInStandaloneMode()) setTimeout(showAndroidBanner,3000);
+});
+function showAndroidBanner(){
+  if(!deferredPrompt) return;
+  try{ var d2=localStorage.getItem('cento_android_banner'); if(d2&&Date.now()-parseInt(d2)<7*24*60*60*1000) return; }catch(err){}
+  var b2=document.getElementById('ios-install-banner');
+  if(!b2) return;
+  b2.innerHTML='<div style="display:flex;align-items:center;gap:12px;margin-bottom:14px"><div style="width:48px;height:48px;border-radius:13px;background:#0a0a0a;border:1.5px solid rgba(200,240,90,.3);display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:800;color:#c8f05a">C</div><div style="flex:1"><div style="font-size:15px;font-weight:800;margin-bottom:2px">Instalar o Cento</div><div style="font-size:12px;color:#7a7a72">App nativo gratuito</div></div><button onclick="dismissAndroidBanner()" style="width:28px;height:28px;border-radius:50%;background:rgba(255,255,255,.08);border:none;color:#7a7a72;cursor:pointer;font-size:18px">x</button></div><button onclick="installAndroid()" style="width:100%;padding:14px;border-radius:14px;background:#c8f05a;color:#0a0a0a;font-size:15px;font-weight:800;border:none;cursor:pointer;margin-bottom:8px">Instalar agora</button><button onclick="dismissAndroidBanner()" style="width:100%;padding:11px;border-radius:14px;background:none;border:none;color:#7a7a72;font-size:13px;cursor:pointer">Agora n\u00E3o</button>';
+  b2.style.display='block';
+}
+function installAndroid(){
+  if(!deferredPrompt) return;
+  deferredPrompt.prompt();
+  deferredPrompt.userChoice.then(function(res){
+    deferredPrompt=null;
+    var b3=document.getElementById('ios-install-banner'); if(b3) b3.style.display='none';
+    try{ localStorage.setItem('cento_android_banner',Date.now().toString()); }catch(err){}
+  });
+}
+function dismissAndroidBanner(){
+  var b4=document.getElementById('ios-install-banner'); if(b4) b4.style.display='none';
+  try{ localStorage.setItem('cento_android_banner',Date.now().toString()); }catch(err){}
+}
+if('serviceWorker' in navigator){
+  window.addEventListener('load',function(){
+    navigator.serviceWorker.register('/cento/sw.js')
+      .then(function(){console.log('SW registered');})
+      .catch(function(err2){console.log('SW error:',err2);});
+  });
+}
+window.addEventListener('load',function(){ setTimeout(checkIOSInstallBanner,1000); });
 </script>
+
+<!-- iOS INSTALL BANNER -->
+<div id="ios-install-banner" style="display:none;position:fixed;bottom:0;left:0;right:0;z-index:9000;background:rgba(12,12,11,.97);border-top:1px solid rgba(200,240,90,.2);padding:16px 18px calc(env(safe-area-inset-bottom,0px) + 16px);-webkit-backdrop-filter:blur(24px);backdrop-filter:blur(24px)">
+  <div style="display:flex;align-items:center;gap:12px;margin-bottom:14px">
+    <div style="width:48px;height:48px;border-radius:13px;background:#0a0a0a;border:1.5px solid rgba(200,240,90,.3);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:22px;font-weight:800;color:#c8f05a">C</div>
+    <div style="flex:1"><div style="font-size:15px;font-weight:800;letter-spacing:-.3px;margin-bottom:2px">Instale o Cento no iPhone</div><div style="font-size:12px;color:#7a7a72">Funciona como app nativo, sem App Store</div></div>
+    <button onclick="dismissIOSBanner(true)" style="width:28px;height:28px;border-radius:50%;background:rgba(255,255,255,.08);border:none;color:#7a7a72;cursor:pointer;font-size:18px;display:flex;align-items:center;justify-content:center">&#10005;</button>
+  </div>
+  <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:14px">
+    <div style="display:flex;align-items:center;gap:12px;padding:11px 14px;border-radius:13px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.07)">
+      <div style="width:24px;height:24px;border-radius:50%;background:rgba(200,240,90,.15);color:#c8f05a;font-size:11px;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0">1</div>
+      <div style="font-size:13px;color:rgba(240,239,232,.85)">Toque no bot&atilde;o <strong>Compartilhar</strong> <span style="font-size:16px">&#9095;</span> no Safari</div>
+    </div>
+    <div style="display:flex;align-items:center;gap:12px;padding:11px 14px;border-radius:13px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.07)">
+      <div style="width:24px;height:24px;border-radius:50%;background:rgba(200,240,90,.15);color:#c8f05a;font-size:11px;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0">2</div>
+      <div style="font-size:13px;color:rgba(240,239,232,.85)">Role e toque em <strong>Adicionar &agrave; Tela de In&iacute;cio</strong></div>
+    </div>
+    <div style="display:flex;align-items:center;gap:12px;padding:11px 14px;border-radius:13px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.07)">
+      <div style="width:24px;height:24px;border-radius:50%;background:rgba(200,240,90,.15);color:#c8f05a;font-size:11px;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0">3</div>
+      <div style="font-size:13px;color:rgba(240,239,232,.85)">Toque em <strong>Adicionar</strong> no canto superior direito</div>
+    </div>
+  </div>
+  <div style="display:flex;align-items:center;justify-content:center;gap:8px;font-size:12px;color:#7a7a72;margin-bottom:14px">
+    <span style="color:#c8f05a;font-size:13px">&#9733;</span>
+    Offline &middot; Tela cheia &middot; Notifica&ccedil;&otilde;es &middot; 100% gratuito
+  </div>
+  <button onclick="dismissIOSBanner(false)" style="width:100%;padding:14px;border-radius:14px;background:#c8f05a;color:#0a0a0a;font-size:15px;font-weight:800;border:none;cursor:pointer;margin-bottom:8px">Entendi, vou instalar!</button>
+  <button onclick="dismissIOSBanner(true)" style="width:100%;padding:11px;border-radius:14px;background:none;border:none;color:#7a7a72;font-size:13px;cursor:pointer">Agora n&atilde;o</button>
+</div>
+
 </body>
 </html>
