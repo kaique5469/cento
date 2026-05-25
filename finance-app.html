@@ -1280,7 +1280,6 @@ function loadAll(){
     sb.from('goals').select('*').eq('user_id',CU.id),
     sb.from('investments').select('*').eq('user_id',CU.id)
   ]).then(function(res){
-    alert('DEBUG loadAll: TX=' + (res[0].data||[]).length + ' err=' + JSON.stringify(res[0].error) + ' CU=' + (CU?CU.id:'null'));
     TX=res[0].data||[];
     var bgs=res[1].data||[]; BUDGETS=bgs.length?bgs:null;
     GOALS=res[2].data||[];
@@ -1289,8 +1288,7 @@ function loadAll(){
     document.getElementById('loading').style.display='none';
     document.getElementById('app').style.display='flex';
     initApp();
-  }).catch(function(e){
-    alert('DEBUG loadAll CATCH: ' + e.message);
+  }).catch(function(){
     document.getElementById('loading').style.display='none';
     document.getElementById('app').style.display='flex';
     initApp();
@@ -1585,7 +1583,7 @@ function fUSD(n){return '$\u00a0'+Math.abs(n).toLocaleString('en-US',{minimumFra
 function fmt(n,c){return c==='USD'?fUSD(n):fBRL(n);}
 function fV(n){return viewCurr==='brl'?fBRL(n):fUSD(n);}
 function toBRL(u){return u*USD;} function toUSD(b){return b/USD;}
-function nowDate(){return new Date().toISOString().split('T')[0];}
+function nowDate(){var d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');}
 function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2,7);}
 function esc(s){return (s||'').replace(/&/g,'\x26amp;').replace(/</g,'\x26lt;').replace(/>/g,'\x26gt;');}
 function getCat(k){return CATS.find(function(c){return c.k===k;})||{k:k,n:k,i:'dots',c:'#555'};}
@@ -1612,8 +1610,13 @@ function getModeTX(){
 }
 function getMonthTX(){
   var now=new Date();
-  var ym=now.getFullYear()+'-'+String(now.getMonth()+1).padStart(2,'0');
-  return getModeTX().filter(function(t){return t.date&&t.date.startsWith(ym);});
+  var y=now.getFullYear();
+  var m=String(now.getMonth()+1).padStart(2,'0');
+  return getModeTX().filter(function(t){
+    if(!t.date) return false;
+    var d=t.date.replace(/\//g,'-');
+    return d.startsWith(y+'-'+m);
+  });
 }
 function cvt(amount,curr){
   if(viewCurr==='brl')return curr==='USD'?toBRL(amount):amount;
