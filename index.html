@@ -1952,7 +1952,6 @@ function renderPlanPage(){
   var pg = document.getElementById('page-plan');
   if(!pg) return;
 
-  // Get real data
   var txs = getModeTX();
   var now = new Date();
   var ym = now.getFullYear()+'-'+String(now.getMonth()+1).padStart(2,'0');
@@ -1967,156 +1966,356 @@ function renderPlanPage(){
   var hasData = inc > 0 || exp2 > 0 || TX.length > 0;
   var mShort = i('months_s');
 
-  // Build header
-  var html = '<div class="page-hdr"><div class="page-title">'+i('plan_title')+'</div><div class="page-sub">'+i('plan_sub')+'</div></div>';
-
   if(!hasData){
-    html += '<div style="background:rgba(22,22,21,.8);border:1px solid rgba(255,255,255,.08);border-radius:20px;padding:28px 20px;text-align:center;margin-bottom:16px">'
-      +'<div style="font-size:40px;margin-bottom:14px">&#128200;</div>'
-      +'<div style="font-size:18px;font-weight:700;margin-bottom:8px;letter-spacing:-.3px">Seu plano est\u00E1 vazio</div>'
-      +'<div style="font-size:14px;color:var(--mu);line-height:1.7;margin-bottom:20px">Adicione pelo menos uma transa\u00E7\u00E3o para a IA criar seu plano personalizado.</div>'
-      +'<button onclick="addFirstTx()" style="padding:14px 28px;border-radius:14px;background:var(--ac);color:#0a0a0a;font-size:15px;font-weight:700;border:none;cursor:pointer">+ Adicionar transa\u00E7\u00E3o</button>'
-      +'</div>'
-      +'<div class="alert-card blue"><div class="alert-ico"><i class="ti ti-info-circle" style="color:var(--bl)"></i></div><div class="alert-body"><div class="alert-title blue">Como funciona</div><div class="alert-desc">A IA usa suas receitas e despesas reais para projetar seu patrim\u00F4nio m\u00EAs a m\u00EAs com dicas personalizadas.</div></div></div>';
-    pg.innerHTML = html;
+    pg.innerHTML = '<div class="page-hdr"><div class="page-title">'+i('plan_title')+'</div><div class="page-sub">'+i('plan_sub')+'</div></div>'
+      +'<div style="margin:40px 0;text-align:center">'
+      +'<div style="width:72px;height:72px;border-radius:22px;background:var(--ac2);border:1.5px solid var(--ac3);display:flex;align-items:center;justify-content:center;margin:0 auto 18px"><i class="ti ti-chart-line" style="font-size:32px;color:var(--ac)"></i></div>'
+      +'<div style="font-size:20px;font-weight:800;letter-spacing:-.5px;margin-bottom:8px">Nenhum dado ainda</div>'
+      +'<div style="font-size:14px;color:var(--mu);line-height:1.7;max-width:300px;margin:0 auto 24px">Adicione pelo menos uma transa\u00e7\u00e3o para a IA criar seu plano personalizado de 12 meses.</div>'
+      +'<button onclick="addFirstTx()" style="padding:15px 28px;border-radius:14px;background:var(--ac);color:#0a0a0a;font-size:15px;font-weight:700;border:none;cursor:pointer;display:inline-flex;align-items:center;gap:8px"><i class="ti ti-plus" style="font-size:18px"></i>Adicionar transa\u00e7\u00e3o</button>'
+      +'</div>';
     return;
   }
 
-  // Build 12-month projection
+  // Projection
   var savings = inc - exp2;
-  var balance = GOALS.reduce(function(acc,g){return acc+g.current_val;},0);
+  var balance = GOALS.reduce(function(acc,g){return acc+(g.current_val||0);},0);
   var months = [];
   var debtLeft = debt;
   for(var mi=0; mi<12; mi++){
     var md = new Date(now.getFullYear(), now.getMonth()+mi, 1);
-    var mInc = Math.round(inc);
-    var mExp = Math.round(exp2);
-    var mDebtPay = debtLeft>0 ? Math.min(debtLeft, mInc*0.15) : 0;
-    var mSave = mInc - mExp - mDebtPay;
+    var mDebtPay = debtLeft>0 ? Math.min(debtLeft, inc*0.15) : 0;
+    var mSave = Math.round(savings - mDebtPay);
     balance += mSave;
     if(debtLeft>0) debtLeft = Math.max(0, debtLeft - mDebtPay);
     months.push({
       name: mShort[md.getMonth()]+'/'+String(md.getFullYear()).slice(2),
+      fullName: i('months')[md.getMonth()]+' '+md.getFullYear(),
       bal: Math.round(balance),
-      inc: mInc, exp: mExp,
-      save: Math.round(mSave),
+      inc: Math.round(inc),
+      exp: Math.round(exp2),
+      save: mSave,
       debt: Math.round(debtLeft),
       isNow: mi===0
     });
   }
   var finalBal = months[11].bal;
+  var trend = finalBal >= (months[0].bal - months[0].save) ? 'up' : 'down';
 
-  html += '<div class="plan-hero">'
-    +'<div class="plan-hero-lbl">Em '+months[11].name+' voc\u00EA ter\u00E1</div>'
-    +'<div class="plan-hero-val" style="color:'+(finalBal>=0?'var(--ac)':'var(--rd)')+'">'+fBRL(finalBal)+'</div>'
-    +'<div class="plan-hero-sub">'+i('plan_projection')+'</div>'
-    +'</div>';
+  var html = '<div class="page-hdr"><div class="page-title">'+i('plan_title')+'</div><div class="page-sub">'+i('plan_sub')+'</div></div>';
 
-  html += '<div style="background:rgba(22,22,21,.8);border:1px solid rgba(255,255,255,.08);border-radius:16px;padding:16px;margin-bottom:16px">'
-    +'<button onclick="generateAIPlan()" id="ai-plan-btn" style="width:100%;padding:14px;border-radius:12px;background:linear-gradient(135deg,var(--ac2),var(--bl2));border:1.5px solid var(--ac3);color:var(--ac);font-size:14px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:9px">'
-    +'<i class="ti ti-sparkles" style="font-size:18px"></i>Gerar caminho personalizado com IA'
+  // Hero card
+  html += '<div style="border-radius:22px;padding:24px;margin-bottom:14px;background:linear-gradient(135deg,rgba(200,240,90,.1) 0%,rgba(77,166,255,.08) 100%);border:1.5px solid rgba(200,240,90,.2)">'
+    +'<div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--mu);margin-bottom:10px">Em '+months[11].fullName+' voc\u00ea ter\u00e1</div>'
+    +'<div style="font-size:44px;font-weight:800;letter-spacing:-2px;color:'+(finalBal>=0?'var(--ac)':'var(--rd)')+';line-height:1;margin-bottom:8px">'+fBRL(finalBal)+'</div>'
+    +'<div style="display:flex;align-items:center;gap:8px;font-size:13px;color:var(--mu)">'
+    +'<i class="ti ti-trending-'+(trend==='up'?'up" style="color:var(--ac)':'down" style="color:var(--rd)')+';font-size:16px"></i>'
+    +(trend==='up'?'Crescimento positivo mantendo o padr\u00e3o atual':'Aten\u00e7\u00e3o: despesas superam receitas')
+    +'</div></div>';
+
+  // AI plan button
+  html += '<button onclick="generateAIPlan()" id="ai-plan-btn" style="width:100%;padding:16px;border-radius:16px;background:rgba(200,240,90,.08);border:1.5px solid rgba(200,240,90,.25);color:var(--ac);font-size:14px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:10px;margin-bottom:6px;letter-spacing:-.2px">'
+    +'<i class="ti ti-sparkles" style="font-size:19px"></i>Gerar caminho personalizado com IA'
     +'</button>'
-    +'<div id="ai-plan-result"></div>'
-    +'</div>';
+    +'<div id="ai-plan-result" style="margin-bottom:14px"></div>';
 
-  html += '<div class="sec-row" style="margin-bottom:14px"><div class="sec-title">'+i('plan_monthly')+'</div></div>';
-  html += '<div class="plan-months">';
-  for(var mj=0; mj<months.length; mj++){
-    var mo = months[mj];
-    var expPct = mo.inc>0 ? Math.min(100,Math.round((mo.exp/mo.inc)*100)) : 0;
-    var savePct = mo.inc>0 ? Math.max(0,Math.min(100,Math.round((Math.abs(mo.save)/mo.inc)*100))) : 0;
+  // Month summary strip
+  html += '<div style="display:flex;gap:8px;overflow-x:auto;padding-bottom:4px;margin-bottom:18px;-webkit-overflow-scrolling:touch">';
+  for(var ms=0; ms<12; ms++){
+    var mo = months[ms];
     var isPos = mo.save >= 0;
-    html += '<div class="plan-month">'
-      +'<div class="pm-dot'+(mo.isNow?' now':'')+'>'+(mo.isNow?'\u2022':(mj+1))+'</div>'
-      +'<div class="pm-card">'
-      +'<div class="pm-header"><div class="pm-name">'+mo.name+(mo.isNow?' \u2014 Agora':'')+'</div>'
-      +'<div class="pm-bal" style="color:'+(mo.bal>=0?'var(--ac)':'var(--rd)')+'">'+fBRL(mo.bal)+'</div></div>'
-      +'<div class="pm-bars">'
-      +'<div class="pm-bar-row"><div class="pm-bar-lbl">'+i('pm_income')+'</div><div class="pm-bar-track"><div class="pm-bar-fill" style="width:100%;background:var(--ac)"></div></div><div class="pm-bar-val" style="color:var(--ac)">'+fBRL(mo.inc)+'</div></div>'
-      +'<div class="pm-bar-row"><div class="pm-bar-lbl">'+i('pm_expense')+'</div><div class="pm-bar-track"><div class="pm-bar-fill" style="width:'+expPct+'%;background:var(--rd)"></div></div><div class="pm-bar-val" style="color:var(--rd)">'+fBRL(mo.exp)+'</div></div>'
-      +'<div class="pm-bar-row"><div class="pm-bar-lbl">'+i('pm_save')+'</div><div class="pm-bar-track"><div class="pm-bar-fill" style="width:'+savePct+'%;background:'+(isPos?'var(--bl)':'var(--rd)')+'"></div></div><div class="pm-bar-val" style="color:'+(isPos?'var(--bl)':'var(--rd)')+'">'+fBRL(mo.save)+'</div></div>'
-      +(mo.debt>0?'<div class="pm-bar-row"><div class="pm-bar-lbl" style="color:var(--or)">D\u00EDvida</div><div class="pm-bar-track"><div class="pm-bar-fill" style="width:100%;background:var(--or)"></div></div><div class="pm-bar-val" style="color:var(--or)">'+fBRL(mo.debt)+'</div></div>':'')
-      +'</div></div></div>';
+    html += '<div onclick="scrollToPlanMonth('+ms+')" style="flex-shrink:0;width:54px;padding:10px 6px;border-radius:12px;background:'+(mo.isNow?'var(--ac)':'rgba(22,22,21,.8)')+';border:1px solid '+(mo.isNow?'var(--ac)':isPos?'rgba(200,240,90,.15)':'rgba(255,95,95,.15)')+';text-align:center;cursor:pointer">'
+      +'<div style="font-size:10px;font-weight:700;color:'+(mo.isNow?'#0a0a0a':isPos?'var(--ac)':'var(--rd)')+';margin-bottom:4px">'+mo.name+'</div>'
+      +'<div style="font-size:9px;color:'+(mo.isNow?'rgba(10,10,10,.7)':'var(--mu)')+'">'+fBRL(mo.bal).replace('R$\u00a0','').slice(0,6)+'</div>'
+      +'</div>';
+  }
+  html += '</div>';
+
+  // Monthly detail cards
+  html += '<div id="plan-months-list" style="display:flex;flex-direction:column;gap:10px">';
+  for(var mj=0; mj<months.length; mj++){
+    var m = months[mj];
+    var expPct = m.inc>0 ? Math.min(100,Math.round((m.exp/m.inc)*100)) : 100;
+    var savePct = m.inc>0 ? Math.max(0,Math.min(100,Math.round((Math.abs(m.save)/m.inc)*100))) : 0;
+    var isP = m.save >= 0;
+    var saveColor = isP ? 'var(--ac)' : 'var(--rd)';
+    html += '<div id="plan-month-'+mj+'" style="border-radius:18px;overflow:hidden;background:rgba(22,22,21,.8);border:1.5px solid '+(m.isNow?'rgba(200,240,90,.3)':'rgba(255,255,255,.07)')+';">'
+      // Month header
+      +'<div style="padding:14px 16px 12px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid rgba(255,255,255,.05)">'
+      +'<div style="display:flex;align-items:center;gap:10px">'
+      +'<div style="width:32px;height:32px;border-radius:50%;background:'+(m.isNow?'var(--ac)':'rgba(255,255,255,.06)')+';display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;color:'+(m.isNow?'#0a0a0a':'var(--mu)')+';">'+(m.isNow?'\u25cf':(mj+1))+'</div>'
+      +'<div><div style="font-size:14px;font-weight:700;letter-spacing:-.3px">'+m.fullName+(m.isNow?' <span style=\'font-size:10px;font-weight:700;padding:2px 8px;border-radius:100px;background:var(--ac);color:#0a0a0a;vertical-align:middle\'>AGORA</span>':'')+'</div>'
+      +(m.debt>0?'<div style="font-size:11px;color:var(--or)">D\u00edvida restante: '+fBRL(m.debt)+'</div>':'')
+      +'</div></div>'
+      +'<div style="text-align:right"><div style="font-size:18px;font-weight:800;letter-spacing:-.5px;color:'+(m.bal>=0?'var(--ac)':'var(--rd)')+'">'+fBRL(m.bal)+'</div><div style="font-size:11px;color:var(--mu)">patrim\u00f4nio</div></div>'
+      +'</div>'
+      // Bars
+      +'<div style="padding:14px 16px;display:flex;flex-direction:column;gap:10px">'
+      // Income bar
+      +'<div><div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:5px"><span style="color:var(--mu);font-weight:500">'+i('pm_income')+'</span><span style="font-weight:700;color:var(--ac)">'+fBRL(m.inc)+'</span></div>'
+      +'<div style="height:6px;background:rgba(255,255,255,.06);border-radius:3px;overflow:hidden"><div style="width:100%;height:100%;background:var(--ac);border-radius:3px"></div></div></div>'
+      // Expense bar
+      +'<div><div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:5px"><span style="color:var(--mu);font-weight:500">'+i('pm_expense')+'</span><span style="font-weight:700;color:var(--rd)">'+fBRL(m.exp)+'</span></div>'
+      +'<div style="height:6px;background:rgba(255,255,255,.06);border-radius:3px;overflow:hidden"><div style="width:'+expPct+'%;height:100%;background:var(--rd);border-radius:3px"></div></div></div>'
+      // Savings bar
+      +'<div style="background:rgba(255,255,255,.03);border-radius:10px;padding:10px 12px;display:flex;justify-content:space-between;align-items:center"><span style="font-size:12px;color:var(--mu);font-weight:500">'+i('pm_save')+' este m\u00eas</span><span style="font-size:15px;font-weight:800;color:'+saveColor+'">'+(isP?'+':'')+fBRL(m.save)+'</span></div>'
+      +'</div></div>';
   }
   html += '</div>';
   pg.innerHTML = html;
+}
+
+function scrollToPlanMonth(idx){
+  var el = document.getElementById('plan-month-'+idx);
+  if(el) el.scrollIntoView({behavior:'smooth',block:'start'});
 }
 
 
 function generateAIPlan(){
   var btn = document.getElementById('ai-plan-btn');
   var result = document.getElementById('ai-plan-result');
-  if(!btn||!result) return;
-  btn.innerHTML = '<div class="typing-dots"><div class="typing-dot"></div><div class="typing-dot"></div><div class="typing-dot"></div></div> Analisando suas finan\u00E7as...';
-  btn.disabled = true;
-  result.style.marginTop = '14px';
-  result.innerHTML = '';
+  if(!btn || !result) return;
 
-  // Build rich context from real data
+  // Show interview instead of generating directly
+  btn.style.display = 'none';
+  result.style.marginTop = '14px';
+  result.innerHTML = buildPlanInterview();
+}
+
+var planAnswers = {};
+var planInterviewStep = 0;
+
+var PLAN_QUESTIONS = [
+  {
+    id: 'goal',
+    question: 'Qual \u00e9 seu principal objetivo financeiro nos pr\u00f3ximos 12 meses?',
+    icon: 'ti-target',
+    options: [
+      {val:'emergency', label: 'Montar reserva de emerg\u00eancia', icon: '\ud83d\udee1\ufe0f'},
+      {val:'debt', label: 'Quitar d\u00edvidas de vez', icon: '\ud83d\udcb3'},
+      {val:'invest', label: 'Come\u00e7ar a investir', icon: '\ud83d\udcc8'},
+      {val:'travel', label: 'Juntar para uma viagem', icon: '\u2708\ufe0f'},
+      {val:'house', label: 'Entrada para casa pr\u00f3pria', icon: '\ud83c\udfe0'},
+      {val:'freedom', label: 'Ter mais liberdade financeira', icon: '\ud83d\ude80'}
+    ]
+  },
+  {
+    id: 'difficulty',
+    question: 'Qual \u00e9 seu maior desafio hoje?',
+    icon: 'ti-alert-circle',
+    options: [
+      {val:'spending', label: 'Gasto mais do que deveria', icon: '\ud83d\udcb8'},
+      {val:'nocontrol', label: 'N\u00e3o sei para onde vai meu dinheiro', icon: '\ud83e\udd37'},
+      {val:'nosave', label: 'N\u00e3o consigo guardar nada', icon: '\ud83d\udd12'},
+      {val:'debt2', label: 'D\u00edvidas me sufocando', icon: '\ud83d\ude25'},
+      {val:'income', label: 'Minha renda \u00e9 irregular', icon: '\ud83d\udcca'},
+      {val:'invest2', label: 'N\u00e3o sei como investir', icon: '\ud83e\udd14'}
+    ]
+  },
+  {
+    id: 'lifestyle',
+    question: 'Como voc\u00ea descreveria seu estilo de vida financeiro?',
+    icon: 'ti-user',
+    options: [
+      {val:'careful', label: 'Controlado, anoto tudo', icon: '\ud83d\udcdd'},
+      {val:'moderate', label: 'Mais ou menos organizado', icon: '\ud83e\udd37'},
+      {val:'impulsive', label: 'Compro por impulso \u00e0s vezes', icon: '\ud83d\uded2'},
+      {val:'chaotic', label: 'Bem desorganizado', icon: '\ud83c\udf2a\ufe0f'}
+    ]
+  },
+  {
+    id: 'commitment',
+    question: 'Quanto voc\u00ea consegue se comprometer por m\u00eas?',
+    icon: 'ti-clock',
+    options: [
+      {val:'low', label: 'Pouco \u2014 minha vida \u00e9 corrida', icon: '\u23f0'},
+      {val:'medium', label: 'Moderado \u2014 reviso mensalmente', icon: '\ud83d\udcc6'},
+      {val:'high', label: 'Alto \u2014 quero acompanhar tudo', icon: '\ud83d\udd25'}
+    ]
+  }
+];
+
+function buildPlanInterview(){
+  planAnswers = {};
+  planInterviewStep = 0;
+  return '<div id="plan-interview" style="background:rgba(22,22,21,.85);border:1.5px solid rgba(200,240,90,.2);border-radius:18px;overflow:hidden">'
+    + buildInterviewStep(0)
+    + '</div>';
+}
+
+function buildInterviewStep(step){
+  var q = PLAN_QUESTIONS[step];
+  var progress = Math.round(((step)/PLAN_QUESTIONS.length)*100);
+  return '<div style="padding:18px 16px">'
+    // Progress
+    + '<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px">'
+    + '<div style="font-size:11px;font-weight:700;color:var(--ac);text-transform:uppercase;letter-spacing:.6px">Pergunta '+(step+1)+' de '+PLAN_QUESTIONS.length+'</div>'
+    + '<div style="font-size:11px;color:var(--mu)">'+progress+'% completo</div>'
+    + '</div>'
+    + '<div style="height:3px;background:rgba(255,255,255,.06);border-radius:2px;overflow:hidden;margin-bottom:18px">'
+    + '<div style="height:100%;width:'+progress+'%;background:var(--ac);border-radius:2px;transition:width .4s ease"></div>'
+    + '</div>'
+    // Icon + Question
+    + '<div style="display:flex;align-items:flex-start;gap:12px;margin-bottom:18px">'
+    + '<div style="width:40px;height:40px;border-radius:12px;background:var(--ac2);border:1px solid var(--ac3);display:flex;align-items:center;justify-content:center;flex-shrink:0">'
+    + '<i class="ti '+q.icon+'" style="font-size:20px;color:var(--ac)"></i></div>'
+    + '<div style="font-size:16px;font-weight:700;letter-spacing:-.3px;line-height:1.4;padding-top:6px">'+q.question+'</div>'
+    + '</div>'
+    // Options
+    + '<div style="display:flex;flex-direction:column;gap:8px">'
+    + q.options.map(function(opt){
+        return '<button onclick="selectPlanAnswer(\''+q.id+'\',\''+opt.val+'\')" '
+          + 'data-qid="'+q.id+'" data-val="'+opt.val+'" '
+          + 'style="width:100%;padding:13px 15px;border-radius:13px;border:1.5px solid rgba(255,255,255,.08);background:rgba(255,255,255,.03);color:var(--tx);font-size:14px;font-weight:500;cursor:pointer;display:flex;align-items:center;gap:12px;text-align:left;transition:all .15s">'
+          + '<span style="font-size:18px">'+opt.icon+'</span>'
+          + '<span>'+opt.label+'</span>'
+          + '</button>';
+      }).join('')
+    + '</div>'
+    + '</div>';
+}
+
+function selectPlanAnswer(qid, val){
+  planAnswers[qid] = val;
+  // Highlight selected
+  document.querySelectorAll('[data-qid="'+qid+'"]').forEach(function(btn){
+    var isSelected = btn.dataset.val === val;
+    btn.style.borderColor = isSelected ? 'var(--ac)' : 'rgba(255,255,255,.08)';
+    btn.style.background = isSelected ? 'var(--ac2)' : 'rgba(255,255,255,.03)';
+    btn.style.color = isSelected ? 'var(--ac)' : 'var(--tx)';
+  });
+  // Auto advance after short delay
+  setTimeout(function(){
+    planInterviewStep++;
+    var interview = document.getElementById('plan-interview');
+    if(!interview) return;
+    if(planInterviewStep < PLAN_QUESTIONS.length){
+      interview.innerHTML = buildInterviewStep(planInterviewStep);
+    } else {
+      // All questions answered - show generating state
+      interview.innerHTML = '<div style="padding:28px 16px;text-align:center">'
+        + '<div style="font-size:32px;margin-bottom:14px;animation:spin 2s linear infinite;display:inline-block">\u2728</div>'
+        + '<div style="font-size:16px;font-weight:700;margin-bottom:6px;letter-spacing:-.3px">Criando seu plano...</div>'
+        + '<div style="font-size:13px;color:var(--mu)">A IA est\u00e1 analisando suas respostas e dados financeiros</div>'
+        + '<div style="display:flex;flex-direction:column;gap:6px;margin-top:18px;text-align:left">'
+        + '<div class="ob-gen-step act"><i class="ti ti-database"></i> Lendo seus dados financeiros</div>'
+        + '<div class="ob-gen-step" id="pgs1"><i class="ti ti-brain"></i> Analisando seu perfil</div>'
+        + '<div class="ob-gen-step" id="pgs2"><i class="ti ti-chart-line"></i> Calculando proje\u00e7\u00f5es</div>'
+        + '<div class="ob-gen-step" id="pgs3"><i class="ti ti-sparkles"></i> Escrevendo seu plano</div>'
+        + '</div></div>';
+      // Animate steps then call AI
+      setTimeout(function(){
+        var s1=document.getElementById('pgs1'); if(s1){s1.classList.add('act');}
+        setTimeout(function(){
+          var s2=document.getElementById('pgs2'); if(s2){s2.classList.add('act');}
+          setTimeout(function(){
+            var s3=document.getElementById('pgs3'); if(s3){s3.classList.add('act');}
+            callAIWithAnswers();
+          },700);
+        },700);
+      },700);
+    }
+  }, 350);
+}
+
+function callAIWithAnswers(){
+  var prof = USER&&USER.profile||{};
   var txs = getModeTX();
   var now = new Date();
   var ym = now.getFullYear()+'-'+String(now.getMonth()+1).padStart(2,'0');
-  var monthTx = txs.filter(function(t){return t.date&&t.date.startsWith(ym);});
-  var realInc = monthTx.filter(function(t){return t.type==='income';}).reduce(function(s,t){return s+Math.abs(cvt(t.amount,t.curr));},0);
-  var realExp = monthTx.filter(function(t){return t.type==='expense';}).reduce(function(s,t){return s+Math.abs(cvt(t.amount,t.curr));},0);
-  var p = USER&&USER.profile||{};
-  var inc = realInc > 0 ? realInc : (p.income||0);
-  var exp = realExp > 0 ? realExp : (p.expenses||0);
-  var savings = inc - exp;
+  var mthTx = txs.filter(function(t){return t.date&&t.date.startsWith(ym);});
+  var realInc = mthTx.filter(function(t){return t.type==='income';}).reduce(function(a,t){return a+Math.abs(cvt(t.amount,t.curr));},0);
+  var realExp = mthTx.filter(function(t){return t.type==='expense';}).reduce(function(a,t){return a+Math.abs(cvt(t.amount,t.curr));},0);
+  var inc = realInc > 0 ? realInc : (prof.income||0);
+  var exp2 = realExp > 0 ? realExp : (prof.expenses||0);
+  var savings = inc - exp2;
   var goalsSummary = GOALS.map(function(g){return g.name+': R$'+g.current_val+'/R$'+g.target;}).join(', ')||'nenhuma';
-  var budgetSummary = BUDGETS ? BUDGETS.map(function(b){var s=catSpent(b.cat);return b.label+': R$'+Math.round(s)+'/R$'+b.limit_val;}).join(', ') : 'nenhum';
-  var topExp = txs.filter(function(t){return t.type==='expense';}).slice(0,5).map(function(t){return (t.description||t.desc||'?')+':R$'+Math.abs(t.amount).toFixed(0);}).join(', ');
-  var debt = p.debt||0;
-  var incType = p.incomeType||'fixed';
+  var budgetOvers = BUDGETS ? BUDGETS.filter(function(b){return catSpent(b.cat)>b.limit_val;}).map(function(b){return b.label;}).join(', ') : '';
+  var topExpenses = txs.filter(function(t){return t.type==='expense';}).slice(0,5).map(function(t){return (t.description||'?')+':R$'+Math.abs(t.amount).toFixed(0);}).join(', ');
+
+  var goalLabels = {
+    emergency:'montar reserva de emergencia',debt:'quitar dividas',invest:'comecar a investir',
+    travel:'juntar para viagem',house:'entrada para casa propria',freedom:'ter liberdade financeira'
+  };
+  var diffLabels = {
+    spending:'gasta demais',nocontrol:'nao sabe para onde vai o dinheiro',nosave:'nao consegue guardar',
+    debt2:'dividas sufocando',income:'renda irregular',invest2:'nao sabe como investir'
+  };
+  var lifeLabels = {careful:'controlado',moderate:'moderado',impulsive:'compra por impulso',chaotic:'desorganizado'};
+  var commitLabels = {low:'pouco tempo',medium:'revisao mensal',high:'acompanha tudo'};
 
   var promptLines = [
-    'Voce e um consultor financeiro expert. Analise os dados reais e crie um CAMINHO DETALHADO de 12 meses.',
+    'Voce e um consultor financeiro pessoal expert. Crie um PLANO DE ACAO PERSONALIZADO de 12 meses.',
     '',
-    'DADOS REAIS:',
-    '- Renda mensal: R$'+Math.round(inc)+' ('+incType+')',
-    '- Gastos mensais: R$'+Math.round(exp),
-    '- Sobra mensal: R$'+Math.round(savings),
-    '- Dividas: R$'+debt,
-    '- Orcamentos: '+budgetSummary,
-    '- Metas: '+goalsSummary,
-    '- Maiores gastos recentes: '+topExp,
-    '- Modo: '+(USER&&USER.mode||'br'),
+    'RESPOSTAS DO CLIENTE:',
+    '- Objetivo principal: ' + (goalLabels[planAnswers.goal]||planAnswers.goal||'nao informado'),
+    '- Maior desafio: ' + (diffLabels[planAnswers.difficulty]||planAnswers.difficulty||'nao informado'),
+    '- Perfil: ' + (lifeLabels[planAnswers.lifestyle]||planAnswers.lifestyle||'nao informado'),
+    '- Comprometimento: ' + (commitLabels[planAnswers.commitment]||planAnswers.commitment||'nao informado'),
     '',
-    'Crie um plano com:',
-    '1. **Diagnostico agora** (2 linhas diretas)',
-    '2. **Meses 1-3**: Acoes concretas com valores (ex: Corte delivery em R$X, poupe R$Y)',
-    '3. **Meses 4-6**: Metas intermediarias',
-    '4. **Meses 7-12**: Onde voce estara',
-    '5. **1 alerta urgente** se houver',
+    'DADOS FINANCEIROS REAIS:',
+    '- Renda mensal: R$' + Math.round(inc),
+    '- Gastos mensais: R$' + Math.round(exp2),
+    '- Sobra mensal: R$' + Math.round(savings),
+    '- Dividas: R$' + (prof.debt||0),
+    '- Orcamentos estourados: ' + (budgetOvers||'nenhum'),
+    '- Metas: ' + goalsSummary,
+    '- Top gastos: ' + (topExpenses||'nao informado'),
+    '- Tipo de renda: ' + (prof.incomeType||'fixa'),
     '',
-    'Use **negrito** nos valores. Seja DIRETO e especifico. Max 300 palavras. Responda em portugues brasileiro.'
+    'INSTRUCOES:',
+    'Crie um plano MUITO ESPECIFICO com base no objetivo e perfil declarados.',
+    'Use **negrito** para valores e acoes chave.',
+    'Estruture assim:',
+    '### ' + (goalLabels[planAnswers.goal]||'Seu objetivo') + ' em 12 meses',
+    '**Diagnostico**: 2 linhas sobre a situacao atual.',
+    '**Meses 1-3**: 3 acoes concretas com valores exatos.',
+    '**Meses 4-6**: 2 marcos a atingir.',
+    '**Meses 7-12**: resultado esperado com numero real.',
+    '**Sua maior alavanca**: 1 mudanca que faz mais diferenca dado seu perfil.',
+    '',
+    'Seja DIRETO, especifico e encorajador. Max 280 palavras. Portugues brasileiro.'
   ];
-  var prompt = promptLines.join('\n');
-    var sys = 'Voc\u00EA \u00E9 Cento, assistente financeiro. Responda em portugu\u00EAs brasileiro. Use **negrito** para valores e n\u00FAmeros chave.';
 
   fetch('https://api.groq.com/openai/v1/chat/completions',{
     method:'POST',
     headers:{'Content-Type':'application/json','Authorization':'Bearer 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'},
-    body:JSON.stringify({model:'llama-3.3-70b-versatile',max_tokens:700,messages:[{role:'system',content:sys},{role:'user',content:prompt}]})
+    body:JSON.stringify({
+      model:'llama-3.3-70b-versatile',
+      max_tokens:700,
+      messages:[
+        {role:'system',content:'Voce e o Cento, consultor financeiro pessoal. Responda em portugues brasileiro. Use **negrito** para valores.'},
+        {role:'user',content:promptLines.join('\n')}
+      ]
+    })
   }).then(function(r){return r.json();})
   .then(function(d){
     var text = d.choices&&d.choices[0]&&d.choices[0].message&&d.choices[0].message.content||'';
-    if(!text){ throw new Error('empty'); }
-    result.innerHTML = '<div style="background:rgba(22,22,21,.85);border:1px solid rgba(200,240,90,.2);border-radius:16px;padding:18px;-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px)">'
-      +'<div style="display:flex;align-items:center;gap:9px;margin-bottom:14px">'
-      +'<div style="width:32px;height:32px;border-radius:10px;background:var(--ac2);border:1px solid var(--ac3);display:flex;align-items:center;justify-content:center"><i class="ti ti-sparkles" style="color:var(--ac);font-size:16px"></i></div>'
-      +'<div><div style="font-size:14px;font-weight:700;letter-spacing:-.2px">Seu caminho de 12 meses</div><div style="font-size:11px;color:var(--mu)">Gerado pela IA com seus dados reais</div></div>'
-      +'</div>'
-      +'<div style="font-size:14px;line-height:1.8;color:var(--tx)">'+md2html(text)+'</div>'
-      +'<button onclick="generateAIPlan()" style="margin-top:14px;padding:10px 16px;border-radius:10px;background:none;border:1.5px solid var(--bd2);color:var(--mu);font-size:12px;font-weight:500;cursor:pointer;display:flex;align-items:center;gap:6px"><i class="ti ti-refresh" style="font-size:14px"></i>Regenerar plano</button>'
-      +'</div>';
-    btn.innerHTML = '<i class="ti ti-sparkles" style="font-size:18px"></i>Regenerar com IA';
-    btn.disabled = false;
-  }).catch(function(err){
-    result.innerHTML = '<div class="alert-card red"><div class="alert-ico"><i class="ti ti-x" style="color:var(--rd)"></i></div><div class="alert-body"><div class="alert-title red">Erro ao gerar plano</div><div class="alert-desc">Verifique sua conex\u00E3o e tente novamente.</div></div></div>';
-    btn.innerHTML = '<i class="ti ti-sparkles" style="font-size:18px"></i>Tentar novamente';
-    btn.disabled = false;
+    var interview = document.getElementById('plan-interview');
+    if(!interview) return;
+    interview.innerHTML =
+      '<div style="padding:20px 16px">'
+      + '<div style="display:flex;align-items:center;gap:10px;margin-bottom:16px">'
+      + '<div style="width:36px;height:36px;border-radius:11px;background:var(--ac2);border:1px solid var(--ac3);display:flex;align-items:center;justify-content:center;flex-shrink:0"><i class="ti ti-sparkles" style="font-size:18px;color:var(--ac)"></i></div>'
+      + '<div><div style="font-size:14px;font-weight:700">Seu plano personalizado</div>'
+      + '<div style="font-size:11px;color:var(--mu)">Baseado nas suas respostas e dados reais</div></div>'
+      + '</div>'
+      + '<div style="font-size:14px;line-height:1.85;color:var(--tx)">'+md2html(text)+'</div>'
+      + '<div style="display:flex;gap:8px;margin-top:16px">'
+      + '<button onclick="generateAIPlan()" style="flex:1;padding:12px;border-radius:12px;background:none;border:1.5px solid var(--bd2);color:var(--mu);font-size:13px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px"><i class="ti ti-refresh" style="font-size:15px"></i>Refazer perguntas</button>'
+      + '<button onclick="shareAIPlan()" style="flex:1;padding:12px;border-radius:12px;background:var(--ac2);border:1.5px solid var(--ac3);color:var(--ac);font-size:13px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px"><i class="ti ti-share" style="font-size:15px"></i>Compartilhar</button>'
+      + '</div></div>';
+  }).catch(function(){
+    var interview = document.getElementById('plan-interview');
+    if(interview) interview.innerHTML = '<div style="padding:20px;text-align:center"><div style="color:var(--rd);margin-bottom:10px"><i class="ti ti-x" style="font-size:28px"></i></div><div style="font-size:14px;font-weight:600;margin-bottom:6px">Erro ao gerar plano</div><div style="font-size:13px;color:var(--mu);margin-bottom:14px">Verifique sua conex\u00e3o e tente novamente.</div><button onclick="generateAIPlan()" style="padding:12px 20px;border-radius:12px;background:var(--ac);color:#0a0a0a;font-size:14px;font-weight:700;border:none;cursor:pointer">Tentar novamente</button></div>';
   });
+}
+
+function shareAIPlan(){
+  var text = document.querySelector('#plan-interview .ai-plan-text');
+  if(navigator.share){
+    navigator.share({title:'Meu Plano Financeiro - Cento',text:'Meu plano de 12 meses gerado pelo Cento'});
+  }
 }
 
 
