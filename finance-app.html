@@ -582,15 +582,15 @@ button,input,textarea,select{font-family:inherit;-webkit-appearance:none;appeara
 <div id="landing">
   <div class="lp-hero">
     <div class="lp-logo2"><div class="lp-logo2-dot"></div>Cento</div>
-    <div class="lp-badge"><span class="lp-badge-dot"></span>App financeiro para brasileiros</div>
-    <h1 class="lp-h1">Seu dinheiro,<br>finalmente<br>sob controle</h1>
-    <p class="lp-sub">O app que entende a vida do brasileiro &mdash; no Brasil, nos EUA ou nos dois ao mesmo tempo. Com IA que realmente conhece suas finan&ccedil;as.</p>
+    <div class="lp-badge"><span class="lp-badge-dot"></span><span data-i18n="lp_badge">App financeiro para brasileiros</span></div>
+    <h1 class="lp-h1" data-i18n="lp_h1">Seu dinheiro,<br>finalmente<br>sob controle</h1>
+    <p class="lp-sub" data-i18n="lp_sub">O app que entende a vida do brasileiro &mdash; no Brasil, nos EUA ou nos dois ao mesmo tempo. Com IA que realmente conhece suas finan&ccedil;as.</p>
     <div class="lp-cta-row">
-      <button class="lp-btn-main" onclick="showAuth('up')">Criar conta gr&aacute;tis &rarr;</button>
-      <button class="lp-btn-sec" onclick="showAuth('in')">J&aacute; tenho conta &mdash; <b>Entrar</b></button>
+      <button class="lp-btn-main" onclick="showAuth('up')"><span data-i18n="lp_cta_main">Criar conta gr&aacute;tis &rarr;</span></button>
+      <button class="lp-btn-sec" onclick="showAuth('in')"><span data-i18n="lp_cta_sec">J&aacute; tenho conta</span> &mdash; <b data-i18n="lp_cta_enter">Entrar</b></button>
     </div>
     <div class="lp-scroll">
-      <span>Saiba mais</span>
+      <span data-i18n="lp_more">Saiba mais</span>
       <div class="lp-scroll-ico"><i class="ti ti-chevron-down"></i></div>
     </div>
   </div>
@@ -753,7 +753,7 @@ button,input,textarea,select{font-family:inherit;-webkit-appearance:none;appeara
     <p class="lp-final-sub">Gratuito para sempre no plano b&aacute;sico.<br>Sem cart&atilde;o de cr&eacute;dito. Sem surpresas.</p>
     <div class="lp-cta-row" style="max-width:340px;margin:0 auto">
       <button class="lp-btn-main" onclick="showAuth('up')">Come&ccedil;ar agora &mdash; &eacute; gr&aacute;tis &rarr;</button>
-      <button class="lp-btn-sec" onclick="showAuth('in')">J&aacute; tenho conta &mdash; <b>Entrar</b></button>
+      <button class="lp-btn-sec" onclick="showAuth('in')"><span data-i18n="lp_cta_sec">J&aacute; tenho conta</span> &mdash; <b data-i18n="lp_cta_enter">Entrar</b></button>
     </div>
     <div class="lp-final-note">&#128274; Seus dados s&atilde;o privados e criptografados.<br>Nunca compartilhamos com terceiros.</div>
   </div>
@@ -1719,6 +1719,16 @@ var TR = {
     months_s:['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'],
     days:['Dom','Seg','Ter','Qua','Qui','Sex','S\u00e1b']
   },
+    lp_badge:'App financeiro para brasileiros',
+    lp_h1:'Seu dinheiro, finalmente sob controle',
+    lp_sub:'O app que entende a vida do brasileiro \u2014 no Brasil, nos EUA ou nos dois ao mesmo tempo.',
+    lp_cta_main:'Criar conta gr\u00e1tis \u2192',
+    lp_cta_sec:'J\u00e1 tenho conta',
+    lp_cta_enter:'Entrar',
+    lp_more:'Saiba mais',
+    lp_why:'Por que o Cento?',
+    lp_feat_title:'Feito para quem leva a vida a s\u00e9rio',
+    lp_feat_sub:'N\u00e3o \u00e9 mais um app de planilha. \u00c9 um assistente que entende sua realidade.',
   en: {
     login:'Sign in',signup:'Create account',email:'Email',password:'Password',name:'Name',
     login_btn:'Sign in \u2192',signup_btn:'Create account \u2192',forgot:'Forgot password? Reset',
@@ -1790,7 +1800,21 @@ var TR = {
     save:'Save',ai_err2:'Error. Try again.',sup_err2:'Sorry, try again.',
     months:['January','February','March','April','May','June','July','August','September','October','November','December'],
     months_s:['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'],
-    days:['Sun','Mon','Tue','Wed','Thu','Fri','Sat']
+    days:['Sun','Mon','Tue','Wed','Thu','Fri','Sat'],
+    Senha:'Password',
+    Investido:'Invested',
+    bg_over_badge:'Over',
+    bg_warn_badge:'Warning',
+    lp_badge:'Financial app for Brazilians',
+    lp_h1:'Your money,\nfinally\nunder control',
+    lp_sub:'The app that understands Brazilian life \u2014 in Brazil, the USA or both at once. With AI that truly knows your finances.',
+    lp_cta_main:'Create free account \u2192',
+    lp_cta_sec:'I already have an account',
+    lp_cta_enter:'Sign in',
+    lp_more:'Learn more',
+    lp_why:'Why Cento?',
+    lp_feat_title:'Built for people who take life seriously',
+    lp_feat_sub:"It\'s not just another spreadsheet app. It\'s an assistant that understands your reality.",
   },
   es: {
     login:'Iniciar sesi\u00f3n',signup:'Crear cuenta',email:'Correo',password:'Contrase\u00f1a',name:'Nombre',
@@ -1863,7 +1887,21 @@ var TR = {
     save:'Guardar',ai_err2:'Error. Int\u00e9ntalo.',sup_err2:'Disculpa, int\u00e9ntalo.',
     months:['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'],
     months_s:['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'],
-    days:['Dom','Lun','Mar','Mi\u00e9','Jue','Vie','S\u00e1b']
+    days:['Dom','Lun','Mar','Mi\u00e9','Jue','Vie','S\u00e1b'],
+    Senha:'Contrase\u00F1a',
+    Investido:'Invertido',
+    bg_over_badge:'Excedido',
+    bg_warn_badge:'Advertencia',
+    lp_badge:'App financiero para brasile\u00f1os',
+    lp_h1:'Tu dinero,\nfinalmente\nbajo control',
+    lp_sub:'La app que entiende la vida brasile\u00f1a \u2014 en Brasil, EE.UU. o en ambos al mismo tiempo. Con IA que realmente conoce tus finanzas.',
+    lp_cta_main:'Crear cuenta gratis \u2192',
+    lp_cta_sec:'Ya tengo cuenta',
+    lp_cta_enter:'Entrar',
+    lp_more:'Saber m\u00e1s',
+    lp_why:'\u00bfPor qu\u00e9 Cento?',
+    lp_feat_title:'Hecho para quienes se toman la vida en serio',
+    lp_feat_sub:'No es otra app de planillas. Es un asistente que entiende tu realidad.',
   }
 };
 
@@ -1887,7 +1925,28 @@ function setLang(l){
 }
 function applyLang(){
   updateDrawer();
+  applyLandingLang();
   if(USER) renderPage(activePage);
+}
+
+function applyLandingLang(){
+  document.querySelectorAll('[data-i18n]').forEach(function(el){
+    var key = el.getAttribute('data-i18n');
+    var val = i(key);
+    if(val && val !== key){
+      // Use innerHTML for elements that may have line breaks
+      if(el.tagName === 'H1' || el.tagName === 'H2'){
+        el.innerHTML = val.replace(/\n/g,'<br>');
+      } else {
+        el.textContent = val;
+      }
+    }
+  });
+  document.querySelectorAll('[data-i18n-ph]').forEach(function(el){
+    var key = el.getAttribute('data-i18n-ph');
+    var val = i(key);
+    if(val && val !== key) el.placeholder = val;
+  });
 }
 function selectLang(l){
   setLang(l);
