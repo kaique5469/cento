@@ -479,8 +479,8 @@ button,input,textarea,select{font-family:inherit;-webkit-appearance:none;appeara
 .lp-final-note{font-size:11px;color:rgba(240,239,232,.3);margin-top:14px;line-height:1.6}
 
 /* PRO LOCKED ITEMS */
-.dr-pro-item{position:relative;justify-content:space-between}
-.dr-pro-lock{display:none;align-items:center;gap:4px;font-size:10px;font-weight:700;padding:2px 8px;border-radius:100px;background:rgba(245,200,66,.15);color:#f5c842;border:1px solid rgba(245,200,66,.3);flex-shrink:0;letter-spacing:.3px}
+.dr-pro-item{position:relative}
+.dr-pro-lock{display:none;align-items:center;gap:4px;font-size:10px;font-weight:700;padding:2px 7px;border-radius:100px;background:rgba(245,200,66,.15);color:#f5c842;border:1px solid rgba(245,200,66,.3);flex-shrink:0;letter-spacing:.3px;margin-left:auto}
 .dr-pro-lock i{font-size:11px}
 .dr-locked .dr-pro-lock{display:flex}
 .dr-locked{opacity:.5;cursor:default}
@@ -1612,7 +1612,27 @@ function updateDrawer(){
   var fabLbl=document.querySelector('.nav-fab-lbl');
   if(fabLbl) fabLbl.textContent=i('nav_new');
 
-  // Menu labels are bilingual HTML — no dynamic update needed
+  // Update drawer text nodes safely (preserve icons and badges)
+  var allDrItems=[
+    ['dr-home','dr_home'],['dr-tx','dr_tx'],['dr-budget','dr_budget'],
+    ['dr-goals','dr_goals'],['dr-ai','dr_ai'],['dr-market','dr_market'],
+    ['dr-risk','dr_risk'],['dr-plan','dr_plan'],['dr-invest','dr_invest']
+  ];
+  allDrItems.forEach(function(pair){
+    var btn=document.getElementById(pair[0]);
+    if(!btn) return;
+    // Update .dr-label-main span if present (bilingual menu)
+    var mainLbl=btn.querySelector('.dr-label-main');
+    if(mainLbl){ mainLbl.textContent=i(pair[1]); return; }
+    // Fallback: find text node directly
+    var isPro2=(pair[0]==='dr-risk'||pair[0]==='dr-plan'||pair[0]==='dr-invest');
+    for(var n=isPro2?0:btn.childNodes.length-1; isPro2?n<btn.childNodes.length:n>=0; isPro2?n++:n--){
+      if(btn.childNodes[n].nodeType===3&&btn.childNodes[n].textContent.trim()){
+        btn.childNodes[n].textContent=i(pair[1]);
+        break;
+      }
+    }
+  });
 }
 
 // \u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550
@@ -1861,9 +1881,9 @@ var TR = {
   },
     nav_home:'Home',nav_tx:'Expenses',nav_budget:'Budget',nav_market:'Market',nav_new:'New',
     dr_sec_main:'Main',dr_sec_pro:'Pro',dr_sec_account:'Account',
-    dr_home:'Overview',dr_tx:'Transactions',dr_budget:'Budget',dr_goals:'Goals',
-    dr_risk:'Risk',dr_plan:'Planning',dr_invest:'Investments',
-    dr_ai:'AI Insights',dr_market:'Market',dr_afiliados:'Affiliate Program',
+    dr_home:'Painel',dr_tx:'Transações',dr_budget:'Orçamento',dr_goals:'Metas',
+    dr_risk:'Risco',dr_plan:'Planejamento',dr_invest:'Investimentos',
+    dr_ai:'Inteligência IA',dr_market:'Mercado',dr_afiliados:'Affiliate Program',
     dr_settings:'Settings',dr_lang:'Language',dr_logout:'Sign out',
     dr_pro_badge:'Upgrade to Pro',
   es: {
