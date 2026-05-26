@@ -1607,9 +1607,7 @@ function md2html(t){
 }
 
 function getModeTX(){
-  var m=USER&&USER.mode||'br';
-  if(m==='br')return TX.filter(function(t){return t.curr==='BRL';});
-  if(m==='us')return TX.filter(function(t){return t.curr==='USD';});
+  // Show ALL transactions - mode only affects display currency
   return TX;
 }
 function getMonthTX(){
