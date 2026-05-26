@@ -350,6 +350,10 @@ button,input,textarea,select{font-family:inherit;-webkit-appearance:none;appeara
 .dr-item.on i{color:var(--ac)}
 .dr-item.danger{color:var(--rd)}
 .dr-item.danger i{color:var(--rd)}
+.dr-label{display:flex;flex-direction:column;gap:1px;line-height:1}
+.dr-label-main{font-size:13.5px;font-weight:600;letter-spacing:.01em}
+.dr-label-sub{font-size:10px;font-weight:400;opacity:.45;letter-spacing:.04em;text-transform:uppercase}
+.dr-item.on .dr-label-sub{opacity:.6}
 .dr-footer{margin-top:auto;padding:12px 16px;border-top:1px solid var(--bd)}
 .dr-add{width:100%;padding:15px;border-radius:14px;background:var(--ac);color:#0a0a0a;font-size:15px;font-weight:700;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:9px}
 .dr-add i{font-size:19px}
@@ -943,18 +947,18 @@ gtag('config','G-1FRWFV9TYQ');
   </div>
   <div class="dr-section">
     <div class="dr-sec-lbl">Principal</div>
-    <button class="dr-item on" id="dr-home" onclick="drNav('home')"><i class="ti ti-home"></i>In&#237;cio</button>
-    <button class="dr-item" id="dr-tx" onclick="drNav('tx')"><i class="ti ti-arrows-sort"></i>Transa&#231;&#245;es</button>
-    <button class="dr-item" id="dr-budget" onclick="drNav('budget')"><i class="ti ti-chart-pie"></i>Or&#231;amentos</button>
-    <button class="dr-item" id="dr-goals" onclick="drNav('goals')"><i class="ti ti-target"></i>Metas</button>
+    <button class="dr-item on" id="dr-home" onclick="drNav('home')"><i class="ti ti-home"></i><span class="dr-label"><span class="dr-label-main">Painel</span><span class="dr-label-sub">Overview</span></span></button>
+    <button class="dr-item" id="dr-tx" onclick="drNav('tx')"><i class="ti ti-arrows-sort"></i><span class="dr-label"><span class="dr-label-main">Transações</span><span class="dr-label-sub">Transactions</span></span></button>
+    <button class="dr-item" id="dr-budget" onclick="drNav('budget')"><i class="ti ti-chart-pie"></i><span class="dr-label"><span class="dr-label-main">Orçamento</span><span class="dr-label-sub">Budget</span></span></button>
+    <button class="dr-item" id="dr-goals" onclick="drNav('goals')"><i class="ti ti-target"></i><span class="dr-label"><span class="dr-label-main">Metas</span><span class="dr-label-sub">Goals</span></span></button>
   </div>
   <div class="dr-section" style="margin-top:4px">
     <div class="dr-sec-lbl">Intelig&#234;ncia</div>
-    <button class="dr-item dr-pro-item" id="dr-risk" onclick="drNavPro('risk')"><i class="ti ti-shield-exclamation"></i>Risco Financeiro<span class="dr-pro-lock" id="lock-risk"><i class="ti ti-lock"></i>Pro</span></button>
-    <button class="dr-item dr-pro-item" id="dr-plan" onclick="drNavPro('plan')"><i class="ti ti-chart-line"></i>Plano 12 Meses<span class="dr-pro-lock" id="lock-plan"><i class="ti ti-lock"></i>Pro</span></button>
-    <button class="dr-item dr-pro-item" id="dr-invest" onclick="drNavPro('invest')"><i class="ti ti-trending-up"></i>Investimentos<span class="dr-pro-lock" id="lock-invest"><i class="ti ti-lock"></i>Pro</span></button>
-    <button class="dr-item" id="dr-ai" onclick="drNav('ai')"><i class="ti ti-sparkles"></i>Assistente IA</button>
-    <button class="dr-item" id="dr-market" onclick="drNav('market')"><i class="ti ti-activity" data-nav-market></i>Mercado ao Vivo</button>
+    <button class="dr-item dr-pro-item" id="dr-risk" onclick="drNavPro('risk')"><i class="ti ti-shield-exclamation"></i><span class="dr-label"><span class="dr-label-main">Risco</span><span class="dr-label-sub">Risk Analysis</span></span><span class="dr-pro-lock" id="lock-risk"><i class="ti ti-lock"></i>Pro</span></button>
+    <button class="dr-item dr-pro-item" id="dr-plan" onclick="drNavPro('plan')"><i class="ti ti-chart-line"></i><span class="dr-label"><span class="dr-label-main">Planejamento</span><span class="dr-label-sub">Financial Plan</span></span><span class="dr-pro-lock" id="lock-plan"><i class="ti ti-lock"></i>Pro</span></button>
+    <button class="dr-item dr-pro-item" id="dr-invest" onclick="drNavPro('invest')"><i class="ti ti-trending-up"></i><span class="dr-label"><span class="dr-label-main">Investimentos</span><span class="dr-label-sub">Investments</span></span><span class="dr-pro-lock" id="lock-invest"><i class="ti ti-lock"></i>Pro</span></button>
+    <button class="dr-item" id="dr-ai" onclick="drNav('ai')"><i class="ti ti-sparkles"></i><span class="dr-label"><span class="dr-label-main">Inteligência IA</span><span class="dr-label-sub">AI Insights</span></span></button>
+    <button class="dr-item" id="dr-market" onclick="drNav('market')"><i class="ti ti-activity" data-nav-market></i><span class="dr-label"><span class="dr-label-main">Mercado</span><span class="dr-label-sub">Live Market</span></span></button>
   </div>
   <div class="dr-section" style="margin-top:4px">
     <div class="dr-sec-lbl">Ganhar Dinheiro</div>
@@ -1778,9 +1782,9 @@ var TR = {
     lp_feat_sub:'N\u00e3o \u00e9 mais um app de planilha. \u00c9 um assistente que entende sua realidade.',
     nav_home:'In\u00EDcio',nav_tx:'Gastos',nav_budget:'Or\u00E7amento',nav_market:'Mercado',nav_new:'Novo',
     dr_sec_main:'Principal',dr_sec_pro:'Pro',dr_sec_account:'Conta',
-    dr_home:'In\u00EDcio',dr_tx:'Transa\u00E7\u00F5es',dr_budget:'Or\u00E7amentos',dr_goals:'Metas',
-    dr_risk:'Risco Financeiro',dr_plan:'Plano 12 Meses',dr_invest:'Investimentos',
-    dr_ai:'Assistente IA',dr_market:'Mercado',dr_afiliados:'Programa de Afiliados',
+    dr_home:'Painel',dr_tx:'Transações',dr_budget:'Orçamento',dr_goals:'Metas',
+    dr_risk:'Risco',dr_plan:'Planejamento',dr_invest:'Investimentos',
+    dr_ai:'Inteligência IA',dr_market:'Mercado',dr_afiliados:'Programa de Afiliados',
     dr_settings:'Configura\u00E7\u00F5es',dr_lang:'Idioma',dr_logout:'Sair',
     dr_pro_badge:'Upgrade para Pro',
   en: {
@@ -1872,9 +1876,9 @@ var TR = {
   },
     nav_home:'Home',nav_tx:'Expenses',nav_budget:'Budget',nav_market:'Market',nav_new:'New',
     dr_sec_main:'Main',dr_sec_pro:'Pro',dr_sec_account:'Account',
-    dr_home:'Home',dr_tx:'Transactions',dr_budget:'Budgets',dr_goals:'Goals',
-    dr_risk:'Financial Risk',dr_plan:'12-Month Plan',dr_invest:'Investments',
-    dr_ai:'AI Assistant',dr_market:'Market',dr_afiliados:'Affiliate Program',
+    dr_home:'Painel',dr_tx:'Transações',dr_budget:'Orçamento',dr_goals:'Metas',
+    dr_risk:'Risco',dr_plan:'Planejamento',dr_invest:'Investimentos',
+    dr_ai:'Inteligência IA',dr_market:'Mercado',dr_afiliados:'Affiliate Program',
     dr_settings:'Settings',dr_lang:'Language',dr_logout:'Sign out',
     dr_pro_badge:'Upgrade to Pro',
   es: {
