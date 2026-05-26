@@ -947,6 +947,8 @@ button,input,textarea,select{font-family:inherit;-webkit-appearance:none;appeara
   </div>
   <div class="dr-section" style="margin-top:4px">
     <div class="dr-sec-lbl">Conta</div>
+    <button class="dr-item" onclick="showAndroidInstallGuide()" id="dr-install-android" style="display:none"><i class="ti ti-device-mobile-down" style="color:var(--ac)"></i><span>Instalar no Android</span></button>
+    <button class="dr-item" onclick="showIOSInstallGuide()" id="dr-install-ios" style="display:none"><i class="ti ti-device-mobile-down" style="color:var(--ac)"></i><span>Instalar no iPhone</span></button>
     <button class="dr-item" onclick="openLangModal()"><i class="ti ti-language"></i>Idioma</button>
     <button class="dr-item danger" onclick="doLogout()"><i class="ti ti-logout"></i>Sair</button>
   </div>
@@ -1438,6 +1440,13 @@ function initApp(){
   if(USER && USER.mode === 'us') viewCurr = 'usd';
   else if(USER && USER.mode === 'br') viewCurr = 'brl';
   else if(USER && USER.mode === 'both') viewCurr = 'brl';
+  // Show install button based on device
+  if(!isInStandaloneMode()){
+    var andBtn = document.getElementById('dr-install-android');
+    var iosBtn = document.getElementById('dr-install-ios');
+    if(andBtn && /android/i.test(navigator.userAgent)) andBtn.style.display = 'flex';
+    if(iosBtn && isIOS()) iosBtn.style.display = 'flex';
+  }
   updateDrawer();
   nav('home');
   initSupportPanel();
@@ -3581,6 +3590,51 @@ if('serviceWorker' in navigator){
   });
 }
 window.addEventListener('load',function(){ setTimeout(checkIOSInstallBanner,1000); });
+
+// \u2500\u2500\u2500 ANDROID INSTALL \u2500\u2500\u2500
+function showAndroidInstallGuide(){
+  var modal = document.getElementById('android-install-modal');
+  if(modal){
+    modal.style.display = 'flex';
+    // Show quick install button if Chrome prompt available
+    var qk = document.getElementById('android-quick-install');
+    if(qk) qk.style.display = deferredPrompt ? 'block' : 'none';
+  }
+}
+
+function closeAndroidModal(){
+  var modal = document.getElementById('android-install-modal');
+  if(modal) modal.style.display = 'none';
+}
+
+function quickInstallAndroid(){
+  if(!deferredPrompt) return;
+  deferredPrompt.prompt();
+  deferredPrompt.userChoice.then(function(r){
+    deferredPrompt = null;
+    closeAndroidModal();
+    if(r.outcome === 'accepted') showToast('Cento instalado! \u2705','success');
+  });
+}
+
+// Override showAndroidBanner to use new modal
+function showAndroidBanner(){
+  // Show full guide modal instead of inline banner
+  if(!isInStandaloneMode()){
+    try{
+      var d = localStorage.getItem('cento_android_banner');
+      if(d && Date.now()-parseInt(d) < 3*24*60*60*1000) return;
+    }catch(err){}
+    setTimeout(showAndroidInstallGuide, 4000);
+  }
+}
+
+function showIOSInstallGuide(){
+  var b = document.getElementById('ios-install-banner');
+  if(b) b.style.display = 'block';
+  var dr = document.getElementById('drawer');
+  if(dr && dr.classList.contains('open')) toggleDrawer();
+}
 </script>
 
 <!-- iOS INSTALL BANNER -->
@@ -3610,6 +3664,71 @@ window.addEventListener('load',function(){ setTimeout(checkIOSInstallBanner,1000
   </div>
   <button onclick="dismissIOSBanner(false)" style="width:100%;padding:14px;border-radius:14px;background:#c8f05a;color:#0a0a0a;font-size:15px;font-weight:800;border:none;cursor:pointer;margin-bottom:8px">Entendi, vou instalar!</button>
   <button onclick="dismissIOSBanner(true)" style="width:100%;padding:11px;border-radius:14px;background:none;border:none;color:#7a7a72;font-size:13px;cursor:pointer">Agora n&atilde;o</button>
+</div>
+
+
+<!-- ANDROID INSTALL MODAL -->
+<div id="android-install-modal" style="display:none;position:fixed;inset:0;z-index:9500;background:rgba(0,0,0,.85);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);align-items:flex-end">
+  <div style="background:#141412;border-radius:24px 24px 0 0;padding:24px 20px 40px;width:100%;max-height:90vh;overflow-y:auto;border-top:1px solid rgba(200,240,90,.2)">
+    <div style="width:36px;height:4px;border-radius:2px;background:rgba(255,255,255,.15);margin:0 auto 20px"></div>
+    <div style="display:flex;align-items:center;gap:12px;margin-bottom:20px">
+      <div style="width:52px;height:52px;border-radius:16px;background:linear-gradient(135deg,#c8f05a,#8ab03a);display:flex;align-items:center;justify-content:center;font-family:serif;font-size:22px;font-weight:900;color:#0a0a0a;flex-shrink:0">C</div>
+      <div>
+        <div style="font-size:18px;font-weight:800;letter-spacing:-.4px">Instalar o Cento</div>
+        <div style="font-size:13px;color:rgba(240,239,232,.5)">No Android sem precisar da Play Store</div>
+      </div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:10px;margin-bottom:20px">
+      <div style="display:flex;align-items:flex-start;gap:12px;padding:14px;background:rgba(255,255,255,.04);border-radius:14px;border:1px solid rgba(255,255,255,.07)">
+        <div style="width:30px;height:30px;border-radius:50%;background:rgba(200,240,90,.15);color:#c8f05a;font-size:12px;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0">1</div>
+        <div>
+          <div style="font-size:13px;font-weight:700;margin-bottom:3px">Abra no Chrome</div>
+          <div style="font-size:12px;color:rgba(240,239,232,.55);line-height:1.5">Certifique-se de estar usando o <strong style="color:rgba(240,239,232,.8)">Google Chrome</strong> no seu Android</div>
+        </div>
+      </div>
+      <div style="display:flex;align-items:flex-start;gap:12px;padding:14px;background:rgba(255,255,255,.04);border-radius:14px;border:1px solid rgba(255,255,255,.07)">
+        <div style="width:30px;height:30px;border-radius:50%;background:rgba(200,240,90,.15);color:#c8f05a;font-size:12px;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0">2</div>
+        <div>
+          <div style="font-size:13px;font-weight:700;margin-bottom:3px">Toque nos 3 pontinhos &#8942;</div>
+          <div style="font-size:12px;color:rgba(240,239,232,.55);line-height:1.5">No canto superior direito do Chrome, toque no menu <strong style="color:rgba(240,239,232,.8)">&#8942;</strong></div>
+        </div>
+      </div>
+      <div style="display:flex;align-items:flex-start;gap:12px;padding:14px;background:rgba(255,255,255,.04);border-radius:14px;border:1px solid rgba(255,255,255,.07)">
+        <div style="width:30px;height:30px;border-radius:50%;background:rgba(200,240,90,.15);color:#c8f05a;font-size:12px;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0">3</div>
+        <div>
+          <div style="font-size:13px;font-weight:700;margin-bottom:3px">Toque em "Adicionar &agrave; tela inicial"</div>
+          <div style="font-size:12px;color:rgba(240,239,232,.55);line-height:1.5">Procure a op&ccedil;&atilde;o <strong style="color:rgba(240,239,232,.8)">"Adicionar &agrave; tela inicial"</strong> ou <strong style="color:rgba(240,239,232,.8)">"Instalar app"</strong></div>
+        </div>
+      </div>
+      <div style="display:flex;align-items:flex-start;gap:12px;padding:14px;background:rgba(255,255,255,.04);border-radius:14px;border:1px solid rgba(255,255,255,.07)">
+        <div style="width:30px;height:30px;border-radius:50%;background:rgba(200,240,90,.15);color:#c8f05a;font-size:12px;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0">4</div>
+        <div>
+          <div style="font-size:13px;font-weight:700;margin-bottom:3px">Confirme a instala&ccedil;&atilde;o</div>
+          <div style="font-size:12px;color:rgba(240,239,232,.55);line-height:1.5">Toque em <strong style="color:rgba(240,239,232,.8)">"Instalar"</strong> ou <strong style="color:rgba(240,239,232,.8)">"Adicionar"</strong> na caixa que aparecer</div>
+        </div>
+      </div>
+    </div>
+    <!-- Benefits -->
+    <div style="background:rgba(200,240,90,.06);border:1px solid rgba(200,240,90,.12);border-radius:14px;padding:14px;margin-bottom:20px">
+      <div style="font-size:11px;font-weight:700;color:#c8f05a;text-transform:uppercase;letter-spacing:.5px;margin-bottom:10px">&#10003; Vantagens do app instalado</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+        <div style="font-size:12px;color:rgba(240,239,232,.7);display:flex;align-items:center;gap:6px"><span style="color:#c8f05a">&#10003;</span>Funciona offline</div>
+        <div style="font-size:12px;color:rgba(240,239,232,.7);display:flex;align-items:center;gap:6px"><span style="color:#c8f05a">&#10003;</span>Tela cheia</div>
+        <div style="font-size:12px;color:rgba(240,239,232,.7);display:flex;align-items:center;gap:6px"><span style="color:#c8f05a">&#10003;</span>Notifica&ccedil;&otilde;es</div>
+        <div style="font-size:12px;color:rgba(240,239,232,.7);display:flex;align-items:center;gap:6px"><span style="color:#c8f05a">&#10003;</span>100% gratuito</div>
+      </div>
+    </div>
+    <!-- Quick install button (shows if Chrome prompt available) -->
+    <div id="android-quick-install" style="display:none;margin-bottom:12px">
+      <button onclick="quickInstallAndroid()" style="width:100%;padding:15px;border-radius:14px;background:linear-gradient(135deg,#c8f05a,#8ab03a);color:#0a0a0a;font-size:15px;font-weight:800;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:10px">
+        &#128640; Instalar agora &mdash; 1 toque
+      </button>
+      <div style="text-align:center;font-size:11px;color:rgba(240,239,232,.4);margin-top:6px">Instalação automática via Chrome</div>
+    </div>
+    <button onclick="closeAndroidModal()" style="width:100%;padding:14px;border-radius:14px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);color:rgba(240,239,232,.6);font-size:14px;font-weight:600;cursor:pointer">
+      Fechar
+    </button>
+  </div>
 </div>
 
 </body>
