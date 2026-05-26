@@ -3573,11 +3573,6 @@ function goToStripe(){
     showStripeSetupGuide();
     return;
   }
-  // Test mode notice
-  if(url.indexOf('test_') >= 0){
-    console.log('Stripe test mode - use test card: 4242 4242 4242 4242');
-  }
-  
   window.open(url, '_blank');
 }
 
