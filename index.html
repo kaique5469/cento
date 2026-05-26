@@ -1586,33 +1586,45 @@ function updateDrawer(){
       }
     }
   });
-  // Update nav labels with current language
-  var navMap = {
-    'nav-home': 'nav_home', 'nav-tx': 'nav_tx',
-    'nav-budget': 'nav_budget', 'nav-market': 'nav_market'
-  };
-  Object.keys(navMap).forEach(function(id){
-    var btn = document.getElementById(id);
-    if(btn){ var span = btn.querySelector('span'); if(span) span.textContent = i(navMap[id]); }
+  // Update nav labels safely
+  var navItems = [
+    ['nav-home','nav_home'],['nav-tx','nav_tx'],
+    ['nav-budget','nav_budget'],['nav-market','nav_market']
+  ];
+  navItems.forEach(function(pair){
+    var btn = document.getElementById(pair[0]);
+    if(btn){ var sp = btn.querySelector('span:not(.nav-alert)'); if(sp) sp.textContent = i(pair[1]); }
   });
   var fabLbl = document.querySelector('.nav-fab-lbl');
   if(fabLbl) fabLbl.textContent = i('nav_new');
-  // Update drawer section labels
-  var drSecs = document.querySelectorAll('.dr-sec-lbl');
-  if(drSecs[0]) drSecs[0].textContent = i('dr_sec_main');
-  // Update drawer items
-  var drMap = {
-    'dr-home': 'dr_home', 'dr-tx': 'dr_tx', 'dr-budget': 'dr_budget',
-    'dr-goals': 'dr_goals', 'dr-risk': 'dr_risk', 'dr-plan': 'dr_plan',
-    'dr-invest': 'dr_invest', 'dr-ai': 'dr_ai', 'dr-market': 'dr_market',
-    'dr-afiliados': 'dr_afiliados'
-  };
-  Object.keys(drMap).forEach(function(id){
-    var btn = document.getElementById(id);
-    if(btn){
-      var icon = btn.querySelector('i');
-      btn.textContent = i(drMap[id]);
-      if(icon) btn.insertBefore(icon, btn.firstChild);
+  // Update drawer items - only update last text node to preserve icons and badges
+  var drItems = [
+    ['dr-home','dr_home'],['dr-tx','dr_tx'],['dr-budget','dr_budget'],
+    ['dr-goals','dr_goals'],['dr-ai','dr_ai'],['dr-market','dr_market']
+  ];
+  drItems.forEach(function(pair){
+    var btn = document.getElementById(pair[0]);
+    if(!btn) return;
+    // Find text nodes and update only the main label text
+    for(var n=btn.childNodes.length-1;n>=0;n--){
+      if(btn.childNodes[n].nodeType===3&&btn.childNodes[n].textContent.trim()){
+        btn.childNodes[n].textContent = i(pair[1]);
+        break;
+      }
+    }
+  });
+  // Pro items - preserve lock badge
+  var proItems = [
+    ['dr-risk','dr_risk'],['dr-plan','dr_plan'],['dr-invest','dr_invest']
+  ];
+  proItems.forEach(function(pair){
+    var btn = document.getElementById(pair[0]);
+    if(!btn) return;
+    for(var n=0;n<btn.childNodes.length;n++){
+      if(btn.childNodes[n].nodeType===3&&btn.childNodes[n].textContent.trim()){
+        btn.childNodes[n].textContent = i(pair[1]);
+        break;
+      }
     }
   });
 }
