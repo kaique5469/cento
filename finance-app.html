@@ -311,6 +311,8 @@ button,input,textarea,select{font-family:inherit;-webkit-appearance:none;appeara
 .ai-textarea{flex:1;background:rgba(22,22,21,.8);border:1.5px solid var(--bd2);border-radius:14px;padding:12px 14px;color:var(--tx);font-size:15px;resize:none;line-height:1.5;min-height:46px;max-height:110px;-webkit-overflow-scrolling:touch;-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px)}
 .ai-textarea:focus{border-color:var(--ac)}
 .ai-textarea::placeholder{color:var(--mu2)}
+.ai-ta{flex:1;background:rgba(22,22,21,.8);border:1.5px solid var(--bd2);border-radius:14px;color:var(--tx);font-size:14px;padding:12px 14px;resize:none;font-family:inherit;line-height:1.5;min-height:46px;max-height:110px;outline:none;-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px)}
+.ai-ta:focus{border-color:var(--ac3)}
 .ai-send{width:46px;height:46px;border-radius:14px;background:var(--ac);color:#0a0a0a;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0}
 .ai-send i{font-size:20px}
 .ai-send:active{opacity:.85}
@@ -3237,12 +3239,110 @@ nav = function(page){
 
 
 
+// ===========================================
+//  AI PAGE
+// ===========================================
+function aiCtx(){
+  var p = USER && USER.profile || {};
+  var txs = TX || [];
+  var now = new Date();
+  var month = now.getMonth(), year = now.getFullYear();
+  var monthTx = txs.filter(function(t){
+    var d = new Date(t.date); return d.getMonth()===month && d.getFullYear()===year;
+  });
+  var inc = monthTx.filter(function(t){return t.type==='income';})
+    .reduce(function(s,t){return s+Math.abs(t.amount||0);},0);
+  var exp = monthTx.filter(function(t){return t.type==='expense';})
+    .reduce(function(s,t){return s+Math.abs(t.amount||0);},0);
+  var bal = inc - exp;
+  var totalInvested = (INVS||[]).reduce(function(s,v){return s+(v.current_value||v.amount_invested||0);},0);
+  var goals = (GOALS||[]).map(function(g){return g.label+': R$'+Math.round(g.current_val||0)+'/R$'+Math.round(g.target_val||0);}).join(', ');
+  var topCats = {};
+  monthTx.filter(function(t){return t.type==='expense';}).forEach(function(t){
+    topCats[t.category||'outros'] = (topCats[t.category||'outros']||0) + Math.abs(t.amount||0);
+  });
+  var topStr = Object.entries(topCats).sort(function(a,b){return b[1]-a[1];}).slice(0,5)
+    .map(function(e){return e[0]+': R$'+Math.round(e[1]);}).join(', ');
+  var ctx = 'Contexto do usuario:\n'
+    + 'Nome: '+(USER&&USER.name||'Usuario')+'\n'
+    + 'Plano: '+(USER&&USER.plan||'free')+'\n'
+    + 'Renda mensal: R$'+Math.round(p.income||inc||0)+'\n'
+    + 'Gastos este mes: R$'+Math.round(exp)+'\n'
+    + 'Receitas este mes: R$'+Math.round(inc)+'\n'
+    + 'Saldo: R$'+Math.round(bal)+'\n'
+    + 'Patrimonio investido: R$'+Math.round(totalInvested)+'\n'
+    + (goals?'Metas: '+goals+'\n':'')
+    + (topStr?'Top categorias de gasto: '+topStr+'\n':'')
+    + 'Total de transacoes: '+txs.length+'\n';
+  return ctx;
+}
+function renderAIPage(){
+  var pg = document.getElementById('page-ai');
+  if(!pg) return;
+  CHAT = [];
+  var name = (USER && USER.name) ? USER.name.split(' ')[0] : 'você';
+  var now = new Date();
+  var month = now.getMonth(), year = now.getFullYear();
+  var txs = TX || [];
+  var monthTx = txs.filter(function(t){
+    var d = new Date(t.date); return d.getMonth()===month && d.getFullYear()===year;
+  });
+  var exp = monthTx.filter(function(t){return t.type==='expense';})
+    .reduce(function(s,t){return s+Math.abs(t.amount||0);},0);
+  var inc = monthTx.filter(function(t){return t.type==='income';})
+    .reduce(function(s,t){return s+Math.abs(t.amount||0);},0);
+  var balCol = inc >= exp ? 'var(--ac)' : 'var(--rd)';
+
+  var greeting = 'Olá, '+name+'! Sou o **Cento IA** — seu assistente financeiro pessoal. '
+    + 'Este mês você teve **R$'+Math.round(inc).toLocaleString('pt-BR')+' de receitas** e '
+    + '**R$'+Math.round(exp).toLocaleString('pt-BR')+' de gastos**. '
+    + (inc >= exp
+        ? 'Você está no positivo! Como posso te ajudar hoje?'
+        : 'Seus gastos estão acima das receitas. Posso te ajudar a encontrar onde economizar!');
+
+  var chips = [
+    'Como está minha saúde financeira?',
+    'Onde posso economizar?',
+    'Me dê dicas de investimento',
+    'Como montar uma reserva de emergência?',
+    'Análise dos meus gastos',
+    'Como sair das dívidas?'
+  ];
+
+  pg.innerHTML =
+    '<div class="page-hdr">'
+    +'<div class="page-title">Inteligência IA</div>'
+    +'<div class="page-sub">Assistente financeiro pessoal</div>'
+    +'</div>'
+    +'<div class="ai-wrap">'
+    +'<div class="ai-chips" id="ai-chips-row">'
+    + chips.map(function(c){return '<button class="ai-chip" onclick="aiChip(this)">'+c+'</button>';}).join('')
+    +'</div>'
+    +'<div class="ai-msgs" id="ai-msgs">'
+    +'<div class="ai-msg">'
+    +'<div class="ai-av bot"><i class="ti ti-sparkles"></i></div>'
+    +'<div class="ai-bubble bot">'+md2html(greeting)+'</div>'
+    +'</div>'
+    +'</div>'
+    +'<div class="ai-input-row">'
+    +'<textarea class="ai-ta" id="ai-ta" placeholder="Pergunte sobre suas finanças..." rows="1" oninput="autoResize(this)" onkeydown="aiKey(event)"></textarea>'
+    +'<button class="ai-send" id="ai-send" onclick="sendAI()"><i class="ti ti-send"></i></button>'
+    +'</div>'
+    +'</div>';
+
+  setTimeout(function(){
+    var ta = document.getElementById('ai-ta');
+    if(ta) ta.focus();
+  }, 300);
+}
+
 
 
 function sendAI(){
   var ta=document.getElementById('ai-ta'); if(!ta)return;
   var msg=ta.value.trim(); if(!msg)return;
   ta.value=''; ta.style.height='';
+  var chips=document.getElementById('ai-chips-row');if(chips)chips.style.display='none';
   var ms=document.getElementById('ai-msgs');
   var ini=(USER&&USER.name)?USER.name[0].toUpperCase():'?';
   ms.innerHTML+='<div class="ai-msg usr"><div class="ai-av usr">'+ini+'</div><div class="ai-bubble usr">'+esc(msg)+'</div></div>';
