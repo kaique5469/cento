@@ -904,15 +904,15 @@ button,input,textarea,select{font-family:inherit;-webkit-appearance:none;appeara
   <nav class="bot-nav">
     <button class="nav-btn on" id="nav-home" onclick="nav('home')">
       <div style="position:relative;display:inline-block"><i class="ti ti-home"></i><span class="nav-alert" id="nav-alert"></span></div>
-      <span>In&#237;cio</span>
+      <span data-i18n="nav_home">In&#237;cio</span>
     </button>
-    <button class="nav-btn" id="nav-tx" onclick="nav('tx')"><i class="ti ti-arrows-sort"></i><span>Gastos</span></button>
+    <button class="nav-btn" id="nav-tx" onclick="nav('tx')"><i class="ti ti-arrows-sort"></i><span data-i18n="nav_tx">Gastos</span></button>
     <div class="nav-fab-wrap">
       <button class="nav-fab" onclick="openModal('tx')"><i class="ti ti-plus"></i></button>
-      <span class="nav-fab-lbl">Novo</span>
+      <span class="nav-fab-lbl" data-i18n="nav_new">Novo</span>
     </div>
-    <button class="nav-btn" id="nav-budget" onclick="nav('budget')"><i class="ti ti-chart-pie"></i><span>Or&#231;amento</span></button>
-    <button class="nav-btn" id="nav-market" onclick="nav('market')"><i class="ti ti-activity"></i><span>Mercado</span></button>
+    <button class="nav-btn" id="nav-budget" onclick="nav('budget')"><i class="ti ti-chart-pie"></i><span data-i18n="nav_budget">Or&#231;amento</span></button>
+    <button class="nav-btn" id="nav-market" onclick="nav('market')"><i class="ti ti-activity" data-nav-market></i><span>Mercado</span></button>
   </nav>
 </div>
 
@@ -939,7 +939,7 @@ button,input,textarea,select{font-family:inherit;-webkit-appearance:none;appeara
     <button class="dr-item dr-pro-item" id="dr-plan" onclick="drNavPro('plan')"><i class="ti ti-chart-line"></i>Plano 12 Meses<span class="dr-pro-lock" id="lock-plan"><i class="ti ti-lock"></i>Pro</span></button>
     <button class="dr-item dr-pro-item" id="dr-invest" onclick="drNavPro('invest')"><i class="ti ti-trending-up"></i>Investimentos<span class="dr-pro-lock" id="lock-invest"><i class="ti ti-lock"></i>Pro</span></button>
     <button class="dr-item" id="dr-ai" onclick="drNav('ai')"><i class="ti ti-sparkles"></i>Assistente IA</button>
-    <button class="dr-item" id="dr-market" onclick="drNav('market')"><i class="ti ti-activity"></i>Mercado ao Vivo</button>
+    <button class="dr-item" id="dr-market" onclick="drNav('market')"><i class="ti ti-activity" data-nav-market></i>Mercado ao Vivo</button>
   </div>
   <div class="dr-section" style="margin-top:4px">
     <div class="dr-sec-lbl">Ganhar Dinheiro</div>
@@ -1586,6 +1586,35 @@ function updateDrawer(){
       }
     }
   });
+  // Update nav labels with current language
+  var navMap = {
+    'nav-home': 'nav_home', 'nav-tx': 'nav_tx',
+    'nav-budget': 'nav_budget', 'nav-market': 'nav_market'
+  };
+  Object.keys(navMap).forEach(function(id){
+    var btn = document.getElementById(id);
+    if(btn){ var span = btn.querySelector('span'); if(span) span.textContent = i(navMap[id]); }
+  });
+  var fabLbl = document.querySelector('.nav-fab-lbl');
+  if(fabLbl) fabLbl.textContent = i('nav_new');
+  // Update drawer section labels
+  var drSecs = document.querySelectorAll('.dr-sec-lbl');
+  if(drSecs[0]) drSecs[0].textContent = i('dr_sec_main');
+  // Update drawer items
+  var drMap = {
+    'dr-home': 'dr_home', 'dr-tx': 'dr_tx', 'dr-budget': 'dr_budget',
+    'dr-goals': 'dr_goals', 'dr-risk': 'dr_risk', 'dr-plan': 'dr_plan',
+    'dr-invest': 'dr_invest', 'dr-ai': 'dr_ai', 'dr-market': 'dr_market',
+    'dr-afiliados': 'dr_afiliados'
+  };
+  Object.keys(drMap).forEach(function(id){
+    var btn = document.getElementById(id);
+    if(btn){
+      var icon = btn.querySelector('i');
+      btn.textContent = i(drMap[id]);
+      if(icon) btn.insertBefore(icon, btn.firstChild);
+    }
+  });
 }
 
 // \u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550
@@ -1738,6 +1767,13 @@ var TR = {
     lp_why:'Por que o Cento?',
     lp_feat_title:'Feito para quem leva a vida a s\u00e9rio',
     lp_feat_sub:'N\u00e3o \u00e9 mais um app de planilha. \u00c9 um assistente que entende sua realidade.',
+    nav_home:'In\u00EDcio',nav_tx:'Gastos',nav_budget:'Or\u00E7amento',nav_market:'Mercado',nav_new:'Novo',
+    dr_sec_main:'Principal',dr_sec_pro:'Pro',dr_sec_account:'Conta',
+    dr_home:'In\u00EDcio',dr_tx:'Transa\u00E7\u00F5es',dr_budget:'Or\u00E7amentos',dr_goals:'Metas',
+    dr_risk:'Risco Financeiro',dr_plan:'Plano 12 Meses',dr_invest:'Investimentos',
+    dr_ai:'Assistente IA',dr_market:'Mercado',dr_afiliados:'Programa de Afiliados',
+    dr_settings:'Configura\u00E7\u00F5es',dr_lang:'Idioma',dr_logout:'Sair',
+    dr_pro_badge:'Upgrade para Pro',
   en: {
     login:'Sign in',signup:'Create account',email:'Email',password:'Password',name:'Name',
     login_btn:'Sign in \u2192',signup_btn:'Create account \u2192',forgot:'Forgot password? Reset',
@@ -1825,6 +1861,13 @@ var TR = {
     lp_feat_title:'Built for people who take life seriously',
     lp_feat_sub:"It\'s not just another spreadsheet app. It\'s an assistant that understands your reality.",
   },
+    nav_home:'Home',nav_tx:'Expenses',nav_budget:'Budget',nav_market:'Market',nav_new:'New',
+    dr_sec_main:'Main',dr_sec_pro:'Pro',dr_sec_account:'Account',
+    dr_home:'Home',dr_tx:'Transactions',dr_budget:'Budgets',dr_goals:'Goals',
+    dr_risk:'Financial Risk',dr_plan:'12-Month Plan',dr_invest:'Investments',
+    dr_ai:'AI Assistant',dr_market:'Market',dr_afiliados:'Affiliate Program',
+    dr_settings:'Settings',dr_lang:'Language',dr_logout:'Sign out',
+    dr_pro_badge:'Upgrade to Pro',
   es: {
     login:'Iniciar sesi\u00f3n',signup:'Crear cuenta',email:'Correo',password:'Contrase\u00f1a',name:'Nombre',
     login_btn:'Iniciar sesi\u00f3n \u2192',signup_btn:'Crear cuenta \u2192',forgot:'\u00bfOlvidaste tu contrase\u00f1a? Recuperar',
@@ -1911,6 +1954,13 @@ var TR = {
     lp_why:'\u00bfPor qu\u00e9 Cento?',
     lp_feat_title:'Hecho para quienes se toman la vida en serio',
     lp_feat_sub:'No es otra app de planillas. Es un asistente que entiende tu realidad.',
+      nav_home:'Inicio',nav_tx:'Gastos',nav_budget:'Presupuesto',nav_market:'Mercado',nav_new:'Nuevo',
+    dr_sec_main:'Principal',dr_sec_pro:'Pro',dr_sec_account:'Cuenta',
+    dr_home:'Inicio',dr_tx:'Transacciones',dr_budget:'Presupuestos',dr_goals:'Metas',
+    dr_risk:'Riesgo Financiero',dr_plan:'Plan 12 Meses',dr_invest:'Inversiones',
+    dr_ai:'Asistente IA',dr_market:'Mercado',dr_afiliados:'Programa de Afiliados',
+    dr_settings:'Configuraci\u00F3n',dr_lang:'Idioma',dr_logout:'Cerrar sesi\u00F3n',
+    dr_pro_badge:'Mejorar a Pro',
   }
 };
 
