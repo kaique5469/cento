@@ -1588,56 +1588,38 @@ function updateDrawer(){
   if(ml) ml.textContent=mmap[USER.mode||'br']||'Brasil';
   var banner=document.getElementById('pro-banner');
   if(banner) banner.style.display=pro?'none':'block';
+
   // Toggle locked state on pro items
-  var proItems=['dr-risk','dr-plan','dr-invest'];
-  proItems.forEach(function(id){
+  ['dr-risk','dr-plan','dr-invest'].forEach(function(id){
     var btn=document.getElementById(id);
     if(btn){
-      if(pro){
-        btn.classList.remove('dr-locked');
-        btn.style.opacity='';
-      } else {
-        btn.classList.add('dr-locked');
-      }
+      if(pro){ btn.classList.remove('dr-locked'); btn.style.opacity=''; }
+      else { btn.classList.add('dr-locked'); }
     }
   });
-  // Update nav labels safely
-  var navItems = [
-    ['nav-home','nav_home'],['nav-tx','nav_tx'],
-    ['nav-budget','nav_budget'],['nav-market','nav_market']
-  ];
-  navItems.forEach(function(pair){
-    var btn = document.getElementById(pair[0]);
-    if(btn){ var sp = btn.querySelector('span:not(.nav-alert)'); if(sp) sp.textContent = i(pair[1]); }
+
+  // Update bottom nav labels
+  [['nav-home','nav_home'],['nav-tx','nav_tx'],['nav-budget','nav_budget'],['nav-market','nav_market']].forEach(function(pair){
+    var btn=document.getElementById(pair[0]);
+    if(btn){ var sp=btn.querySelector('span:not(.nav-alert)'); if(sp) sp.textContent=i(pair[1]); }
   });
-  var fabLbl = document.querySelector('.nav-fab-lbl');
-  if(fabLbl) fabLbl.textContent = i('nav_new');
-  // Update drawer items - only update last text node to preserve icons and badges
-  var drItems = [
+  var fabLbl=document.querySelector('.nav-fab-lbl');
+  if(fabLbl) fabLbl.textContent=i('nav_new');
+
+  // Update drawer text nodes safely (preserve icons and badges)
+  var allDrItems=[
     ['dr-home','dr_home'],['dr-tx','dr_tx'],['dr-budget','dr_budget'],
-    ['dr-goals','dr_goals'],['dr-ai','dr_ai'],['dr-market','dr_market']
-  ];
-  drItems.forEach(function(pair){
-    var btn = document.getElementById(pair[0]);
-    if(!btn) return;
-    // Find text nodes and update only the main label text
-    for(var n=btn.childNodes.length-1;n>=0;n--){
-      if(btn.childNodes[n].nodeType===3&&btn.childNodes[n].textContent.trim()){
-        btn.childNodes[n].textContent = i(pair[1]);
-        break;
-      }
-    }
-  });
-  // Pro items - preserve lock badge
-  var proItems = [
+    ['dr-goals','dr_goals'],['dr-ai','dr_ai'],['dr-market','dr_market'],
     ['dr-risk','dr_risk'],['dr-plan','dr_plan'],['dr-invest','dr_invest']
   ];
-  proItems.forEach(function(pair){
-    var btn = document.getElementById(pair[0]);
+  allDrItems.forEach(function(pair){
+    var btn=document.getElementById(pair[0]);
     if(!btn) return;
-    for(var n=0;n<btn.childNodes.length;n++){
+    // For pro items, text node is first; for others, last
+    var isPro2=(pair[0]==='dr-risk'||pair[0]==='dr-plan'||pair[0]==='dr-invest');
+    for(var n=isPro2?0:btn.childNodes.length-1; isPro2?n<btn.childNodes.length:n>=0; isPro2?n++:n--){
       if(btn.childNodes[n].nodeType===3&&btn.childNodes[n].textContent.trim()){
-        btn.childNodes[n].textContent = i(pair[1]);
+        btn.childNodes[n].textContent=i(pair[1]);
         break;
       }
     }
