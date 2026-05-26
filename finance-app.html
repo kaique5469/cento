@@ -1621,7 +1621,10 @@ function updateDrawer(){
   allDrItems.forEach(function(pair){
     var btn=document.getElementById(pair[0]);
     if(!btn) return;
-    // For pro items, text node is first; for others, last
+    // Update .dr-label-main span if present (bilingual menu)
+    var mainLbl=btn.querySelector('.dr-label-main');
+    if(mainLbl){ mainLbl.textContent=i(pair[1]); return; }
+    // Fallback: find text node directly
     var isPro2=(pair[0]==='dr-risk'||pair[0]==='dr-plan'||pair[0]==='dr-invest');
     for(var n=isPro2?0:btn.childNodes.length-1; isPro2?n<btn.childNodes.length:n>=0; isPro2?n++:n--){
       if(btn.childNodes[n].nodeType===3&&btn.childNodes[n].textContent.trim()){
