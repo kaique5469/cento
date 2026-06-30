@@ -311,8 +311,6 @@ button,input,textarea,select{font-family:inherit;-webkit-appearance:none;appeara
 .ai-textarea{flex:1;background:rgba(22,22,21,.8);border:1.5px solid var(--bd2);border-radius:14px;padding:12px 14px;color:var(--tx);font-size:15px;resize:none;line-height:1.5;min-height:46px;max-height:110px;-webkit-overflow-scrolling:touch;-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px)}
 .ai-textarea:focus{border-color:var(--ac)}
 .ai-textarea::placeholder{color:var(--mu2)}
-.ai-ta{flex:1;background:rgba(22,22,21,.8);border:1.5px solid var(--bd2);border-radius:14px;color:var(--tx);font-size:14px;padding:12px 14px;resize:none;font-family:inherit;line-height:1.5;min-height:46px;max-height:110px;outline:none;-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px)}
-.ai-ta:focus{border-color:var(--ac3)}
 .ai-send{width:46px;height:46px;border-radius:14px;background:var(--ac);color:#0a0a0a;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0}
 .ai-send i{font-size:20px}
 .ai-send:active{opacity:.85}
@@ -352,10 +350,6 @@ button,input,textarea,select{font-family:inherit;-webkit-appearance:none;appeara
 .dr-item.on i{color:var(--ac)}
 .dr-item.danger{color:var(--rd)}
 .dr-item.danger i{color:var(--rd)}
-.dr-label{display:flex;flex-direction:column;gap:1px;line-height:1}
-.dr-label-main{font-size:13.5px;font-weight:600;letter-spacing:.01em}
-.dr-label-sub{font-size:10px;font-weight:400;opacity:.45;letter-spacing:.04em;text-transform:uppercase}
-.dr-item.on .dr-label-sub{opacity:.6}
 .dr-footer{margin-top:auto;padding:12px 16px;border-top:1px solid var(--bd)}
 .dr-add{width:100%;padding:15px;border-radius:14px;background:var(--ac);color:#0a0a0a;font-size:15px;font-weight:700;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:9px}
 .dr-add i{font-size:19px}
@@ -479,8 +473,8 @@ button,input,textarea,select{font-family:inherit;-webkit-appearance:none;appeara
 .lp-final-note{font-size:11px;color:rgba(240,239,232,.3);margin-top:14px;line-height:1.6}
 
 /* PRO LOCKED ITEMS */
-.dr-pro-item{position:relative}
-.dr-pro-lock{display:none;align-items:center;gap:4px;font-size:10px;font-weight:700;padding:2px 7px;border-radius:100px;background:rgba(245,200,66,.15);color:#f5c842;border:1px solid rgba(245,200,66,.3);flex-shrink:0;letter-spacing:.3px;margin-left:auto}
+.dr-pro-item{position:relative;justify-content:space-between}
+.dr-pro-lock{display:none;align-items:center;gap:4px;font-size:10px;font-weight:700;padding:2px 8px;border-radius:100px;background:rgba(245,200,66,.15);color:#f5c842;border:1px solid rgba(245,200,66,.3);flex-shrink:0;letter-spacing:.3px}
 .dr-pro-lock i{font-size:11px}
 .dr-locked .dr-pro-lock{display:flex}
 .dr-locked{opacity:.5;cursor:default}
@@ -949,18 +943,18 @@ gtag('config','G-1FRWFV9TYQ');
   </div>
   <div class="dr-section">
     <div class="dr-sec-lbl">Principal</div>
-    <button class="dr-item on" id="dr-home" onclick="drNav('home')"><i class="ti ti-home"></i><span class="dr-label"><span class="dr-label-main">Painel</span><span class="dr-label-sub">Overview</span></span></button>
-    <button class="dr-item" id="dr-tx" onclick="drNav('tx')"><i class="ti ti-arrows-sort"></i><span class="dr-label"><span class="dr-label-main">Transações</span><span class="dr-label-sub">Transactions</span></span></button>
-    <button class="dr-item" id="dr-budget" onclick="drNav('budget')"><i class="ti ti-chart-pie"></i><span class="dr-label"><span class="dr-label-main">Orçamento</span><span class="dr-label-sub">Budget</span></span></button>
-    <button class="dr-item" id="dr-goals" onclick="drNav('goals')"><i class="ti ti-target"></i><span class="dr-label"><span class="dr-label-main">Metas</span><span class="dr-label-sub">Goals</span></span></button>
+    <button class="dr-item on" id="dr-home" onclick="drNav('home')"><i class="ti ti-home"></i>In&#237;cio</button>
+    <button class="dr-item" id="dr-tx" onclick="drNav('tx')"><i class="ti ti-arrows-sort"></i>Transa&#231;&#245;es</button>
+    <button class="dr-item" id="dr-budget" onclick="drNav('budget')"><i class="ti ti-chart-pie"></i>Or&#231;amentos</button>
+    <button class="dr-item" id="dr-goals" onclick="drNav('goals')"><i class="ti ti-target"></i>Metas</button>
   </div>
   <div class="dr-section" style="margin-top:4px">
     <div class="dr-sec-lbl">Intelig&#234;ncia</div>
-    <button class="dr-item dr-pro-item" id="dr-risk" onclick="drNavPro('risk')"><i class="ti ti-shield-exclamation"></i><span class="dr-label"><span class="dr-label-main">Risco</span><span class="dr-label-sub">Risk Analysis</span></span><span class="dr-pro-lock" id="lock-risk"><i class="ti ti-lock"></i>Pro</span></button>
-    <button class="dr-item dr-pro-item" id="dr-plan" onclick="drNavPro('plan')"><i class="ti ti-chart-line"></i><span class="dr-label"><span class="dr-label-main">Planejamento</span><span class="dr-label-sub">Financial Plan</span></span><span class="dr-pro-lock" id="lock-plan"><i class="ti ti-lock"></i>Pro</span></button>
-    <button class="dr-item dr-pro-item" id="dr-invest" onclick="drNavPro('invest')"><i class="ti ti-trending-up"></i><span class="dr-label"><span class="dr-label-main">Investimentos</span><span class="dr-label-sub">Investments</span></span><span class="dr-pro-lock" id="lock-invest"><i class="ti ti-lock"></i>Pro</span></button>
-    <button class="dr-item" id="dr-ai" onclick="drNav('ai')"><i class="ti ti-sparkles"></i><span class="dr-label"><span class="dr-label-main">Inteligência IA</span><span class="dr-label-sub">AI Insights</span></span></button>
-    <button class="dr-item" id="dr-market" onclick="drNav('market')"><i class="ti ti-activity" data-nav-market></i><span class="dr-label"><span class="dr-label-main">Mercado</span><span class="dr-label-sub">Live Market</span></span></button>
+    <button class="dr-item dr-pro-item" id="dr-risk" onclick="drNavPro('risk')"><i class="ti ti-shield-exclamation"></i>Risco Financeiro<span class="dr-pro-lock" id="lock-risk"><i class="ti ti-lock"></i>Pro</span></button>
+    <button class="dr-item dr-pro-item" id="dr-plan" onclick="drNavPro('plan')"><i class="ti ti-chart-line"></i>Plano 12 Meses<span class="dr-pro-lock" id="lock-plan"><i class="ti ti-lock"></i>Pro</span></button>
+    <button class="dr-item dr-pro-item" id="dr-invest" onclick="drNavPro('invest')"><i class="ti ti-trending-up"></i>Investimentos<span class="dr-pro-lock" id="lock-invest"><i class="ti ti-lock"></i>Pro</span></button>
+    <button class="dr-item" id="dr-ai" onclick="drNav('ai')"><i class="ti ti-sparkles"></i>Assistente IA</button>
+    <button class="dr-item" id="dr-market" onclick="drNav('market')"><i class="ti ti-activity" data-nav-market></i>Mercado ao Vivo</button>
   </div>
   <div class="dr-section" style="margin-top:4px">
     <div class="dr-sec-lbl">Ganhar Dinheiro</div>
@@ -1141,6 +1135,7 @@ try { sb = (window.supabase||supabase).createClient(SUPA_URL, SUPA_KEY); } catch
 
 var USER = null, CU = null;
 var TX = [], BUDGETS = null, GOALS = [], INVS = [], CHAT = [];
+var supOpen = false, supInited = false;
 var activePage = 'home', txFilter = 'all', viewCurr = 'brl';
 var txType = 'expense', txCurr = 'BRL', txCat = '', txExtra = false, txEditId = null;
 var goalCurr = 'BRL', goalEditId = null, bgEditCat = null, invType = 'acoes', invEditId = null;
@@ -1190,9 +1185,6 @@ window.addEventListener('DOMContentLoaded', function() {
     if (session && session.user) { CU = session.user; loadUser(); }
     else { CU = null; showAuth(); }
   });
-  if (/iphone|ipad|ipod/i.test(navigator.userAgent) && !window.navigator.standalone) {
-    setTimeout(function(){ document.getElementById('install-banner').style.display='block'; }, 4000);
-  }
 });
 
 // \u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550
@@ -1612,7 +1604,24 @@ function updateDrawer(){
   var fabLbl=document.querySelector('.nav-fab-lbl');
   if(fabLbl) fabLbl.textContent=i('nav_new');
 
-  // Menu labels are bilingual HTML — no dynamic update needed
+  // Update drawer text nodes safely (preserve icons and badges)
+  var allDrItems=[
+    ['dr-home','dr_home'],['dr-tx','dr_tx'],['dr-budget','dr_budget'],
+    ['dr-goals','dr_goals'],['dr-ai','dr_ai'],['dr-market','dr_market'],
+    ['dr-risk','dr_risk'],['dr-plan','dr_plan'],['dr-invest','dr_invest']
+  ];
+  allDrItems.forEach(function(pair){
+    var btn=document.getElementById(pair[0]);
+    if(!btn) return;
+    // For pro items, text node is first; for others, last
+    var isPro2=(pair[0]==='dr-risk'||pair[0]==='dr-plan'||pair[0]==='dr-invest');
+    for(var n=isPro2?0:btn.childNodes.length-1; isPro2?n<btn.childNodes.length:n>=0; isPro2?n++:n--){
+      if(btn.childNodes[n].nodeType===3&&btn.childNodes[n].textContent.trim()){
+        btn.childNodes[n].textContent=i(pair[1]);
+        break;
+      }
+    }
+  });
 }
 
 // \u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550
@@ -1767,9 +1776,9 @@ var TR = {
     lp_feat_sub:'N\u00e3o \u00e9 mais um app de planilha. \u00c9 um assistente que entende sua realidade.',
     nav_home:'In\u00EDcio',nav_tx:'Gastos',nav_budget:'Or\u00E7amento',nav_market:'Mercado',nav_new:'Novo',
     dr_sec_main:'Principal',dr_sec_pro:'Pro',dr_sec_account:'Conta',
-    dr_home:'Painel',dr_tx:'Transações',dr_budget:'Orçamento',dr_goals:'Metas',
-    dr_risk:'Risco',dr_plan:'Planejamento',dr_invest:'Investimentos',
-    dr_ai:'Inteligência IA',dr_market:'Mercado',dr_afiliados:'Programa de Afiliados',
+    dr_home:'In\u00EDcio',dr_tx:'Transa\u00E7\u00F5es',dr_budget:'Or\u00E7amentos',dr_goals:'Metas',
+    dr_risk:'Risco Financeiro',dr_plan:'Plano 12 Meses',dr_invest:'Investimentos',
+    dr_ai:'Assistente IA',dr_market:'Mercado',dr_afiliados:'Programa de Afiliados',
     dr_settings:'Configura\u00E7\u00F5es',dr_lang:'Idioma',dr_logout:'Sair',
     dr_pro_badge:'Upgrade para Pro',
   en: {
@@ -1782,7 +1791,7 @@ var TR = {
     ok_signup:'Check your email to confirm!',
     home_title:'Home',tx_title:'Transactions',
     budget_title:'Budgets',budget_sub:'Tap to edit limit',
-    goals_title:'Goals',goals_add:'New Goal',goal_target_word:'Goal',goal_target_word:'Goal',
+    goals_title:'Goals',goals_add:'New Goal',goal_target_word:'Goal',
     risk_title:'Financial Risk',risk_sub:'Health and vulnerability of your money',
     plan_title:'12-Month Plan',plan_sub:'Projection with your real numbers',
     invest_title:'Investments',invest_sub:'Your personal portfolio',
@@ -1861,9 +1870,9 @@ var TR = {
   },
     nav_home:'Home',nav_tx:'Expenses',nav_budget:'Budget',nav_market:'Market',nav_new:'New',
     dr_sec_main:'Main',dr_sec_pro:'Pro',dr_sec_account:'Account',
-    dr_home:'Painel',dr_tx:'Transações',dr_budget:'Orçamento',dr_goals:'Metas',
-    dr_risk:'Risco',dr_plan:'Planejamento',dr_invest:'Investimentos',
-    dr_ai:'Inteligência IA',dr_market:'Mercado',dr_afiliados:'Affiliate Program',
+    dr_home:'Home',dr_tx:'Transactions',dr_budget:'Budgets',dr_goals:'Goals',
+    dr_risk:'Financial Risk',dr_plan:'12-Month Plan',dr_invest:'Investments',
+    dr_ai:'AI Assistant',dr_market:'Market',dr_afiliados:'Affiliate Program',
     dr_settings:'Settings',dr_lang:'Language',dr_logout:'Sign out',
     dr_pro_badge:'Upgrade to Pro',
   es: {
@@ -1876,13 +1885,12 @@ var TR = {
     ok_signup:'\u00a1Verifica tu correo para confirmar!',
     home_title:'Inicio',tx_title:'Transacciones',
     budget_title:'Presupuestos',budget_sub:'Toca para editar el l\u00edmite',
-    goals_title:'Metas',goals_add:'Nueva Meta',goal_target_word:'Meta',goal_target_word:'Meta',
+    goals_title:'Metas',goals_add:'Nueva Meta',goal_target_word:'Meta',
     risk_title:'Riesgo Financiero',risk_sub:'Salud y vulnerabilidad de tu dinero',
     plan_title:'Plan 12 Meses',plan_sub:'Proyecci\u00f3n con tus n\u00fameros reales',
     invest_title:'Inversiones',invest_sub:'Tu cartera personal',
     ai_title:'Asistente IA',ai_sub:'Conoce toda tu vida financiera',
     market_title:'Mercado en Vivo',
-    nav_home:'Inicio',nav_tx:'Gastos',nav_new:'Nuevo',nav_budget:'Presupuesto',nav_market:'Mercado',
     dr_mode_br:'Brasil',dr_mode_us:'EE.UU.',dr_mode_both:'BR + EE.UU.',
     kpi_income:'Ingresos',kpi_expense:'Gastos',kpi_balance:'Saldo',
     recent:'Recientes',view_all:'Ver todo',flow:'Flujo mensual',
@@ -2945,6 +2953,94 @@ var MKT_TIMER = null;
 var MKT_FILTER = 'all';
 
 
+
+function renderInvestPage(){
+  var el = document.getElementById('page-invest');
+  if(!el) return;
+  var totalInv = INVS.reduce(function(s,i){return s+cvt(i.amount_invested||0,'BRL');},0);
+  var totalCur = INVS.reduce(function(s,i){return s+cvt(i.current_value||0,'BRL');},0);
+  var gain = totalCur - totalInv;
+  var gainPct = totalInv>0 ? (gain/totalInv*100) : 0;
+  var typeIcons = {acoes:'chart-line',fii:'building',cripto:'currency-bitcoin',renda_fixa:'shield-check',outro:'wallet'};
+  var typeLabels = {acoes:'A\u00e7\u00f5es',fii:'FII',cripto:'Cripto',renda_fixa:'Renda Fixa',outro:'Outro'};
+
+  var listHTML = INVS.length ? INVS.map(function(inv){
+    var ic = cvt(inv.current_value||0,'BRL');
+    var ii = cvt(inv.amount_invested||0,'BRL');
+    var ig = ic - ii;
+    var igp = ii>0 ? (ig/ii*100) : 0;
+    var pos = ig >= 0;
+    return '<div class="goal-item" onclick="openEditInv(\''+inv.id+'\')" style="cursor:pointer">'
+      +'<div class="goal-top">'
+      +'<div class="goal-emoji" style="background:var(--ac2)"><i class="ti ti-'+(typeIcons[inv.inv_type]||'wallet')+'" style="color:var(--ac);font-size:18px"></i></div>'
+      +'<div class="goal-info"><div class="goal-name">'+esc(inv.name)+'</div><div class="goal-target">'+(typeLabels[inv.inv_type]||'Outro')+'</div></div>'
+      +'<div class="goal-pct" style="color:'+(pos?'var(--ac)':'var(--rd)')+'">'+(pos?'+':'')+igp.toFixed(1)+'%</div>'
+      +'</div>'
+      +'<div class="goal-row"><span>Investido: '+fV(ii)+'</span><span>Atual: '+fV(ic)+'</span></div>'
+      +'</div>';
+  }).join('') : '<div class="empty"><i class="ti ti-chart-pie"></i><div class="empty-title">Nenhum investimento</div><div class="empty-sub">Toque no <strong>+</strong> abaixo para adicionar.</div></div>';
+
+  el.innerHTML =
+    '<div class="page-hdr"><div class="page-title">Investimentos</div><div class="page-sub">Sua carteira consolidada</div></div>'
+    +'<div class="kpi-grid">'
+    +'<div class="kpi-card"><div class="kpi-label">Investido</div><div class="kpi-val">'+fV(totalInv)+'</div></div>'
+    +'<div class="kpi-card"><div class="kpi-label">Atual</div><div class="kpi-val">'+fV(totalCur)+'</div></div>'
+    +'<div class="kpi-card"><div class="kpi-label">Resultado</div><div class="kpi-val '+(gain>=0?'green':'red')+'">'+(gain>=0?'+':'')+fV(Math.abs(gain))+'</div></div>'
+    +'</div>'
+    +'<div class="sec-row"><div class="sec-title">Seus ativos</div></div>'
+    +'<div class="goal-list">'+listHTML+'</div>'
+    +'<button class="fab-mini" onclick="invEditId=null;invType=\'acoes\';document.getElementById(\'minv-title\').textContent=i(\'add_inv\')||\'Adicionar Investimento\';document.getElementById(\'inv-name\').value=\'\';document.getElementById(\'inv-invested\').value=\'\';document.getElementById(\'inv-current\').value=\'\';openModal(\'invest\')" style="position:fixed;bottom:calc(var(--sab)+90px);right:20px;width:56px;height:56px;border-radius:50%;background:var(--ac);color:#0a0a0a;border:none;display:flex;align-items:center;justify-content:center;box-shadow:0 8px 24px rgba(200,240,90,.35);z-index:50"><i class="ti ti-plus" style="font-size:24px"></i></button>';
+}
+
+function aiCtx(){
+  var txs=getMonthTX();
+  var inc=txs.filter(function(t){return t.type==='income';}).reduce(function(s,t){return s+Math.abs(cvt(t.amount,t.curr));},0);
+  var exp=txs.filter(function(t){return t.type==='expense';}).reduce(function(s,t){return s+Math.abs(cvt(t.amount,t.curr));},0);
+  var bal=inc-exp;
+  var goalsStr = GOALS.length ? GOALS.map(function(g){return g.name+': '+fV(g.current_val)+'/'+fV(g.target);}).join(', ') : 'nenhuma meta cadastrada';
+  var budgetsStr = BUDGETS && BUDGETS.length ? BUDGETS.map(function(b){return b.label+': limite '+fV(b.limit_val);}).join(', ') : 'sem orcamentos definidos';
+  var catSpend = {};
+  txs.filter(function(t){return t.type==='expense';}).forEach(function(t){
+    var c = t.cat||'outros';
+    catSpend[c] = (catSpend[c]||0) + Math.abs(cvt(t.amount,t.curr));
+  });
+  var catStr = Object.keys(catSpend).map(function(c){return c+': '+fV(catSpend[c]);}).join(', ') || 'sem gastos registrados';
+  return 'Dados financeiros do usuario (mes atual): Receita total '+fV(inc)+', Despesa total '+fV(exp)+', Saldo '+fV(bal)+'. '
+    +'Gastos por categoria: '+catStr+'. '
+    +'Metas: '+goalsStr+'. '
+    +'Orcamentos: '+budgetsStr+'. '
+    +'Moeda de exibicao: '+(viewCurr==='brl'?'Real (BRL)':'Dolar (USD)')+'. '
+    +'Nome do usuario: '+((USER&&USER.name)||'usuario')+'.';
+}
+
+function renderAIPage(){
+  var el = document.getElementById('page-ai');
+  if(!el) return;
+  if(el.dataset.built === '1') return; // don't rebuild, preserves chat history
+  el.dataset.built = '1';
+
+  var suggestions = [
+    'Quanto gastei esse mes?',
+    'Onde posso economizar?',
+    'Estou no caminho certo pras minhas metas?',
+    'Faca um resumo da minha situacao financeira'
+  ];
+
+  el.innerHTML =
+    '<div class="page-hdr"><div class="page-title">Assistente IA</div><div class="page-sub">Pergunte qualquer coisa sobre suas financas</div></div>'
+    +'<div id="ai-msgs" style="padding:0 20px 20px;display:flex;flex-direction:column;gap:14px;min-height:200px">'
+    +'<div class="ai-msg"><div class="ai-av bot"><i class="ti ti-sparkles"></i></div><div class="ai-bubble bot">Oi'+((USER&&USER.name)?', '+esc(USER.name.split(' ')[0]):'')+'! Eu sou a IA do Cento e ja tenho acesso aos seus dados financeiros. Pode perguntar qualquer coisa &mdash; "quanto gastei em delivery?", "consigo bater minha meta esse mes?" ou peca um conselho direto.</div></div>'
+    +'</div>'
+    +'<div style="padding:0 20px 16px;display:flex;flex-wrap:wrap;gap:8px">'
+    +suggestions.map(function(s){return '<button onclick="document.getElementById(\'ai-ta\').value=\''+s.replace(/'/g,"\\'")+'\';sendAI()" style="padding:9px 14px;border-radius:100px;background:var(--ac2);border:1px solid var(--ac3);color:var(--ac);font-size:12px;font-weight:600;cursor:pointer">'+s+'</button>';}).join('')
+    +'</div>'
+    +'<div style="position:sticky;bottom:0;padding:12px 20px calc(var(--sab)+12px);background:var(--bg);border-top:1px solid var(--bd);display:flex;gap:10px;align-items:flex-end">'
+    +'<textarea id="ai-ta" placeholder="Escreva sua pergunta..." rows="1" style="flex:1;resize:none;background:var(--bg2);border:1px solid var(--bd);border-radius:14px;padding:12px 14px;color:var(--tx);font-size:14px;font-family:inherit;max-height:120px" onkeydown="if(event.key===\'Enter\'&&!event.shiftKey){event.preventDefault();sendAI();}" oninput="this.style.height=\'\';this.style.height=Math.min(this.scrollHeight,120)+\'px\'"></textarea>'
+    +'<button id="ai-send" onclick="sendAI()" style="width:44px;height:44px;border-radius:50%;background:var(--ac);color:#0a0a0a;border:none;display:flex;align-items:center;justify-content:center;flex-shrink:0"><i class="ti ti-send" style="font-size:18px"></i></button>'
+    +'</div>';
+}
+
+
 function renderAfiliadosPage(){
   var el = document.getElementById('page-afiliados');
   if(!el) return;
@@ -3222,110 +3318,12 @@ nav = function(page){
 
 
 
-// ===========================================
-//  AI PAGE
-// ===========================================
-function aiCtx(){
-  var p = USER && USER.profile || {};
-  var txs = TX || [];
-  var now = new Date();
-  var month = now.getMonth(), year = now.getFullYear();
-  var monthTx = txs.filter(function(t){
-    var d = new Date(t.date); return d.getMonth()===month && d.getFullYear()===year;
-  });
-  var inc = monthTx.filter(function(t){return t.type==='income';})
-    .reduce(function(s,t){return s+Math.abs(t.amount||0);},0);
-  var exp = monthTx.filter(function(t){return t.type==='expense';})
-    .reduce(function(s,t){return s+Math.abs(t.amount||0);},0);
-  var bal = inc - exp;
-  var totalInvested = (INVS||[]).reduce(function(s,v){return s+(v.current_value||v.amount_invested||0);},0);
-  var goals = (GOALS||[]).map(function(g){return g.label+': R$'+Math.round(g.current_val||0)+'/R$'+Math.round(g.target_val||0);}).join(', ');
-  var topCats = {};
-  monthTx.filter(function(t){return t.type==='expense';}).forEach(function(t){
-    topCats[t.category||'outros'] = (topCats[t.category||'outros']||0) + Math.abs(t.amount||0);
-  });
-  var topStr = Object.entries(topCats).sort(function(a,b){return b[1]-a[1];}).slice(0,5)
-    .map(function(e){return e[0]+': R$'+Math.round(e[1]);}).join(', ');
-  var ctx = 'Contexto do usuario:\n'
-    + 'Nome: '+(USER&&USER.name||'Usuario')+'\n'
-    + 'Plano: '+(USER&&USER.plan||'free')+'\n'
-    + 'Renda mensal: R$'+Math.round(p.income||inc||0)+'\n'
-    + 'Gastos este mes: R$'+Math.round(exp)+'\n'
-    + 'Receitas este mes: R$'+Math.round(inc)+'\n'
-    + 'Saldo: R$'+Math.round(bal)+'\n'
-    + 'Patrimonio investido: R$'+Math.round(totalInvested)+'\n'
-    + (goals?'Metas: '+goals+'\n':'')
-    + (topStr?'Top categorias de gasto: '+topStr+'\n':'')
-    + 'Total de transacoes: '+txs.length+'\n';
-  return ctx;
-}
-function renderAIPage(){
-  var pg = document.getElementById('page-ai');
-  if(!pg) return;
-  CHAT = [];
-  var name = (USER && USER.name) ? USER.name.split(' ')[0] : 'você';
-  var now = new Date();
-  var month = now.getMonth(), year = now.getFullYear();
-  var txs = TX || [];
-  var monthTx = txs.filter(function(t){
-    var d = new Date(t.date); return d.getMonth()===month && d.getFullYear()===year;
-  });
-  var exp = monthTx.filter(function(t){return t.type==='expense';})
-    .reduce(function(s,t){return s+Math.abs(t.amount||0);},0);
-  var inc = monthTx.filter(function(t){return t.type==='income';})
-    .reduce(function(s,t){return s+Math.abs(t.amount||0);},0);
-  var balCol = inc >= exp ? 'var(--ac)' : 'var(--rd)';
-
-  var greeting = 'Olá, '+name+'! Sou o **Cento IA** — seu assistente financeiro pessoal. '
-    + 'Este mês você teve **R$'+Math.round(inc).toLocaleString('pt-BR')+' de receitas** e '
-    + '**R$'+Math.round(exp).toLocaleString('pt-BR')+' de gastos**. '
-    + (inc >= exp
-        ? 'Você está no positivo! Como posso te ajudar hoje?'
-        : 'Seus gastos estão acima das receitas. Posso te ajudar a encontrar onde economizar!');
-
-  var chips = [
-    'Como está minha saúde financeira?',
-    'Onde posso economizar?',
-    'Me dê dicas de investimento',
-    'Como montar uma reserva de emergência?',
-    'Análise dos meus gastos',
-    'Como sair das dívidas?'
-  ];
-
-  pg.innerHTML =
-    '<div class="page-hdr">'
-    +'<div class="page-title">Inteligência IA</div>'
-    +'<div class="page-sub">Assistente financeiro pessoal</div>'
-    +'</div>'
-    +'<div class="ai-wrap">'
-    +'<div class="ai-chips" id="ai-chips-row">'
-    + chips.map(function(c){return '<button class="ai-chip" onclick="aiChip(this)">'+c+'</button>';}).join('')
-    +'</div>'
-    +'<div class="ai-msgs" id="ai-msgs">'
-    +'<div class="ai-msg">'
-    +'<div class="ai-av bot"><i class="ti ti-sparkles"></i></div>'
-    +'<div class="ai-bubble bot">'+md2html(greeting)+'</div>'
-    +'</div>'
-    +'</div>'
-    +'<div class="ai-input-row">'
-    +'<textarea class="ai-ta" id="ai-ta" placeholder="Pergunte sobre suas finanças..." rows="1" oninput="autoResize(this)" onkeydown="aiKey(event)"></textarea>'
-    +'<button class="ai-send" id="ai-send" onclick="sendAI()"><i class="ti ti-send"></i></button>'
-    +'</div>'
-    +'</div>';
-
-  setTimeout(function(){
-    var ta = document.getElementById('ai-ta');
-    if(ta) ta.focus();
-  }, 300);
-}
-
 
 
 function sendAI(){
   var ta=document.getElementById('ai-ta'); if(!ta)return;
   var msg=ta.value.trim(); if(!msg)return;
   ta.value=''; ta.style.height='';
-  var chips=document.getElementById('ai-chips-row');if(chips)chips.style.display='none';
   var ms=document.getElementById('ai-msgs');
   var ini=(USER&&USER.name)?USER.name[0].toUpperCase():'?';
   ms.innerHTML+='<div class="ai-msg usr"><div class="ai-av usr">'+ini+'</div><div class="ai-bubble usr">'+esc(msg)+'</div></div>';
@@ -3368,6 +3366,12 @@ function sendSupport(){
     if(ms2){ms2.innerHTML+='<div class="ai-msg"><div class="ai-av bot"><i class="ti ti-sparkles"></i></div><div class="ai-bubble bot">'+md2html(reply)+'</div></div>';ms2.scrollTop=99999;}
   }).catch(function(){var typ=document.getElementById('sup-typ');if(typ)typ.remove();})
   .finally(function(){var sb4=document.getElementById('sup-send');if(sb4)sb4.disabled=false;});
+}
+
+function initSupportPanel(){
+  var ms = document.getElementById('sup-msgs');
+  if(!ms || ms.children.length) return;
+  ms.innerHTML = '<div class="ai-msg"><div class="ai-av bot"><i class="ti ti-sparkles"></i></div><div class="ai-bubble bot">Oi! Sou o suporte do Cento. Posso ajudar com d\u00favidas sobre o app, conta ou como usar alguma funcionalidade. Manda sua pergunta ou toca em uma das op\u00e7\u00f5es acima.</div></div>';
 }
 
 function toggleSupport(){
@@ -3656,6 +3660,11 @@ function goToStripe(){
     showStripeSetupGuide();
     return;
   }
+  // Test mode notice
+  if(url.indexOf('test_') >= 0){
+    console.log('Stripe test mode - use test card: 4242 4242 4242 4242');
+  }
+  
   window.open(url, '_blank');
 }
 
